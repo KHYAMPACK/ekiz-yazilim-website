@@ -6,17 +6,18 @@ const siteUrl =
 
 export const seo = {
   siteUrl,
-  title: `${site.name} | Denizli yazılım, web sitesi ve e-ticaret`,
+  title: `${site.name} | Eğitim kurumları için öğrenci takip sistemi ve web sitesi`,
   description:
-    "Denizli’de küçük ve büyük işletmeler için web sitesi, e-ticaret başlangıç ve sade yazılım çözümleri. Net kapsam, hızlı iletişim.",
+    "Etüt merkezleri, kreşler ve özel okullar için öğrenci takip sistemi, veli bildirimi ve web sitesi. Türkiye genelinde uzaktan hizmet. Net kapsam, hızlı iletişim.",
   keywords: [
-    "Denizli yazılım",
-    "Denizli web sitesi",
-    "Denizli e-ticaret",
-    "e-ticaret başlangıç Denizli",
-    "küçük işletme web sitesi Denizli",
-    "büyük işletme yazılım Denizli",
-    "yazılım firması Denizli",
+    "öğrenci takip sistemi",
+    "etüt merkezi yazılımı",
+    "etüt merkezi öğrenci takip programı",
+    "veli bilgilendirme uygulaması",
+    "kreş web sitesi",
+    "özel okul web sitesi",
+    "eğitim kurumu web sitesi",
+    "ödev takip sistemi",
     "Ekiz Yazılım",
   ],
 } as const;
@@ -27,12 +28,16 @@ const faqItems = [
     a: "Kapsama göre. Önce ihtiyacı netleştirir, sonra sabit veya net aralıklı bir teklif yazarız. Gizli kalem yok.",
   },
   {
+    q: "Öğrenci takip sistemi nedir?",
+    a: "Müdür, öğretmen, rehber öğretmen ve veliyi aynı uygulamada buluşturan sistem: yoklama, ödev, deneme sınavı, aidat, mesajlaşma ve velilere anlık bildirim. Etüt merkezleri, kreşler ve özel okullar için.",
+  },
+  {
     q: "Ne kadar sürer?",
     a: "Basit bir tanıtım / landing sitesi genelde kısa sürede çıkar. E-ticaret ve özel yazılım işin büyüklüğüne göre planlanır; süre teklifte yazar.",
   },
   {
     q: "E-ticarete sıfırdan mı başlıyorsunuz?",
-    a: "Evet. Denizli’de ürün satan işletmeler için online mağaza kuruyoruz: ürün vitrini, sipariş/ödeme düzeni ve ilk yayına net bir yol.",
+    a: "Evet. Ürün satan işletmeler için online mağaza kuruyoruz: ürün vitrini, sipariş/ödeme düzeni ve ilk yayına net bir yol.",
   },
   {
     q: "Hosting ve alan adı sizde mi?",
@@ -43,8 +48,8 @@ const faqItems = [
     a: "Evet. Küçük düzeltmeler ve sorular için yanınızdayız. Daha büyük eklemeler ayrı konuşulur.",
   },
   {
-    q: "Denizli dışına iş alıyor musunuz?",
-    a: "Önceliğimiz Denizli’deki küçük ve büyük işletmeler. Uzaktan da çalışabiliriz; odak şimdilik yerelde.",
+    q: "Başka şehirlerden çalışıyor musunuz?",
+    a: "Evet. Merkezimiz Denizli, ama Türkiye genelinde uzaktan çalışıyoruz. Görüşme, kurulum ve eğitim online yapılır.",
   },
 ] as const;
 
@@ -70,8 +75,8 @@ export function localBusinessJsonLd() {
         },
         image: `${seo.siteUrl}/logo/logo_lightwtext.png`,
         areaServed: {
-          "@type": "City",
-          name: site.city,
+          "@type": "Country",
+          name: "Türkiye",
         },
         sameAs: [site.linkedin, site.instagram].filter(Boolean),
       },
@@ -91,17 +96,17 @@ export function localBusinessJsonLd() {
           addressCountry: "TR",
         },
         areaServed: {
-          "@type": "City",
-          name: site.city,
+          "@type": "Country",
+          name: "Türkiye",
         },
         parentOrganization: {
           "@id": `${seo.siteUrl}/#organization`,
         },
         knowsAbout: [
-          "Web sitesi geliştirme",
+          "Öğrenci takip sistemi",
+          "Eğitim kurumları için web sitesi",
           "E-ticaret",
-          "İşletme yazılımı",
-          "Denizli dijital dönüşüm",
+          "Veli bilgilendirme uygulaması",
         ],
       },
       {

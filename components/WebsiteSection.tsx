@@ -23,11 +23,11 @@ export default function WebsiteSection() {
             id="websitesi-home-title"
             className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
           >
-            Denizli’de İşletmenize Özel Web Sitesi
+            Okul, Kreş Ve Etüt Merkezleri İçin Özel Web Sitesi
           </h2>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-black/70">
-            Kreş, okul, ofis veya atölye için işinizi anlatan bir site. Keşiften
-            yayına kadar tasarımı ve kurulumu biz yürütürüz.
+            Kreş, okul, etüt merkezi veya işletmeniz için işinizi anlatan bir
+            site. Keşiften yayına kadar tasarımı ve kurulumu biz yürütürüz.
           </p>
           <ul className="mt-6 space-y-2.5">
             {points.map((line) => (
@@ -42,13 +42,13 @@ export default function WebsiteSection() {
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/denizli-web-sitesi"
+              href="/web-sitesi"
               className="inline-flex border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
             >
               Web sitesi sayfasına git
             </Link>
             <Link
-              href="/denizli-web-sitesi#gorusme"
+              href="/web-sitesi#gorusme"
               className="inline-flex border border-black px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-ice/40"
             >
               Görüşme ayarla
@@ -57,7 +57,7 @@ export default function WebsiteSection() {
         </div>
 
         <Link
-          href="/denizli-web-sitesi"
+          href="/web-sitesi"
           className="group relative w-full overflow-hidden border border-black bg-ice/20 lg:justify-self-end"
         >
           <Image

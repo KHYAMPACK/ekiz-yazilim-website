@@ -34,7 +34,7 @@ export default function EticaretScheduleSection() {
 
     const fullName = [ad.trim(), soyad.trim()].filter(Boolean).join(" ");
     const mesaj = [
-      "Denizli e-ticaret — görüşme talebi.",
+      "E-ticaret — görüşme talebi.",
       `Ad: ${fullName}.`,
       not.trim() ? `Not: ${not.trim()}` : "",
     ]
@@ -49,7 +49,7 @@ export default function EticaretScheduleSection() {
           step: "complete",
           mesaj,
           telefon: telefon.trim(),
-          answers: { kaynak: "denizli-e-ticaret-gorusme" },
+          answers: { kaynak: "e-ticaret-gorusme" },
         }),
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };

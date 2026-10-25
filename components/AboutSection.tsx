@@ -115,25 +115,25 @@ function DemoSoftware() {
 
 const services = [
   {
+    title: "Öğrenci Takip Sistemi",
+    body: "Ödev, yoklama, deneme sınavı, aidat ve veli bildirimi tek uygulamada.",
+    cta: "Sistemi Gör",
+    href: "/egitim",
+    Demo: DemoSoftware,
+  },
+  {
     title: "Web Sitesi / Landing",
     body: "Ne sattığınızı veya ne yaptığınızı net anlatan sayfalar.",
     cta: "Site İste",
-    href: "/denizli-web-sitesi",
+    href: "/web-sitesi",
     Demo: DemoLanding,
   },
   {
     title: "E-Ticaret",
     body: "Ürün satışı ve kendi markanızla online vitrin.",
     cta: "E-Ticaret Başlat",
-    href: "/#ust",
+    href: "/e-ticaret",
     Demo: DemoEcommerce,
-  },
-  {
-    title: "Özel Çözüm",
-    body: "İşinize ve hedeflerinize göre uyarlanmış yazılımlar.",
-    cta: "Çözüm Konuş",
-    href: "/#iletisim",
-    Demo: DemoSoftware,
   },
 ] as const;
 
@@ -154,17 +154,19 @@ export default function AboutSection() {
               id="hakkimizda-title"
               className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
             >
-              Denizli’deki Küçük, Orta Ve Büyük İşletmeler İçin Dijitalleşme Zamanı...
+              Etüt Merkezleri, Kreşler Ve Özel Okullar İçin Dijital Altyapı.
             </h2>
           </div>
           <div className="space-y-4 text-base leading-relaxed text-black/80 sm:text-lg">
             <p>
-              Ekiz Yazılım olarak odak noktamız; Denizli’de dijitalleşmeye yeni başlayan
-              veya markasını online büyütmek isteyen küçük, orta ve büyük işletmeler.
+              Ekiz Yazılım olarak odak noktamız eğitim kurumları: etüt merkezleri,
+              kreşler ve özel okullar. Öğrenci takip sistemini ve kurumsal web
+              sitesini aynı yerden, tek muhatapla kuruyoruz.
             </p>
             <p>
-              Ürün satan işletmeler için e-ticaret, vitrin veya
-              tanıtım için web siteleri, ihtiyaca özel yazılım çözümleri ve daha fazlasını sizin yerinize baştan sona ele alıyoruz.
+              Ödev, yoklama, deneme sınavı ve aidat takibinden velilere anlık
+              bildirime kadar günlük işleyişi tek uygulamada topluyoruz. Ürün
+              satan işletmeler için e-ticaret ve ihtiyaca özel yazılımlar da yapıyoruz.
             </p>
             <p className="border-l-2 border-ice bg-ice/25 py-2 pl-4 text-black">
               Siz işinize bakın. Dijital tarafını biz hallederiz.
@@ -178,9 +180,9 @@ export default function AboutSection() {
               Kime?
             </p>
             <p className="p-6 text-base leading-relaxed text-black/80">
-              Denizli’deki esnaf, atölye, butik, yerel markalar ve büyüyen
-              işletmeler. Online satışa geçmek, marka sayfası kurmak veya mevcut
-              sistemi güçlendirmek isteyenler.
+              Öğrenci takibini defter, Excel ve WhatsApp grupları ile yürüten
+              etüt merkezleri, kreşler ve özel okullar. Butik ve yerel markalar
+              için online mağaza da kuruyoruz.
             </p>
           </div>
           <div className="border-b border-black sm:border-b-0 sm:border-r">
@@ -198,8 +200,8 @@ export default function AboutSection() {
               Nerede?
             </p>
             <p className="p-6 text-base leading-relaxed text-black/80">
-              Şimdilik Denizli. Yerel işletmeleri önce burada güçlendiriyoruz;
-              adım adım büyürüz.
+              Merkezimiz Denizli; Türkiye genelinde uzaktan çalışıyoruz.
+              Görüşme, kurulum ve eğitim online yapılır.
             </p>
           </div>
         </div>

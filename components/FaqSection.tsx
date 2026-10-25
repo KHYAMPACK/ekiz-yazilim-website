@@ -1,5 +1,9 @@
 const faqs = [
   {
+    q: "Öğrenci Takip Sistemi Nedir?",
+    a: "Müdür, öğretmen, rehber öğretmen ve veliyi aynı uygulamada buluşturan sistem: yoklama, ödev, deneme sınavı, aidat, mesajlaşma ve velilere anlık bildirim. Etüt merkezleri, kreşler ve özel okullar için.",
+  },
+  {
     q: "Fiyat Nasıl Belirleniyor?",
     a: "Kapsama göre. Önce ihtiyacı netleştirir, sonra sabit veya net aralıklı bir teklif yazarız. Gizli kalem yok.",
   },
@@ -13,7 +17,7 @@ const faqs = [
   },
   {
     q: "E-Ticarete Sıfırdan Mı Başlıyorsunuz?",
-    a: "Evet. Denizli’de ürün satan işletmeler için online mağaza kuruyoruz: ürün vitrini, sipariş ve ödeme düzeni, ilk yayına net bir yol. Butik ve giyim için ayrı bir sayfamız da var.",
+    a: "Evet. Ürün satan işletmeler için online mağaza kuruyoruz: ürün vitrini, sipariş ve ödeme düzeni, ilk yayına net bir yol. Butik ve giyim için ayrı bir sayfamız da var.",
   },
   {
     q: "Hosting Ve Alan Adı Sizde Mi?",
@@ -24,8 +28,8 @@ const faqs = [
     a: "Evet. Küçük düzeltmeler ve sorular için yanınızdayız. Daha büyük eklemeler ayrı konuşulur.",
   },
   {
-    q: "Denizli Dışına İş Alıyor Musunuz?",
-    a: "Önceliğimiz Denizli’deki küçük ve büyük işletmeler. Uzaktan da çalışabiliriz; odak şimdilik yerelde.",
+    q: "Başka Şehirlerden Çalışıyor Musunuz?",
+    a: "Evet. Merkezimiz Denizli, ama Türkiye genelinde uzaktan çalışıyoruz. Görüşme, kurulum ve eğitim online yapılır.",
   },
 ] as const;
 

@@ -410,7 +410,7 @@ export default function HeroIntake() {
         </div>
 
         <h1 className="mb-8 text-center text-base font-medium tracking-tight text-black/70 sm:mb-12 sm:text-lg">
-          Denizli’de Web Sitesi, E-Ticaret Ve Yazılım
+          Eğitim Kurumları İçin Öğrenci Takip Sistemi Ve Web Sitesi
         </h1>
 
         {phase === "success" ? (

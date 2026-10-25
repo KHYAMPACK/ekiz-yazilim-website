@@ -12,7 +12,7 @@ export const site = {
   /** Optional Cal.com / Calendly / Google Appointments URL */
   bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL ?? "",
   description:
-    "Denizli’de küçük ve büyük işletmeler için web sitesi, e-ticaret başlangıç ve sade yazılım çözümleri.",
+    "Etüt merkezleri, kreşler ve özel okullar için öğrenci takip sistemi ve web sitesi. Türkiye genelinde uzaktan hizmet.",
 } as const;
 
 export function whatsappHref(prefill?: string) {

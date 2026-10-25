@@ -51,8 +51,8 @@ export default function FounderSection() {
               Bilkent Üniversitesi CTIS (Bilgisayar Teknolojisi ve Bilişim
               Sistemleri) öğrencisiyim. Trendyol ve Insider’da staj yaptım; Halit
               Alptekin, Selçuk Saraç ve Erkan Uçar ile çalışma fırsatı buldum.
-              Bu süreçte öğrendiğim disiplin ve yaklaşımı, şimdi Denizli’deki
-              işletmeler için kullanıyorum.
+              Bu süreçte öğrendiğim disiplin ve yaklaşımı, şimdi eğitim
+              kurumları ve işletmeler için kullanıyorum.
             </p>
             <p>
               Hem küçük hem büyük işletmelerle çalışıyorum. İlk web sitesinden
@@ -61,7 +61,7 @@ export default function FounderSection() {
             </p>
             <p>
             Yazılımı, günlük işinizi kolaylaştırmak, büyümenizi hızlandırmak ve markanızı güçlendirmek için tasarlıyorum.
-              Denizli’de başladığımız bu yolculukta sizin yanınızda olmak istiyorum.<br/>
+              Bu yolculukta sizin yanınızda olmak istiyorum.<br/>
               Dijital tarafı birlikte netleştirelim.
             </p>
             <p className="border-l-2 border-ice pl-4 text-black">
@@ -75,7 +75,7 @@ export default function FounderSection() {
                 Odak
               </dt>
               <dd className="mt-2 text-base text-black">
-                Denizli’deki küçük, orta ve büyük işletmeler
+                Etüt merkezleri, kreşler ve özel okullar
               </dd>
             </div>
             <div>

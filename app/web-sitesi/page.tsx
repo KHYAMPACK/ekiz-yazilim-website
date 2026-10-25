@@ -19,22 +19,22 @@ import { FAQS, WEB_PATH, WEB_WA } from "@/lib/websitesi";
 const pageUrl = `${seo.siteUrl}${WEB_PATH}`;
 
 export const metadata: Metadata = {
-  title: "Denizli Web Sitesi | Keşiften Yayına Kurumsal Site",
+  title: "Web Sitesi | Okul, Kreş ve İşletmeler İçin Kurumsal Site",
   description:
-    "Denizli’de kreş, okul, ofis ve yerel işletmeler için özel web sitesi. Hazır şablon değil — keşiften yayına tek muhatap, yazılı teklif.",
+    "Kreş, okul, etüt merkezi ve işletmeler için özel web sitesi. Hazır şablon değil — keşiften yayına tek muhatap, yazılı teklif.",
   keywords: [
-    "Denizli web sitesi",
-    "Denizli kurumsal site",
-    "küçük işletme web sitesi Denizli",
-    "kreş web sitesi Denizli",
-    "web sitesi yaptırmak Denizli",
+    "kurumsal web sitesi",
+    "kreş web sitesi",
+    "etüt merkezi web sitesi",
+    "özel okul web sitesi",
+    "web sitesi yaptırmak",
     "Ekiz Yazılım",
   ],
   alternates: { canonical: WEB_PATH },
   openGraph: {
-    title: "Denizli Web Sitesi | Keşiften Yayına Kurumsal Site",
+    title: "Web Sitesi | Okul, Kreş ve İşletmeler İçin Kurumsal Site",
     description:
-      "Denizli’de işletmenize özel web sitesi. Keşiften yayına kadar süreci biz yürütürüz.",
+      "İşletmenize özel web sitesi. Keşiften yayına kadar süreci biz yürütürüz.",
     url: pageUrl,
     siteName: site.name,
     locale: "tr_TR",
@@ -42,9 +42,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Denizli Web Sitesi | Keşiften Yayına Kurumsal Site",
+    title: "Web Sitesi | Okul, Kreş ve İşletmeler İçin Kurumsal Site",
     description:
-      "Denizli’de işletmenize özel web sitesi. Keşiften yayına kadar süreci biz yürütürüz.",
+      "İşletmenize özel web sitesi. Keşiften yayına kadar süreci biz yürütürüz.",
   },
 };
 
@@ -56,9 +56,9 @@ function jsonLd() {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
         url: pageUrl,
-        name: "Denizli Web Sitesi | Keşiften Yayına Kurumsal Site",
+        name: "Web Sitesi | Okul, Kreş ve İşletmeler İçin Kurumsal Site",
         description:
-          "Denizli’de kreş, okul, ofis ve yerel işletmeler için özel web sitesi kurulumu.",
+          "Kreş, okul, etüt merkezi ve işletmeler için özel web sitesi kurulumu.",
         isPartOf: { "@id": `${seo.siteUrl}/#website` },
         about: { "@id": `${pageUrl}#service` },
         inLanguage: "tr-TR",
@@ -66,10 +66,10 @@ function jsonLd() {
       {
         "@type": "Service",
         "@id": `${pageUrl}#service`,
-        name: "Denizli web sitesi — keşiften yayına",
+        name: "Web sitesi — keşiften yayına",
         serviceType: "Kurumsal web sitesi kurulumu",
         description:
-          "Denizli’deki işletmeler için özel tasarım web sitesi: keşif, yazılı teklif, kurulum ve yayın.",
+          "Eğitim kurumları ve işletmeler için özel tasarım web sitesi: keşif, yazılı teklif, kurulum ve yayın.",
         provider: {
           "@type": "Organization",
           name: site.name,
@@ -78,12 +78,12 @@ function jsonLd() {
           telephone: site.phone ? `+${site.phone}` : undefined,
         },
         areaServed: {
-          "@type": "City",
-          name: "Denizli",
+          "@type": "Country",
+          name: "Türkiye",
         },
         audience: {
           "@type": "Audience",
-          audienceType: "Yerel işletmeler",
+          audienceType: "Eğitim kurumları ve işletmeler",
         },
         url: pageUrl,
       },
@@ -111,7 +111,7 @@ function jsonLd() {
           {
             "@type": "ListItem",
             position: 2,
-            name: "Denizli web sitesi",
+            name: "Web sitesi",
             item: pageUrl,
           },
         ],
@@ -120,7 +120,7 @@ function jsonLd() {
   };
 }
 
-export default function DenizliWebSitesiPage() {
+export default function WebSitesiPage() {
   const wa = whatsappHref(WEB_WA);
 
   return (

@@ -36,13 +36,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
-      url: `${seo.siteUrl}/denizli-web-sitesi`,
+      url: `${seo.siteUrl}/egitim`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 1,
+    },
+    {
+      url: `${seo.siteUrl}/web-sitesi`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.95,
     },
     {
-      url: `${seo.siteUrl}/denizli-e-ticaret`,
+      url: `${seo.siteUrl}/e-ticaret`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.95,

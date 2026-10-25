@@ -25,7 +25,7 @@ export default function EcommerceSection() {
             id="eticaret-home-title"
             className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
           >
-            Denizli’de butik ve giyim için online mağaza
+            Butik ve giyim için online mağaza
           </h2>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-black/70">
             Instagram ve WhatsApp’tan gelen siparişleri bir online mağazaya
@@ -45,7 +45,7 @@ export default function EcommerceSection() {
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
-              href="/denizli-e-ticaret"
+              href="/e-ticaret"
               className="inline-flex border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
             >
               E-ticaret sayfasına git

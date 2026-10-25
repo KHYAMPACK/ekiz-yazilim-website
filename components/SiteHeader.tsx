@@ -30,8 +30,9 @@ export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const onHome = pathname === "/";
-  const onEticaret = pathname === "/denizli-e-ticaret";
-  const onWeb = pathname === "/denizli-web-sitesi";
+  const onEticaret = pathname === "/e-ticaret";
+  const onWeb = pathname === "/web-sitesi";
+  const onEgitim = pathname === "/egitim";
 
   function close() {
     setOpen(false);
@@ -72,7 +73,20 @@ export default function SiteHeader() {
             ))}
           </ul>
           <Link
-            href="/denizli-web-sitesi"
+            href="/egitim"
+            onClick={close}
+            className={[
+              "shrink-0 border px-3 py-1.5 text-sm font-medium tracking-wide transition-colors",
+              onEgitim
+                ? "border-black bg-black text-white"
+                : "border-black bg-ice text-black hover:bg-black hover:text-white",
+            ].join(" ")}
+            aria-current={onEgitim ? "page" : undefined}
+          >
+            Eğitim kurumları
+          </Link>
+          <Link
+            href="/web-sitesi"
             onClick={close}
             className={[
               "shrink-0 border px-3 py-1.5 text-sm font-medium tracking-wide transition-colors",
@@ -85,7 +99,7 @@ export default function SiteHeader() {
             Web sitesi
           </Link>
           <Link
-            href="/denizli-e-ticaret"
+            href="/e-ticaret"
             onClick={close}
             className={[
               "shrink-0 border px-3 py-1.5 text-sm font-medium tracking-wide transition-colors",
@@ -131,7 +145,22 @@ export default function SiteHeader() {
           <ul className="mx-auto w-full max-w-6xl px-4 sm:px-6">
             <li className="border-b border-black/10 py-3">
               <Link
-                href="/denizli-web-sitesi"
+                href="/egitim"
+                onClick={close}
+                className={[
+                  "flex min-h-11 items-center justify-center border text-sm font-medium tracking-wide",
+                  onEgitim
+                    ? "border-black bg-black text-white"
+                    : "border-black bg-ice text-black",
+                ].join(" ")}
+                aria-current={onEgitim ? "page" : undefined}
+              >
+                Eğitim kurumları
+              </Link>
+            </li>
+            <li className="border-b border-black/10 py-3">
+              <Link
+                href="/web-sitesi"
                 onClick={close}
                 className={[
                   "flex min-h-11 items-center justify-center border text-sm font-medium tracking-wide",
@@ -141,12 +170,12 @@ export default function SiteHeader() {
                 ].join(" ")}
                 aria-current={onWeb ? "page" : undefined}
               >
-                Denizli Web sitesi
+                Web sitesi
               </Link>
             </li>
             <li className="border-b border-black/10 py-3">
               <Link
-                href="/denizli-e-ticaret"
+                href="/e-ticaret"
                 onClick={close}
                 className={[
                   "flex min-h-11 items-center justify-center border text-sm font-medium tracking-wide",
@@ -156,7 +185,7 @@ export default function SiteHeader() {
                 ].join(" ")}
                 aria-current={onEticaret ? "page" : undefined}
               >
-                Denizli E-ticaret
+                E-ticaret
               </Link>
             </li>
             {(onWeb ? webLinks : links).map((link) => (

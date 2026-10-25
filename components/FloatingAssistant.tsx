@@ -21,19 +21,29 @@ type Topic = {
 
 const TOPICS: Topic[] = [
   {
+    id: "egitim",
+    question: "Etüt merkezim / kreşim için sistem arıyorum",
+    title: "Öğrenci takip sistemi",
+    body: "Ödev, yoklama, deneme sınavı, aidat ve veli bildirimi tek uygulamada. Sayfada neler yaptığını görebilirsiniz.",
+    ctas: [
+      { label: "Eğitim kurumları", href: "/egitim", primary: true },
+      { label: "Görüşme ayarla", href: "/egitim#gorusme" },
+    ],
+  },
+  {
     id: "eticaret",
     question: "E-ticarete başlamak istiyorum",
     title: "Online mağaza birlikte kurulur",
-    body: "Butik ve giyim için vitrin, sepet, ödeme ve sipariş paneli. Denizli odaklı sayfada süreci görebilirsiniz.",
+    body: "Butik ve giyim için vitrin, sepet, ödeme ve sipariş paneli. Sayfada süreci görebilirsiniz.",
     ctas: [
       {
         label: "E-ticaret sayfası",
-        href: "/denizli-e-ticaret",
+        href: "/e-ticaret",
         primary: true,
       },
       {
         label: "Görüşme ayarla",
-        href: "/denizli-e-ticaret#gorusme",
+        href: "/e-ticaret#gorusme",
       },
     ],
   },
@@ -41,10 +51,10 @@ const TOPICS: Topic[] = [
     id: "website",
     question: "Web sitesi yaptırmak istiyorum",
     title: "İşinize uygun bir site",
-    body: "Kreş, okul, ofis veya atölye için keşiften yayına özel web sitesi. Denizli sayfasında süreci ve örnek işleri görebilirsiniz.",
+    body: "Kreş, okul, etüt merkezi veya işletmeniz için keşiften yayına özel web sitesi. Sayfada süreci ve örnek işleri görebilirsiniz.",
     ctas: [
-      { label: "Web sitesi sayfası", href: "/denizli-web-sitesi", primary: true },
-      { label: "Görüşme ayarla", href: "/denizli-web-sitesi#gorusme" },
+      { label: "Web sitesi sayfası", href: "/web-sitesi", primary: true },
+      { label: "Görüşme ayarla", href: "/web-sitesi#gorusme" },
     ],
   },
   {

@@ -47,16 +47,22 @@ export default function SiteFooter() {
 
         <div className="flex shrink-0 flex-col gap-3 text-sm text-white/55 md:items-end md:text-right">
           <Link
-            href="/denizli-web-sitesi"
+            href="/egitim"
             className="inline-flex border border-ice/40 bg-ice/15 px-3 py-1.5 text-ice transition-colors hover:bg-ice hover:text-black"
           >
-            Denizli web sitesi
+            Eğitim kurumları
           </Link>
           <Link
-            href="/denizli-e-ticaret"
+            href="/web-sitesi"
             className="transition-colors hover:text-white"
           >
-            Denizli e-ticaret
+            Web sitesi
+          </Link>
+          <Link
+            href="/e-ticaret"
+            className="transition-colors hover:text-white"
+          >
+            E-ticaret
           </Link>
           <Link
             href="/gorunurluk"

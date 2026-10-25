@@ -4,8 +4,8 @@ import WebReveal from "./WebReveal";
 const SIGNALS = [
   {
     label: "Odak",
-    value: "Denizli",
-    note: "Önceliğimiz buradaki işletmeler.",
+    value: "Eğitim",
+    note: "Okul, kreş ve etüt merkezleri önceliğimiz.",
   },
   {
     label: "Yayında",
@@ -52,8 +52,8 @@ export default function WebTrust() {
           </h2>
           <p className="mt-4 text-base leading-relaxed text-black/70 sm:text-lg">
             Merhaba, ben Mert. Bilkent CTIS öğrencisiyim; Trendyol ve Insider’da
-            staj yaptım. Aynı disiplini şimdi Denizli’deki işletmelerin siteleri
-            için kullanıyorum: tek muhatap, yazılı teklif ve yayından sonra da
+            staj yaptım. Aynı disiplini şimdi eğitim kurumlarının ve işletmelerin
+            siteleri için kullanıyorum: tek muhatap, yazılı teklif ve yayından sonra da
             ulaşılabilir bir iletişim.
           </p>
 

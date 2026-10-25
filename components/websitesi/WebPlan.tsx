@@ -166,7 +166,7 @@ export default function WebPlan() {
             İşleri Gör
           </h3>
           <p className="mt-3 text-sm leading-relaxed text-white/50">
-            Denizli’de yayına aldığımız siteler. Hepsi işe özel tasarlandı.
+            Yayına aldığımız siteler. Hepsi işe özel tasarlandı.
           </p>
           <ul className="mt-8 flex flex-1 flex-col">
             {WORKS.map((work, i) => (

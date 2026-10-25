@@ -9,27 +9,25 @@ import SiteHeader from "@/components/SiteHeader";
 import { seo } from "@/lib/seo";
 import { site, whatsappHref } from "@/lib/site";
 
-const path = "/denizli-e-ticaret";
+const path = "/e-ticaret";
 const pageUrl = `${seo.siteUrl}${path}`;
 
 export const metadata: Metadata = {
-  title: "Denizli E-Ticaret | Butik ve Giyim Online Mağaza",
+  title: "E-Ticaret | Butik ve Giyim Online Mağaza",
   description:
-    "Denizli’de butik ve giyim mağazaları için e-ticaret: Instagram ve WhatsApp siparişlerinden kendi online mağazanıza. Ürün vitrini, sepet, ödeme ve sipariş takibi.",
+    "Butik ve giyim mağazaları için e-ticaret: Instagram ve WhatsApp siparişlerinden kendi online mağazanıza. Ürün vitrini, sepet, ödeme ve sipariş takibi.",
   keywords: [
-    "Denizli e-ticaret",
-    "e ticaret Denizli",
-    "Denizli online mağaza",
-    "Denizli butik e-ticaret",
-    "Denizli giyim sitesi",
-    "e-ticaret başlangıç Denizli",
-    "Denizli e ticaret sitesi",
+    "butik e-ticaret",
+    "giyim e-ticaret sitesi",
+    "online mağaza kurulumu",
+    "e-ticaret başlangıç",
+    "butik online mağaza",
   ],
   alternates: { canonical: path },
   openGraph: {
-    title: "Denizli E-Ticaret | Butik ve Giyim Online Mağaza",
+    title: "E-Ticaret | Butik ve Giyim Online Mağaza",
     description:
-      "Denizli’de butik ve giyim için online mağaza: vitrin, sepet, ödeme ve sipariş takibi.",
+      "Butik ve giyim için online mağaza: vitrin, sepet, ödeme ve sipariş takibi.",
     url: pageUrl,
     siteName: site.name,
     locale: "tr_TR",
@@ -37,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Denizli E-Ticaret | Butik ve Giyim Online Mağaza",
+    title: "E-Ticaret | Butik ve Giyim Online Mağaza",
     description:
       "Denizli’de e-ticaret — butik ve giyim için kendi online mağazanız.",
   },
@@ -101,12 +99,12 @@ const STEPS = [
 
 const FAQS = [
   {
-    q: "Denizli’de e-ticarete hiç başlamadım, olur mu?",
+    q: "E-ticarete hiç başlamadım, olur mu?",
     a: "Olur. Ürün vitrini, sipariş ve ödeme ile ilk online mağazanızı kuruyoruz. Özellikle butik ve giyim satan işletmeler için bu sayfayı yazdık.",
   },
   {
     q: "Sadece giyim / butik mi?",
-    a: "Bu sayfa onlara odaklı. Ürün satmayan bir tanıtım sitesi istiyorsanız Denizli web sitesi sayfasına bakın.",
+    a: "Bu sayfa onlara odaklı. Ürün satmayan bir tanıtım sitesi istiyorsanız web sitesi sayfasına bakın.",
   },
   {
     q: "Ne kazanırım?",
@@ -134,7 +132,7 @@ const BENEFITS = [
 ] as const;
 
 const waMessage =
-  "Merhaba, Denizli e-ticaret sayfanızdan yazıyorum. Butik / giyim için online mağazaya birlikte başlamak istiyorum.";
+  "Merhaba, e-ticaret sayfanızdan yazıyorum. Butik / giyim için online mağazaya birlikte başlamak istiyorum.";
 
 function jsonLd() {
   return {
@@ -144,9 +142,9 @@ function jsonLd() {
         "@type": "WebPage",
         "@id": `${pageUrl}#webpage`,
         url: pageUrl,
-        name: "Denizli E-Ticaret | Butik ve Giyim Online Mağaza",
+        name: "E-Ticaret | Butik ve Giyim Online Mağaza",
         description:
-          "Denizli’de butik ve giyim mağazaları için e-ticaret ve online mağaza kurulumu.",
+          "Butik ve giyim mağazaları için e-ticaret ve online mağaza kurulumu.",
         isPartOf: { "@id": `${seo.siteUrl}/#website` },
         about: { "@id": `${pageUrl}#service` },
         inLanguage: "tr-TR",
@@ -154,10 +152,10 @@ function jsonLd() {
       {
         "@type": "Service",
         "@id": `${pageUrl}#service`,
-        name: "Denizli e-ticaret — butik ve giyim online mağaza",
+        name: "E-ticaret — butik ve giyim online mağaza",
         serviceType: "E-ticaret web sitesi kurulumu",
         description:
-          "Denizli’de butik ve giyim satan işletmeler için online mağaza: ürün vitrini, sepet, ödeme ve sipariş takibi.",
+          "Butik ve giyim satan işletmeler için online mağaza: ürün vitrini, sepet, ödeme ve sipariş takibi.",
         provider: {
           "@type": "Organization",
           name: site.name,
@@ -166,8 +164,8 @@ function jsonLd() {
           telephone: site.phone ? `+${site.phone}` : undefined,
         },
         areaServed: {
-          "@type": "City",
-          name: "Denizli",
+          "@type": "Country",
+          name: "Türkiye",
         },
         audience: {
           "@type": "Audience",
@@ -199,7 +197,7 @@ function jsonLd() {
           {
             "@type": "ListItem",
             position: 2,
-            name: "Denizli e-ticaret",
+            name: "E-ticaret",
             item: pageUrl,
           },
         ],
@@ -208,7 +206,7 @@ function jsonLd() {
   };
 }
 
-export default function DenizliEticaretPage() {
+export default function EticaretPage() {
   const wa = whatsappHref(waMessage);
 
   return (
@@ -223,10 +221,10 @@ export default function DenizliEticaretPage() {
           <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-12">
             <div className="mx-auto w-full max-w-xl text-center lg:mx-0 lg:max-w-none lg:text-left">
               <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                Denizli · E-ticaret
+                E-ticaret
               </p>
               <h1 className="text-3xl font-medium tracking-tight text-black sm:text-5xl">
-                Denizli’de butik ve giyim için online mağaza
+                Butik ve giyim için online mağaza
               </h1>
               <p className="mt-5 text-base leading-relaxed text-black/70 sm:text-lg lg:max-w-lg">
                 {site.name} olarak Instagram ve WhatsApp siparişlerini online

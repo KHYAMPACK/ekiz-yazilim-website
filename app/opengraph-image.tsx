@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { LOGO_PATHS } from "@/components/logoPaths";
 
-export const alt = "Ekiz Yazılım — Denizli web sitesi ve e-ticaret";
+export const alt = "Ekiz Yazılım — Eğitim kurumları için öğrenci takip sistemi ve web sitesi";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -67,7 +67,7 @@ export default function OpenGraphImage() {
               maxWidth: 900,
             }}
           >
-            Denizli’de web sitesi ve e-ticaret
+            Eğitim kurumları için öğrenci takip sistemi ve web sitesi
           </div>
           <div
             style={{

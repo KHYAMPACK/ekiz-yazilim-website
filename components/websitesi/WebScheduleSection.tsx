@@ -31,7 +31,7 @@ export default function WebScheduleSection() {
 
     const fullName = [ad.trim(), soyad.trim()].filter(Boolean).join(" ");
     const mesaj = [
-      "Denizli web sitesi — görüşme talebi.",
+      "Web sitesi — görüşme talebi.",
       `Ad: ${fullName}.`,
       not.trim() ? `Not: ${not.trim()}` : "",
     ]
@@ -46,7 +46,7 @@ export default function WebScheduleSection() {
           step: "complete",
           mesaj,
           telefon: telefon.trim(),
-          answers: { kaynak: "denizli-web-sitesi-gorusme" },
+          answers: { kaynak: "web-sitesi-gorusme" },
         }),
       });
       const data = (await res.json()) as { ok?: boolean; error?: string };

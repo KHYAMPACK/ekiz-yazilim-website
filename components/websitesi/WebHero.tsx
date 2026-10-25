@@ -39,7 +39,7 @@ export default function WebHero({ wa }: Props) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
           >
-            Denizli · Web sitesi
+            Web sitesi
           </motion.p>
 
           <h1 className="text-[clamp(2.6rem,8vw,5.6rem)] leading-[1.05] font-medium tracking-tight text-black">

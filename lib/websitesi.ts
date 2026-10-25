@@ -1,7 +1,7 @@
-export const WEB_PATH = "/denizli-web-sitesi";
+export const WEB_PATH = "/web-sitesi";
 
 export const WEB_WA =
-  "Merhaba, Denizli web sitesi sayfanızdan yazıyorum. İşletmem için bir site kurmak istiyorum.";
+  "Merhaba, web sitesi sayfanızdan yazıyorum. İşletmem için bir site kurmak istiyorum.";
 
 export const CLIENTS = [
   "Şahika Öncü Minikler",
@@ -237,11 +237,11 @@ export const COMPARE_ROWS = [
 export const FAQS = [
   {
     q: "Bu Sayfa Kimler İçin?",
-    a: "Denizli’de kreş, okul, ofis, atölye, klinik veya yerel bir işletmesi olan; ürün satmayan, kendini anlatan bir site isteyenler için.",
+    a: "Kreş, okul, etüt merkezi, ofis, atölye, klinik veya bir işletmesi olan; ürün satmayan, kendini anlatan bir site isteyenler için.",
   },
   {
     q: "Bu E-Ticaret Mi?",
-    a: "Hayır. Bu sayfa tanıtım ve kurumsal site içindir. Ürün satıp sepet ve ödeme istiyorsanız Denizli e-ticaret sayfasına bakın.",
+    a: "Hayır. Bu sayfa tanıtım ve kurumsal site içindir. Ürün satıp sepet ve ödeme istiyorsanız e-ticaret sayfasına bakın.",
   },
   {
     q: "Hazır Şablon Mu Kullanıyorsunuz?",
@@ -253,7 +253,7 @@ export const FAQS = [
   },
   {
     q: "Fiyat Nasıl Belirleniyor?",
-    a: "Tipik bir tanıtım sitesi 10.000 ₺ civarında çıkar. Bu sabit bir paket fiyatı değil — kapsam keşifte netleşir. Görüşmeden sonra yazılı teklif gelir; sonradan eklenen gizli ücret yok.",
+    a: "Tipik bir tanıtım sitesi 20.000 ₺ civarında çıkar. Bu sabit bir paket fiyatı değil — kapsam keşifte netleşir. Görüşmeden sonra yazılı teklif gelir; sonradan eklenen gizli ücret yok.",
   },
   {
     q: "Logom Veya Fotoğrafım Yoksa?",
@@ -268,7 +268,7 @@ export const FAQS = [
     a: "Evet. Site yayına çıktıktan sonra da yanınızdayız. Metin, görsel ve küçük güncellemeler için her zaman yazabilirsiniz. Daha büyük eklemeler ayrıca konuşulur.",
   },
   {
-    q: "Denizli Dışında Da Çalışır Mısınız?",
-    a: "Önceliğimiz Denizli. Uzaktan da çalışabiliriz; odak şimdilik yerelde.",
+    q: "Başka Şehirlerden Çalışır Mısınız?",
+    a: "Evet. Merkezimiz Denizli, ama Türkiye genelinde uzaktan çalışıyoruz. Görüşme ve teslim online yapılır.",
   },
 ] as const;
