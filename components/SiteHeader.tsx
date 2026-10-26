@@ -10,7 +10,6 @@ const links = [
   { href: "/#surec", label: "Süreç" },
   { href: "/isler", label: "İşler", route: true },
   { href: "/ilham", label: "İlham", route: true },
-  { href: "/gorunurluk", label: "Görünürlük", route: true },
   { href: "/#kurucu", label: "Kurucu" },
   { href: "/#sss", label: "SSS" },
   { href: "/#iletisim", label: "İletişim" },

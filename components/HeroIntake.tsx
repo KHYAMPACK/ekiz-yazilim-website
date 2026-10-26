@@ -31,9 +31,9 @@ const solutions = [
     prompt: "İşletmemi tanıtan sade bir tanıtım / landing sayfası istiyorum.",
   },
   {
-    id: "visibility",
-    label: "Görünürlük",
-    href: "/gorunurluk",
+    id: "education",
+    label: "Eğitim Kurumları",
+    href: "/egitim",
   },
   {
     id: "custom",

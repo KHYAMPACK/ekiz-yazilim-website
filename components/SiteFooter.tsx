@@ -64,12 +64,6 @@ export default function SiteFooter() {
           >
             E-ticaret
           </Link>
-          <Link
-            href="/gorunurluk"
-            className="transition-colors hover:text-white"
-          >
-            Görünürlük analizi
-          </Link>
           <Link href="/ilham" className="transition-colors hover:text-white">
             İlham
           </Link>

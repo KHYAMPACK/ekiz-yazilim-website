@@ -58,16 +58,6 @@ const TOPICS: Topic[] = [
     ],
   },
   {
-    id: "gorunurluk",
-    question: "Google’da daha görünür olmak istiyorum",
-    title: "Görünürlük raporu",
-    body: "Kısa formdan sonra sizi arayıp sitenizin ve Google’daki durumunuzu anlaşılır bir özetle paylaşırız.",
-    ctas: [
-      { label: "Görünürlük formu", href: "/gorunurluk", primary: true },
-      { label: "Randevu", href: "/randevu" },
-    ],
-  },
-  {
     id: "surec",
     question: "Süreç ve fiyat nasıl işler?",
     title: "Önce netlik, sonra teklif",

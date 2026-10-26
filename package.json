@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "export:brand": "node scripts/export-brand-pngs.mjs"
+    "export:brand": "node scripts/export-brand-pngs.mjs",
+    "site-report": "node scripts/site-report/cli.mjs"
   },
   "dependencies": {
     "motion": "^13.1.0",

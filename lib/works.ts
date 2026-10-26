@@ -217,9 +217,8 @@ export const works: Work[] = [
     tags: ["web"],
     status: "live",
     blurb:
-      "Stüdyonun kendi sitesi ve müşteri akışı. İçinde işletmeler için web görünürlük analizi aracı da var.",
+      "Stüdyonun kendi sitesi ve müşteri akışı. Müşteri akışı ve randevu / proje formu da içinde.",
     highlights: [
-      "Görünürlük analizi: işletmeye özel, erişim korumalı rapor",
       "Tasarım ilham testi ve randevu / proje formu",
       "Yerel SEO için hizmet sayfaları, Resend ile e-posta",
     ],

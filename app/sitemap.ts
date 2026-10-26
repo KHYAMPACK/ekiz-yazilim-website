@@ -53,11 +53,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.95,
     },
-    {
-      url: `${seo.siteUrl}/gorunurluk`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
   ];
 }

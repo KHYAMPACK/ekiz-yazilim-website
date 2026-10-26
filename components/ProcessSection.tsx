@@ -3,12 +3,12 @@ export default function ProcessSection() {
     {
       n: "01",
       title: "1. Aşama: Keşif",
-      body: "İhtiyacı netleştiririz — isterseniz görünürlük formu ve kısa görüşmeyle başlarız.",
+      body: "İhtiyacı netleştiririz — kısa bir görüşmeyle ve mevcut siteniz varsa kısa bir site raporuyla başlarız.",
     },
     {
       n: "02",
       title: "2. Aşama: Teklif",
-      body: "Kapsam, süre ve fiyatı belirleriz; skorlu rapor varsa öncelikler netleşir.",
+      body: "Kapsam, süre ve fiyatı belirleriz; rapor varsa öncelikler netleşir.",
     },
     {
       n: "03",

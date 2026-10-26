@@ -12,10 +12,6 @@ const faqs = [
     a: "Basit bir tanıtım / landing sitesi genelde kısa sürede çıkar. E-ticaret ve özel yazılım işin büyüklüğüne göre planlanır; süre teklifte yazar.",
   },
   {
-    q: "Görünürlük Analizi Nedir?",
-    a: "Kısa bir form ve görüşmeden sonra sitenizin ve Google’daki durumunuzu sade bir raporla özetleriz: nerede güçlüsünüz, önce ne yapılmalı. PDF olarak elinizde kalır.",
-  },
-  {
     q: "E-Ticarete Sıfırdan Mı Başlıyorsunuz?",
     a: "Evet. Ürün satan işletmeler için online mağaza kuruyoruz: ürün vitrini, sipariş ve ödeme düzeni, ilk yayına net bir yol. Butik ve giyim için ayrı bir sayfamız da var.",
   },
