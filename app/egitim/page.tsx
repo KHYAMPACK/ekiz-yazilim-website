@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import EgitimMockups from "@/components/egitim/EgitimMockups";
 import EgitimScheduleSection from "@/components/egitim/EgitimScheduleSection";
 import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
@@ -8,9 +9,10 @@ import { site, whatsappHref } from "@/lib/site";
 
 const path = "/egitim";
 const pageUrl = `${seo.siteUrl}${path}`;
-const title = "Etüt Merkezi, Kreş ve Özel Okul İçin Öğrenci Takip Sistemi";
+const SCHOLARES_URL = "https://scholares.site";
+const title = "LGS Hazırlık Kurumları ve Etüt Merkezleri İçin Öğrenci Takip Sistemi";
 const description =
-  "Ödev, yoklama, deneme sınavı, aidat ve veli bildirimi tek uygulamada. Etüt merkezleri, kreşler ve özel okullar için öğrenci takip sistemi ve kurumsal web sitesi. Türkiye genelinde uzaktan kurulum.";
+  "Deneme sınavı analizi, yoklama, ödev ve veli bildirimi tek uygulamada. LGS hazırlık kurumları, etüt merkezleri ve kreşler için öğrenci takip sistemi (Scholares) ve kurumsal web sitesi. Türkiye genelinde uzaktan kurulum.";
 
 export const metadata: Metadata = {
   title,
@@ -96,7 +98,7 @@ const PROOF = [
 const FAQS = [
   {
     q: "Fiyat nasıl belirleniyor?",
-    a: "Yıllık lisans olarak, öğrenci kapasitenize göre. Görüşmede öğrenci sayınızı öğrenir, yazılı teklif veririz. Gizli kalem yok.",
+    a: "Önce kapsamı ve başarı ölçütlerini yazılı belirlediğimiz kısa, ücretli bir pilot yaparız. Sonrasında öğrenci kapasitenize göre yıllık lisans. Görüşmede öğrenci sayınızı öğrenir, yazılı teklif veririz. Gizli kalem yok.",
   },
   {
     q: "Kurulum için ek ücret var mı?",
@@ -191,17 +193,26 @@ export default function EgitimPage() {
           <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-24">
             <p className={eyebrow}>Eğitim kurumları için</p>
             <h1 className="max-w-4xl text-[clamp(2.2rem,6vw,4.2rem)] leading-[1.08] font-medium tracking-tight text-black">
-              Etüt merkezi, kreş ve özel okullar için öğrenci takip sistemi
+              LGS hazırlık kurumları ve etüt merkezleri için öğrenci takip sistemi
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-black/70 sm:text-lg">
-              Ödev, yoklama, deneme sınavı, aidat ve veli bildirimi tek
-              uygulamada. Kurumsal web sitenizi de aynı yerden, tek muhatapla
-              kuruyoruz. Atlas Eğitim Kurumu’nda her gün kullanılıyor.
+              Deneme sınavı analizi, yoklama, ödev ve veli bildirimi tek
+              uygulamada: <strong className="font-medium text-black">Scholares</strong>.
+              Kurumsal web sitenizi de aynı yerden, tek muhatapla kuruyoruz.
+              Atlas Eğitim Kurumu’nda her gün kullanılıyor.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href={SCHOLARES_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
+              >
+                Scholares’i incele
+              </a>
               <Link
                 href="#gorusme"
-                className="inline-flex border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
+                className="inline-flex border border-black px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-ice/40"
               >
                 Demo iste
               </Link>
@@ -261,7 +272,20 @@ export default function EgitimPage() {
           </div>
         </section>
 
-        <section className="border-b border-black bg-ice/30" aria-labelledby="egitim-proof">
+        <section className="border-b border-black bg-ice/30" aria-labelledby="egitim-screens">
+          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+            <p className={eyebrow}>Uygulamadan</p>
+            <h2 id="egitim-screens" className={h2}>
+              Öğretmen ne girer, veli ne görür?
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-black/65">
+              Aşağıdaki ekranlar örnek verilerle hazırlanmış görünümlerdir.
+            </p>
+            <EgitimMockups />
+          </div>
+        </section>
+
+        <section className="border-b border-black bg-white" aria-labelledby="egitim-proof">
           <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
             <p className={eyebrow}>Referanslar</p>
             <h2 id="egitim-proof" className={h2}>
@@ -306,8 +330,9 @@ export default function EgitimPage() {
               ))}
             </ol>
             <p className="mt-6 max-w-2xl text-sm leading-relaxed text-black/65">
-              Yıllık lisans, öğrenci kapasitenize göre. İlk yıl kurulum ve
-              eğitim dahil. Görüşmeden sonra yazılı teklif gelir.
+              Önce yazılı kapsamlı ve başarı ölçütlü ücretli bir pilotla
+              başlıyoruz; memnun kalırsanız öğrenci kapasitenize göre yıllık
+              lisansa geçilir. İlk yıl kurulum ve eğitim dahil.
             </p>
           </div>
         </section>
