@@ -56,51 +56,39 @@ export default function EgitimScheduleSection() {
     }
   }
 
-  const field =
-    "min-h-12 border border-black bg-white px-4 text-base text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice";
+  const field = "sc-input";
 
   return (
     <section
       id="gorusme"
-      className="border-b border-black bg-white"
+      className="sc-glow border-t border-sc-border"
       aria-labelledby="egitim-gorusme-title"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14">
+      <div className="sc-container sc-section grid gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-16">
         <div>
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            Başlayalım
-          </p>
-          <h2
-            id="egitim-gorusme-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Demoyu Birlikte İnceleyelim.
+          <p className="sc-eyebrow mb-3">Başlayalım</p>
+          <h2 id="egitim-gorusme-title" className="sc-h2">
+            Demoyu Birlikte <span className="sc-em">İnceleyelim.</span>
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-black/65">
+          <p className="sc-lead mt-5">
             Formu doldurun; sizi arayıp kurumunuzun ihtiyacını 15–20 dakikada
             netleştirelim, sistemi canlı gösterelim. Ardından öğrenci
             sayınıza göre yazılı teklif gelir.
           </p>
         </div>
 
-        <div className="border border-black bg-white p-5 sm:p-6">
+        <div className="sc-card sc-card--lg p-6 sm:p-8">
           {status === "ok" ? (
             <div role="status" className="py-6">
-              <p className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                Talebiniz alındı
-              </p>
-              <p className="mt-3 text-xl font-medium tracking-tight text-black">
-                En Kısa Sürede Sizi Arayacağız.
-              </p>
-              <p className="mt-2 text-sm text-black/60">
+              <p className="sc-eyebrow">Talebiniz alındı</p>
+              <p className="sc-h3 mt-3">En Kısa Sürede Sizi Arayacağız.</p>
+              <p className="sc-body mt-2 !text-sm">
                 Numaranızı aldık. Uygun bir zamanda dönüş yaparız.
               </p>
             </div>
           ) : (
             <form onSubmit={submit} className="flex flex-col gap-3">
-              <p className="mb-1 text-xs font-medium tracking-[0.16em] uppercase text-black/45">
-                Demo / görüşme talebi
-              </p>
+              <p className="sc-eyebrow mb-1">Demo / görüşme talebi</p>
               <label className="sr-only" htmlFor="egitim-ad">
                 Ad Soyad
               </label>
@@ -157,14 +145,14 @@ export default function EgitimScheduleSection() {
                 className={field}
               />
               {error && (
-                <p className="text-sm text-black" role="alert">
+                <p className="text-sm text-sc-accent-text" role="alert">
                   {error}
                 </p>
               )}
               <button
                 type="submit"
                 disabled={status === "sending" || !telefon.trim()}
-                className="mt-2 inline-flex min-h-11 items-center justify-center border border-black bg-black px-5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
+                className="sc-btn sc-btn--primary mt-2"
               >
                 {status === "sending" ? "…" : "Demo iste →"}
               </button>

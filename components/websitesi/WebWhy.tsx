@@ -9,7 +9,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 function CheckIcon() {
   return (
     <span
-      className="mt-0.5 flex size-5 shrink-0 items-center justify-center bg-black text-ice"
+      className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-sc-accent text-sc-on-accent"
       aria-hidden
     >
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -26,7 +26,7 @@ function CheckIcon() {
 function DashIcon() {
   return (
     <span
-      className="mt-0.5 flex size-5 shrink-0 items-center justify-center border border-black/25 text-black/35"
+      className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border border-sc-border text-sc-muted"
       aria-hidden
     >
       <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -42,28 +42,23 @@ export default function WebWhy() {
   return (
     <section
       id="neden"
-      className="border-b border-black bg-ice/30"
+      className="sc-section"
       aria-labelledby="neden-title"
     >
-      <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+      <div className="sc-container">
         <WebReveal className="mx-auto max-w-2xl text-center">
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            Neden biz?
-          </p>
-          <h2
-            id="neden-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Online Olmanın Daha Net Yolu.
+          <p className="sc-eyebrow mb-4">Neden biz?</p>
+          <h2 id="neden-title" className="sc-h2">
+            Online olmanın <span className="sc-em">daha net</span> yolu.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-black/65">
+          <p className="sc-lead mt-5">
             Hazır site, freelance veya klasik ajansla karşılaştırdığınızda süre,
             fiyat ve yayın sonrası destek çoğu zaman belirsiz kalır. Ekiz’de
             kapsam yazılıdır; yayından sonra da yanınızdayız.
           </p>
         </WebReveal>
 
-        <div className="mt-10 overflow-x-auto border border-black bg-white">
+        <div className="sc-card sc-card--lg mt-12 overflow-x-auto overflow-y-hidden">
           <table className="w-full min-w-[40rem] border-collapse text-left">
             <caption className="sr-only">
               Ekiz, ajans, freelance ve kendin yap karşılaştırması
@@ -72,7 +67,7 @@ export default function WebWhy() {
               <tr>
                 <th
                   scope="col"
-                  className="w-[18%] border-b border-black bg-white px-4 py-3 text-xs font-medium tracking-[0.16em] uppercase text-black/40"
+                  className="w-[18%] border-b border-sc-border px-4 py-4 text-xs font-medium tracking-[0.16em] text-sc-muted uppercase"
                 >
                   <span className="sr-only">Kriter</span>
                 </th>
@@ -80,10 +75,10 @@ export default function WebWhy() {
                   <th
                     key={col.key}
                     scope="col"
-                    className={`border-b border-l border-black px-4 py-3 text-xs font-medium tracking-[0.16em] uppercase ${
+                    className={`border-b border-l border-sc-border px-4 py-4 text-xs font-medium tracking-[0.16em] uppercase ${
                       col.ours
-                        ? "bg-ice text-black"
-                        : "bg-black text-white"
+                        ? "bg-sc-accent text-sc-on-accent"
+                        : "text-sc-muted"
                     }`}
                   >
                     {col.label}
@@ -106,8 +101,8 @@ export default function WebWhy() {
                 >
                   <th
                     scope="row"
-                    className={`px-4 py-4 text-xs font-medium tracking-[0.16em] uppercase text-black/45 ${
-                      i < COMPARE_ROWS.length - 1 ? "border-b border-black/10" : ""
+                    className={`px-4 py-4 text-xs font-medium tracking-[0.16em] text-sc-muted uppercase ${
+                      i < COMPARE_ROWS.length - 1 ? "border-b border-sc-border" : ""
                     }`}
                   >
                     {row.label}
@@ -117,13 +112,13 @@ export default function WebWhy() {
                     return (
                       <td
                         key={col.key}
-                        className={`border-l border-black/10 px-4 py-4 ${
+                        className={`border-l border-sc-border px-4 py-4 ${
                           i < COMPARE_ROWS.length - 1
-                            ? "border-b border-black/10"
+                            ? "border-b border-sc-border"
                             : ""
-                        } ${col.ours ? "bg-ice/35" : "bg-white"}`}
+                        } ${col.ours ? "bg-sc-accent/10" : ""}`}
                       >
-                        <span className="flex items-start gap-2.5 text-sm leading-snug text-black">
+                        <span className="flex items-start gap-2.5 text-sm leading-snug text-sc-text">
                           {col.ours ? <CheckIcon /> : <DashIcon />}
                           {value}
                         </span>

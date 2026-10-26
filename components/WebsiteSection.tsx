@@ -11,46 +11,36 @@ export default function WebsiteSection() {
   return (
     <section
       id="web-sitesi"
-      className="border-b border-black bg-ice/30"
+      className="border-t border-sc-border bg-sc-surface"
       aria-labelledby="websitesi-home-title"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
+      <div className="sc-container sc-section grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-16">
         <div>
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            Web sitesi
-          </p>
-          <h2
-            id="websitesi-home-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Okul, Kreş Ve Etüt Merkezleri İçin Özel Web Sitesi
+          <p className="sc-eyebrow mb-4">Web sitesi</p>
+          <h2 id="websitesi-home-title" className="sc-h2">
+            Okul, kreş ve etüt merkezleri için{" "}
+            <span className="sc-em">özel web sitesi</span>
           </h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-black/70">
+          <p className="sc-lead mt-5 max-w-xl">
             Kreş, okul, etüt merkezi veya işletmeniz için işinizi anlatan bir
-            site. Keşiften yayına kadar tasarımı ve kurulumu biz yürütürüz.
+            site. Keşiften yayına tasarımı ve kurulumu biz yürütürüz.
           </p>
-          <ul className="mt-6 space-y-2.5">
+          <ul className="mt-7 space-y-3">
             {points.map((line) => (
-              <li
-                key={line}
-                className="flex gap-2.5 text-sm leading-relaxed text-black/70"
-              >
-                <span className="mt-2 h-1 w-1 shrink-0 bg-black" aria-hidden />
+              <li key={line} className="flex gap-3 text-[0.9375rem] text-sc-text">
+                <span
+                  className="mt-[0.55rem] size-1.5 shrink-0 rounded-full bg-sc-accent"
+                  aria-hidden
+                />
                 {line}
               </li>
             ))}
           </ul>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/web-sitesi"
-              className="inline-flex border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
-            >
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link href="/web-sitesi" className="sc-btn sc-btn--primary">
               Web sitesi sayfasına git
             </Link>
-            <Link
-              href="/web-sitesi#gorusme"
-              className="inline-flex border border-black px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-ice/40"
-            >
+            <Link href="/web-sitesi#gorusme" className="sc-btn sc-btn--ghost">
               Görüşme ayarla
             </Link>
           </div>
@@ -58,7 +48,7 @@ export default function WebsiteSection() {
 
         <Link
           href="/web-sitesi"
-          className="group relative w-full overflow-hidden border border-black bg-ice/20 lg:justify-self-end"
+          className="group relative block w-full overflow-hidden rounded-3xl border border-sc-border bg-sc-bg shadow-[0_30px_80px_-30px_rgba(229,138,92,0.3)]"
         >
           <Image
             src="/works/sahika-desktop.png"
@@ -66,10 +56,11 @@ export default function WebsiteSection() {
             width={1280}
             height={720}
             className="aspect-[16/10] h-auto w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-            sizes="(max-width: 1024px) 100vw, 420px"
+            sizes="(max-width: 1024px) 100vw, 560px"
           />
-          <span className="absolute right-0 bottom-0 border-t border-l border-black bg-white px-3 py-1.5 text-xs font-medium tracking-wide text-black">
-            Yayında →
+          <span className="absolute right-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-[#121211]/85 px-3.5 py-1.5 text-xs font-medium text-sc-text backdrop-blur">
+            <span className="size-1.5 rounded-full bg-sc-accent" aria-hidden />
+            Yayında
           </span>
         </Link>
       </div>

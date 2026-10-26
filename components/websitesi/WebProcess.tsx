@@ -20,21 +20,16 @@ export default function WebProcess() {
   return (
     <section
       id="surec"
-      className="bg-black text-white"
+      className="border-t border-sc-border bg-sc-surface"
       aria-labelledby="web-surec-title"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 pt-14 pb-0 sm:px-6 sm:pt-20 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
-        <div className="lg:sticky lg:top-24 lg:self-start">
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-ice">
-            İş akışı
-          </p>
-          <h2
-            id="web-surec-title"
-            className="text-3xl font-medium tracking-tight text-white sm:text-4xl"
-          >
-            İş Akışımız
+      <div className="sc-container grid gap-10 pt-16 pb-6 sm:pt-24 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <p className="sc-eyebrow mb-4">İş akışı</p>
+          <h2 id="web-surec-title" className="sc-h2">
+            İş <span className="sc-em">akışımız</span>
           </h2>
-          <p className="mt-4 max-w-sm text-base leading-relaxed text-white/60">
+          <p className="sc-lead mt-5 max-w-sm">
             Keşiften yayına, ardından sürekli destek. Siz işinizi anlatırsınız;
             gerisini biz yürütürüz.
           </p>
@@ -42,13 +37,13 @@ export default function WebProcess() {
 
         <div ref={ref} className="relative">
           <div
-            className="absolute top-2 bottom-0 left-[11px] w-px bg-white/15 sm:left-[15px]"
+            className="absolute top-2 bottom-0 left-[15px] w-px bg-sc-border sm:left-[19px]"
             aria-hidden
           />
           {!reduce && (
             <motion.div
               style={{ scaleY }}
-              className="absolute top-2 bottom-0 left-[11px] w-px origin-top bg-ice sm:left-[15px]"
+              className="absolute top-2 bottom-0 left-[15px] w-px origin-top bg-sc-accent sm:left-[19px]"
               aria-hidden
             />
           )}
@@ -67,16 +62,18 @@ export default function WebProcess() {
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
-                <span className="relative z-10 mt-0.5 flex size-6 items-center justify-center border border-ice bg-black text-[10px] font-medium tracking-wide text-ice sm:size-8 sm:text-xs">
+                <span className="relative z-10 mt-0.5 flex size-8 items-center justify-center rounded-full border border-sc-accent bg-sc-surface text-[11px] font-medium tracking-wide text-sc-accent-text sm:size-10 sm:text-xs">
                   {step.n}
                 </span>
-                <div className={i < STEPS.length - 1 ? "border-b border-white/10 pb-6 sm:pb-8" : ""}>
-                  <h3 className="text-xl font-medium tracking-tight text-white sm:text-2xl">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/60 sm:text-base">
-                    {step.body}
-                  </p>
+                <div
+                  className={
+                    i < STEPS.length - 1
+                      ? "border-b border-sc-border pb-6 sm:pb-8"
+                      : "pb-6 sm:pb-10"
+                  }
+                >
+                  <h3 className="sc-h3">{step.title}</h3>
+                  <p className="sc-body mt-2">{step.body}</p>
                 </div>
               </motion.li>
             ))}

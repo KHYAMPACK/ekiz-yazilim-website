@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import SiteFooter from "@/components/SiteFooter";
-import SiteHeader from "@/components/SiteHeader";
+import ScFooter from "@/components/ScFooter";
+import ScHeader from "@/components/ScHeader";
 import WorksGrid from "@/components/WorksGrid";
 import { STACK_GROUPS, works } from "@/lib/works";
 
@@ -19,30 +19,27 @@ const stats = [
 
 export default function IslerPage() {
   return (
-    <>
-      <SiteHeader />
+    <div className="sc-root">
+      <ScHeader />
       <main>
-        <section className="border-b border-black bg-white">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-              İşler
-            </p>
-            <h1 className="max-w-3xl text-3xl font-medium tracking-tight text-black sm:text-5xl">
-              Yaptığım her şey
+        <section className="sc-glow">
+          <div className="sc-container sc-section">
+            <p className="sc-eyebrow mb-4">İşler</p>
+            <h1 className="sc-h1 max-w-3xl">
+              Yaptığım <span className="sc-em">her şey</span>
             </h1>
-            <p className="mt-4 max-w-2xl text-base leading-relaxed text-black/70 sm:text-lg">
+            <p className="sc-lead mt-6 max-w-2xl">
               Kurumsal sitelerden e-ticaret altyapısına, okul yönetim
               uygulamasından oyuna kadar tüm işler. Satıştan tasarıma, kodlamadan
               yayına kadar her birini uçtan uca ben yürütüyorum.
             </p>
-            <dl className="mt-10 grid max-w-xl grid-cols-3 border border-black">
-              {stats.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className={`px-4 py-5 ${i > 0 ? "border-l border-black" : ""}`}
-                >
-                  <dt className="text-xs tracking-wide text-black/55">{stat.label}</dt>
-                  <dd className="mt-1 text-3xl font-medium tracking-tight">{stat.value}</dd>
+            <dl className="mt-12 grid max-w-2xl grid-cols-3 gap-3 sm:gap-4">
+              {stats.map((stat) => (
+                <div key={stat.label} className="sc-card px-4 py-5 sm:px-6 sm:py-6">
+                  <dd className="font-display text-4xl tracking-tight text-sc-text sm:text-5xl">
+                    {stat.value}
+                  </dd>
+                  <dt className="mt-1 text-xs text-sc-muted sm:text-sm">{stat.label}</dt>
                 </div>
               ))}
             </dl>
@@ -50,25 +47,20 @@ export default function IslerPage() {
         </section>
 
         <section
-          className="border-b border-black bg-ice/30"
+          className="border-t border-sc-border"
           aria-labelledby="isler-stack-title"
         >
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
-            <h2
-              id="isler-stack-title"
-              className="text-2xl font-medium tracking-tight text-black sm:text-3xl"
-            >
-              Kullandığım teknolojiler
+          <div className="sc-container sc-section">
+            <h2 id="isler-stack-title" className="sc-h2">
+              Kullandığım <span className="sc-em">teknolojiler</span>
             </h2>
-            <div className="mt-8 grid gap-px border border-black bg-black sm:grid-cols-2 lg:grid-cols-5">
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {STACK_GROUPS.map((group) => (
-                <div key={group.title} className="bg-white px-5 py-5">
-                  <h3 className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                    {group.title}
-                  </h3>
-                  <ul className="mt-3 space-y-1.5">
+                <div key={group.title} className="sc-card p-5">
+                  <h3 className="sc-eyebrow">{group.title}</h3>
+                  <ul className="mt-4 space-y-2">
                     {group.items.map((item) => (
-                      <li key={item} className="text-sm text-black">
+                      <li key={item} className="text-sm text-sc-text">
                         {item}
                       </li>
                     ))}
@@ -80,21 +72,18 @@ export default function IslerPage() {
         </section>
 
         <section
-          className="border-b border-black bg-white"
+          className="border-t border-sc-border"
           aria-labelledby="isler-list-title"
         >
-          <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-            <h2
-              id="isler-list-title"
-              className="mb-6 text-2xl font-medium tracking-tight text-black sm:text-3xl"
-            >
-              Projeler
+          <div className="sc-container sc-section">
+            <h2 id="isler-list-title" className="sc-h2 mb-10">
+              <span className="sc-em">Projeler</span>
             </h2>
             <WorksGrid />
           </div>
         </section>
       </main>
-      <SiteFooter />
-    </>
+      <ScFooter />
+    </div>
   );
 }

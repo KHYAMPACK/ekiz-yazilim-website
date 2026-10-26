@@ -28,12 +28,14 @@ export default function WorksGrid() {
               type="button"
               onClick={() => setFilter(item.id)}
               aria-pressed={active}
-              className={`inline-flex min-h-10 items-center gap-2 border border-black px-4 text-sm font-medium transition-colors ${
-                active ? "bg-black text-white" : "bg-white text-black hover:bg-ice/40"
+              className={`inline-flex min-h-10 items-center gap-2 rounded-full border px-4 text-sm font-medium transition-colors ${
+                active
+                  ? "border-sc-accent bg-sc-accent text-sc-on-accent"
+                  : "border-sc-border text-sc-text hover:border-sc-accent"
               }`}
             >
               {item.label}
-              <span className={active ? "text-white/60" : "text-black/45"}>{count}</span>
+              <span className={active ? "text-sc-on-accent/65" : "text-sc-muted"}>{count}</span>
             </button>
           );
         })}

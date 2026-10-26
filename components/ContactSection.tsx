@@ -72,82 +72,69 @@ export default function ContactSection() {
   return (
     <section
       id="iletisim"
-      className="border-b border-black bg-white"
+      className="relative overflow-hidden border-t border-sc-border bg-sc-bg"
       aria-labelledby="iletisim-title"
     >
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20 lg:py-20">
-        <div className="max-w-xl">
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            İletişim
-          </p>
-          <h2
-            id="iletisim-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Birlikte Çalışalım
+      <div className="sc-glow pointer-events-none absolute inset-0" />
+      <div className="sc-container sc-section relative">
+        <div className="max-w-2xl">
+          <p className="sc-eyebrow mb-4">İletişim</p>
+          <h2 id="iletisim-title" className="sc-h2">
+            Birlikte <span className="sc-em">çalışalım</span>
           </h2>
-          <p className="mt-4 text-base text-black/65">
+          <p className="sc-lead mt-4">
             Arayın, yazın veya formu doldurun. {site.responseTime}.
           </p>
         </div>
 
-        <div className="mt-10 grid w-full items-stretch gap-6 lg:mt-12 lg:grid-cols-2 lg:gap-8">
-          <div className="flex min-w-0 flex-col border border-black">
-            <dl className="flex flex-1 flex-col justify-center space-y-5 bg-ice/40 px-5 py-6 text-sm sm:px-6 sm:py-7">
+        <div className="mt-12 grid w-full items-stretch gap-5 lg:grid-cols-2">
+          <div className="sc-card sc-card--lg flex min-w-0 flex-col overflow-hidden">
+            <dl className="flex flex-1 flex-col justify-center space-y-6 px-6 py-8 sm:px-8">
               <div>
-                <dt className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                  Telefon
-                </dt>
-                <dd className="mt-1">
+                <dt className="sc-eyebrow">Telefon</dt>
+                <dd className="mt-1.5">
                   {call ? (
                     <a
                       href={call}
-                      className="text-base text-black transition-colors hover:text-black/60"
+                      className="sc-serif text-2xl text-sc-text transition-colors hover:text-sc-accent-text"
                     >
                       {phoneDisplay()}
                     </a>
                   ) : (
-                    <span className="text-base text-black">
+                    <span className="sc-serif text-2xl text-sc-text">
                       {phoneDisplay()}
                     </span>
                   )}
                 </dd>
               </div>
               <div>
-                <dt className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                  E-posta
-                </dt>
-                <dd className="mt-1">
+                <dt className="sc-eyebrow">E-posta</dt>
+                <dd className="mt-1.5">
                   <a
                     href={`mailto:${site.email}`}
-                    className="break-all text-base text-black transition-colors hover:text-black/60"
+                    className="break-all text-lg text-sc-text transition-colors hover:text-sc-accent-text"
                   >
                     {site.email}
                   </a>
                 </dd>
               </div>
-              <div>
-                <dt className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                  Konum
-                </dt>
-                <dd className="mt-1 text-base text-black">{site.city}</dd>
-              </div>
-              <div>
-                <dt className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                  Yanıt
-                </dt>
-                <dd className="mt-1 text-base text-black">
-                  {site.responseTime}
-                </dd>
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <dt className="sc-eyebrow">Konum</dt>
+                  <dd className="mt-1.5 text-lg text-sc-text">{site.city}</dd>
+                </div>
+                <div>
+                  <dt className="sc-eyebrow">Yanıt</dt>
+                  <dd className="mt-1.5 text-lg text-sc-text">
+                    {site.responseTime}
+                  </dd>
+                </div>
               </div>
             </dl>
 
-            <div className="flex flex-col gap-0 border-t border-black sm:flex-row">
+            <div className="flex flex-col gap-3 border-t border-sc-border p-5 sm:flex-row sm:p-6">
               {call && (
-                <a
-                  href={call}
-                  className="flex min-h-12 flex-1 items-center justify-center bg-black text-sm font-medium tracking-wide text-white transition-colors hover:bg-black/85"
-                >
+                <a href={call} className="sc-btn sc-btn--primary flex-1">
                   Ara
                 </a>
               )}
@@ -156,7 +143,7 @@ export default function ContactSection() {
                   href={wa}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex min-h-12 flex-1 items-center justify-center bg-white text-sm font-medium tracking-wide text-black transition-colors hover:bg-ice/50 ${call ? "border-t border-black sm:border-t-0 sm:border-l" : ""}`}
+                  className="sc-btn sc-btn--secondary flex-1"
                 >
                   WhatsApp’tan yazın
                 </a>
@@ -166,7 +153,7 @@ export default function ContactSection() {
 
           <form
             onSubmit={handleSubmit}
-            className="flex h-full min-w-0 w-full flex-col gap-0 border border-black"
+            className="sc-card sc-card--lg flex h-full w-full min-w-0 flex-col gap-3 p-5 sm:p-7"
           >
             <label className="sr-only" htmlFor="ad">
               Ad
@@ -178,7 +165,7 @@ export default function ContactSection() {
               required
               autoComplete="name"
               placeholder="Adınız"
-              className="min-h-12 w-full min-w-0 shrink-0 border-0 border-b border-black bg-white px-4 text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice"
+              className="sc-input"
             />
             <label className="sr-only" htmlFor="email">
               E-posta
@@ -190,7 +177,7 @@ export default function ContactSection() {
               required
               autoComplete="email"
               placeholder="E-posta"
-              className="min-h-12 w-full min-w-0 shrink-0 border-0 border-b border-black bg-white px-4 text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice"
+              className="sc-input"
             />
             <label className="sr-only" htmlFor="mesaj">
               Mesaj
@@ -203,24 +190,33 @@ export default function ContactSection() {
               placeholder="Mesajınız"
               defaultValue={draft}
               key={draft || "empty"}
-              className="min-h-[9rem] w-full min-w-0 flex-1 resize-none border-0 border-b border-black bg-white px-4 py-3 text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice"
+              className="sc-input min-h-[9rem] flex-1 resize-none"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="mt-auto min-h-12 w-full shrink-0 border-0 bg-black text-sm font-medium tracking-wide text-white transition-colors hover:bg-black/85 disabled:opacity-60"
+              className="sc-btn sc-btn--primary mt-1 w-full"
             >
               {status === "loading" ? "Gönderiliyor…" : "Gönder"}
             </button>
             {status === "sent" && (
-              <p className="border-t border-ice bg-ice/40 px-4 py-3 text-sm text-black">
+              <p
+                className="rounded-xl border border-sc-accent/40 bg-sc-accent/10 px-4 py-3 text-sm text-sc-text"
+                role="status"
+              >
                 Teşekkürler — mesajınız alındı. En kısa sürede döneceğiz.
               </p>
             )}
             {status === "error" && (
-              <p className="border-t border-black px-4 py-3 text-sm text-black">
+              <p
+                className="rounded-xl border border-sc-border bg-sc-surface-2 px-4 py-3 text-sm text-sc-text"
+                role="alert"
+              >
                 {error}{" "}
-                <a className="underline" href={`mailto:${site.email}`}>
+                <a
+                  className="text-sc-accent-text underline"
+                  href={`mailto:${site.email}`}
+                >
                   {site.email}
                 </a>
               </p>

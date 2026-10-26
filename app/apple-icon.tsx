@@ -14,20 +14,10 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#000000",
+          background: "#e58a5c",
         }}
       >
-        <svg
-          width="128"
-          height="128"
-          viewBox="0 0 100 100"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d={LOGO_PATHS.bracketTl} fill="#ffffff" />
-          <path d={LOGO_PATHS.bracketBr} fill="#ffffff" />
-          <path d={LOGO_PATHS.core} fill="#ffffff" />
-        </svg>
+        <svg width="128" height="128" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><g transform="translate(50 50) scale(0.8) translate(-51.8 -50)" fill="#141413"><path d={LOGO_PATHS.core} /></g></svg>
       </div>
     ),
     { ...size },

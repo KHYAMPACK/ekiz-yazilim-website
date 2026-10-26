@@ -1,21 +1,20 @@
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
-import EcommerceSection from "@/components/EcommerceSection";
 import FaqSection from "@/components/FaqSection";
 import FirstClientNote from "@/components/FirstClientNote";
 import FounderSection from "@/components/FounderSection";
 import HeroIntake from "@/components/HeroIntake";
 import ProcessSection from "@/components/ProcessSection";
 import Reveal from "@/components/Reveal";
-import SiteFooter from "@/components/SiteFooter";
-import SiteHeader from "@/components/SiteHeader";
+import ScFooter from "@/components/ScFooter";
+import ScHeader from "@/components/ScHeader";
 import WebsiteSection from "@/components/WebsiteSection";
 import WorksSection from "@/components/WorksSection";
 
 export default function Home() {
   return (
-    <>
-      <SiteHeader />
+    <div className="sc-root">
+      <ScHeader />
       <main>
         <HeroIntake />
         <Reveal>
@@ -23,9 +22,6 @@ export default function Home() {
         </Reveal>
         <Reveal delay={40}>
           <WebsiteSection />
-        </Reveal>
-        <Reveal delay={40}>
-          <EcommerceSection />
         </Reveal>
         <Reveal delay={40}>
           <ProcessSection />
@@ -47,8 +43,8 @@ export default function Home() {
         </Reveal>
       </main>
       <Reveal>
-        <SiteFooter />
+        <ScFooter />
       </Reveal>
-    </>
+    </div>
   );
 }

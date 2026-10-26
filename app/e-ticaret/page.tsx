@@ -13,6 +13,8 @@ const path = "/e-ticaret";
 const pageUrl = `${seo.siteUrl}${path}`;
 
 export const metadata: Metadata = {
+  // Hidden: not linked from the site and kept out of search. Remove to re-publish.
+  robots: { index: false, follow: false },
   title: "E-Ticaret | Butik ve Giyim Online Mağaza",
   description:
     "Butik ve giyim mağazaları için e-ticaret: Instagram ve WhatsApp siparişlerinden kendi online mağazanıza. Ürün vitrini, sepet, ödeme ve sipariş takibi.",

@@ -9,58 +9,51 @@ const points = [
   "Siparişleri panelden takip edersiniz",
 ] as const;
 
+/** Light "paper" band: the one cream section on the homepage. */
 export default function EcommerceSection() {
   return (
     <section
       id="e-ticaret"
-      className="border-b border-black bg-white"
+      className="sc-paper"
       aria-labelledby="eticaret-home-title"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-14">
-        <div>
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            E-ticaret
-          </p>
-          <h2
-            id="eticaret-home-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Butik ve giyim için online mağaza
+      <div className="sc-container sc-section grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-16">
+        <div className="lg:order-2">
+          <p className="sc-eyebrow mb-4">E-ticaret</p>
+          <h2 id="eticaret-home-title" className="sc-h2">
+            Butik ve giyim için{" "}
+            <span className="sc-em">online mağaza</span>
           </h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-black/70">
+          <p className="sc-lead mt-5 max-w-xl">
             Instagram ve WhatsApp’tan gelen siparişleri bir online mağazaya
             taşıyoruz. Ürünleriniz vitrinde durur; müşteri satın alır; siz
             siparişi yönetirsiniz.
           </p>
-          <ul className="mt-6 space-y-2.5">
+          <ul className="mt-7 space-y-3">
             {points.map((line) => (
-              <li
-                key={line}
-                className="flex gap-2.5 text-sm leading-relaxed text-black/70"
-              >
-                <span className="mt-2 h-1 w-1 shrink-0 bg-black" aria-hidden />
+              <li key={line} className="flex gap-3 text-[0.9375rem] text-sc-text">
+                <span
+                  className="mt-[0.55rem] size-1.5 shrink-0 rounded-full bg-sc-accent"
+                  aria-hidden
+                />
                 {line}
               </li>
             ))}
           </ul>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link
-              href="/e-ticaret"
-              className="inline-flex border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
-            >
+          <div className="mt-9 flex flex-wrap gap-3">
+            <Link href="/e-ticaret" className="sc-btn sc-btn--primary">
               E-ticaret sayfasına git
             </Link>
-            <Link
-              href="/#iletisim"
-              className="inline-flex border border-black px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-white"
-            >
+            <Link href="/#iletisim" className="sc-btn sc-btn--ghost">
               Konuşalım
             </Link>
           </div>
         </div>
 
-        <div className="w-full max-w-[22rem] justify-self-center lg:justify-self-end">
-          <ShopFlowDemo />
+        <div className="w-full max-w-[22rem] justify-self-center lg:order-1 lg:justify-self-start">
+          <div className="rounded-3xl bg-[#f0eee6] p-4 sm:p-5 [&_.shop-demo]:rounded-2xl">
+            <ShopFlowDemo />
+          </div>
         </div>
       </div>
     </section>

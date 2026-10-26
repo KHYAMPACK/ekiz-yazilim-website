@@ -15,46 +15,14 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#000000",
-          color: "#ffffff",
+          background: "#121211",
+          color: "#f3f0e8",
           padding: 72,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
-          <svg
-            width="96"
-            height="96"
-            viewBox="0 0 100 100"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d={LOGO_PATHS.bracketTl} fill="#ffffff" />
-            <path d={LOGO_PATHS.bracketBr} fill="#ffffff" />
-            <path d={LOGO_PATHS.core} fill="#ffffff" />
-          </svg>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
-              style={{
-                fontSize: 56,
-                fontWeight: 600,
-                letterSpacing: "-0.03em",
-                lineHeight: 1,
-              }}
-            >
-              ekiz
-            </div>
-            <div
-              style={{
-                marginTop: 10,
-                fontSize: 22,
-                fontWeight: 300,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-              }}
-            >
-              yazılım
-            </div>
-          </div>
+          <svg width="96" height="96" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="26" fill="#e58a5c" /><g transform="translate(50 50) scale(0.58) translate(-51.8 -50)" fill="#141413"><path d={LOGO_PATHS.core} /></g></svg>
+          <div style={{ display: "flex", fontSize: 52, fontWeight: 600, letterSpacing: "-0.02em", lineHeight: 1 }}>Ekiz&nbsp;<span style={{ fontWeight: 400, color: "#a9a69c" }}>Yazılım</span></div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -72,7 +40,7 @@ export default function OpenGraphImage() {
           <div
             style={{
               fontSize: 28,
-              color: "#BFD5EB",
+              color: "#e58a5c",
               maxWidth: 820,
               lineHeight: 1.35,
             }}

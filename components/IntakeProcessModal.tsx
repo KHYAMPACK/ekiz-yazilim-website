@@ -412,14 +412,14 @@ export default function IntakeProcessModal({
       <button
         type="button"
         aria-label="Kapat"
-        className="absolute inset-0 cursor-default bg-white/55 backdrop-blur-md transition-opacity"
+        className="absolute inset-0 cursor-default bg-[#0a0a09]/75 backdrop-blur-md transition-opacity"
         style={{ transitionDuration: `${EXIT_MS}ms` }}
         onClick={requestClose}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,#00000007_1px,transparent_1px),linear-gradient(to_bottom,#00000007_1px,transparent_1px)] bg-size-[40px_40px]" />
+      <div className="sc-glow pointer-events-none absolute inset-0" />
 
       <div
-        className={`relative w-full max-w-lg border border-black bg-white transition-[opacity,transform] ease-out ${
+        className={`sc-card sc-card--lg relative w-full max-w-lg overflow-hidden shadow-[0_40px_120px_-30px_rgba(229,138,92,0.25)] transition-[opacity,transform] ease-out ${
           visible
             ? "translate-y-0 scale-100 opacity-100"
             : "translate-y-3 scale-[0.98] opacity-0"
@@ -427,28 +427,28 @@ export default function IntakeProcessModal({
         style={{ transitionDuration: `${EXIT_MS}ms` }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="relative border-b border-black px-5 py-4 sm:px-7">
+        <div className="relative border-b border-sc-border px-5 py-4 sm:px-7">
           <button
             type="button"
             onClick={requestClose}
             disabled={submitting}
-            className="absolute top-3 right-3 flex size-9 items-center justify-center border border-black bg-white text-lg leading-none text-black transition-colors hover:bg-ice/50 disabled:opacity-50 sm:top-3.5 sm:right-3.5"
+            className="absolute top-3 right-3 flex size-9 items-center justify-center rounded-full border border-sc-border text-lg leading-none text-sc-muted transition-colors hover:border-sc-accent hover:text-sc-text disabled:opacity-50 sm:top-3.5 sm:right-3.5"
             aria-label="Kapat"
           >
             ×
           </button>
           <div className="flex items-end justify-between gap-4 pr-10">
-            <p className="text-[10px] font-medium tracking-[0.22em] uppercase text-black/45">
+            <p className="sc-eyebrow !text-[10px] !tracking-[0.22em]">
               {step?.kind === "phone" ? "Son adım" : "Hazırlanıyor"}
             </p>
-            <p className="text-xs tabular-nums text-black/45">
+            <p className="text-xs tabular-nums text-sc-muted">
               %{progressLabel}
             </p>
           </div>
-          <div className="mt-3 h-1.5 w-full overflow-hidden bg-black/10">
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-sc-surface-2">
             <div
               ref={barRef}
-              className="h-full bg-black"
+              className="h-full rounded-full bg-sc-accent"
               style={{ width: "0%" }}
             />
           </div>
@@ -460,25 +460,20 @@ export default function IntakeProcessModal({
         >
           {step?.kind === "question" ? (
             <>
-              <p className="mb-3 text-xs font-medium tracking-[0.18em] uppercase text-black/45">
+              <p className="sc-eyebrow mb-3 !text-xs">
                 Kısa soru {questionNumber} / {YES_NO_TOTAL}
               </p>
-              <h2
-                id="intake-process-title"
-                className="text-2xl font-medium tracking-tight text-black sm:text-3xl"
-              >
+              <h2 id="intake-process-title" className="sc-h3 !text-[1.75rem] sm:!text-[2rem]">
                 {step.title}
               </h2>
-              <p className="mt-2 text-sm text-black/60">{step.detail}</p>
-              <div className="mt-8 grid grid-cols-2 gap-0 border border-black">
+              <p className="sc-body mt-2 !text-sm">{step.detail}</p>
+              <div className="mt-8 grid grid-cols-2 gap-3">
                 {step.options.map((opt, i) => (
                   <button
                     key={opt}
                     type="button"
                     onClick={() => pickOption(opt)}
-                    className={`min-h-12 text-sm font-medium tracking-wide text-black transition-colors hover:bg-ice/50 ${
-                      i > 0 ? "border-l border-black" : ""
-                    }`}
+                    className={`sc-btn ${i === 0 ? "sc-btn--primary" : "sc-btn--secondary"}`}
                   >
                     {opt}
                   </button>
@@ -488,39 +483,27 @@ export default function IntakeProcessModal({
           ) : step?.kind === "tip" ? (
             <>
               <div className="mb-5 flex items-center gap-3">
-                <span className="intake-pulse-dot inline-block size-2.5 shrink-0 bg-black" />
-                <span className="text-xs font-medium tracking-[0.18em] uppercase text-black/45">
-                  İpucu
-                </span>
+                <span className="intake-pulse-dot inline-block size-2.5 shrink-0 rounded-full bg-sc-accent" />
+                <span className="sc-eyebrow">İpucu</span>
               </div>
-              <h2
-                id="intake-process-title"
-                className="text-2xl font-medium tracking-tight text-black sm:text-3xl"
-              >
+              <h2 id="intake-process-title" className="sc-h3 !text-[1.75rem] sm:!text-[2rem]">
                 {step.title}
               </h2>
-              <p className="mt-4 text-base leading-relaxed text-black/75 sm:text-lg">
-                {step.detail}
-              </p>
+              <p className="sc-lead mt-4">{step.detail}</p>
             </>
           ) : step?.kind === "phone" ? (
             <form onSubmit={handlePhoneSubmit} className="flex flex-col gap-5">
               <div>
-                <p className="mb-3 text-xs font-medium tracking-[0.18em] uppercase text-black/45">
-                  İsteğe bağlı
-                </p>
-                <h2
-                  id="intake-process-title"
-                  className="text-2xl font-medium tracking-tight text-black sm:text-3xl"
-                >
+                <p className="sc-eyebrow mb-3">İsteğe bağlı</p>
+                <h2 id="intake-process-title" className="sc-h3 !text-[1.75rem] sm:!text-[2rem]">
                   Numaranızı bırakın, sizi arayalım.
                 </h2>
-                <p className="mt-2 text-sm text-black/60">
+                <p className="sc-body mt-2 !text-sm">
                   Girdiğiniz numarayı arayarak kısa sürede dönüş yaparız.
                   İstemezseniz kapatabilirsiniz.
                 </p>
               </div>
-              <div className="flex w-full min-w-0 flex-col gap-0 border border-black sm:flex-row">
+              <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row">
                 <label className="sr-only" htmlFor="intake-telefon">
                   Telefon
                 </label>
@@ -536,18 +519,21 @@ export default function IntakeProcessModal({
                     setPhoneError("");
                   }}
                   placeholder="05XX XXX XX XX"
-                  className="min-h-12 w-full min-w-0 flex-1 border-0 bg-white px-4 text-base text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice disabled:opacity-60"
+                  className="sc-input flex-1 disabled:opacity-60"
                 />
                 <button
                   type="submit"
                   disabled={submitting || !phone.trim()}
-                  className="min-h-12 border-t border-black bg-black px-6 text-sm font-medium tracking-wide text-white transition-colors hover:bg-black/85 disabled:cursor-not-allowed disabled:opacity-60 sm:border-t-0 sm:border-l"
+                  className="sc-btn sc-btn--primary"
                 >
                   {submitting ? "…" : "Ara beni"}
                 </button>
               </div>
               {phoneError && (
-                <p className="border border-black px-4 py-3 text-sm text-black">
+                <p
+                  className="rounded-xl border border-sc-accent/40 bg-sc-accent/10 px-4 py-3 text-sm text-sc-text"
+                  role="alert"
+                >
                   {phoneError}
                 </p>
               )}
@@ -555,20 +541,15 @@ export default function IntakeProcessModal({
           ) : (
             <>
               <div className="mb-5 flex items-center gap-3">
-                <span className="intake-pulse-dot inline-block size-2.5 shrink-0 bg-black" />
-                <span className="text-xs font-medium tracking-[0.18em] uppercase text-black/45">
+                <span className="intake-pulse-dot inline-block size-2.5 shrink-0 rounded-full bg-sc-accent" />
+                <span className="sc-eyebrow">
                   {step?.kind === "wrap" ? "Tamamlanıyor" : "İşleniyor"}
                 </span>
               </div>
-              <h2
-                id="intake-process-title"
-                className="text-2xl font-medium tracking-tight text-black sm:text-3xl"
-              >
+              <h2 id="intake-process-title" className="sc-h3 !text-[1.75rem] sm:!text-[2rem]">
                 {step?.title}
               </h2>
-              <p className="mt-2 text-sm text-black/60 sm:text-base">
-                {step?.detail}
-              </p>
+              <p className="sc-body mt-2">{step?.detail}</p>
             </>
           )}
         </div>

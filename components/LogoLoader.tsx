@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { LOGO_PATHS } from "./logoPaths";
+import { LogoTile } from "./Logo";
 
 type Phase = "boot" | "assemble" | "open" | "gone";
 
@@ -99,31 +99,9 @@ export default function LogoLoader({ children }: { children: React.ReactNode }) 
           {phase === "assemble" && (
             <div className="logo-loader__brand">
               <div className="logo-loader__stage">
-                <svg
-                  className="logo-loader__layer logo-loader__core"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path d={LOGO_PATHS.core} fill="#ffffff" />
-                </svg>
-                <svg
-                  className="logo-loader__layer logo-loader__bracket-tl"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path d={LOGO_PATHS.bracketTl} fill="#ffffff" />
-                </svg>
-                <svg
-                  className="logo-loader__layer logo-loader__bracket-br"
-                  viewBox="0 0 100 100"
-                  xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true"
-                >
-                  <path d={LOGO_PATHS.bracketBr} fill="#ffffff" />
-                </svg>
+                <span className="logo-loader__layer logo-loader__core"><LogoTile size={140} /></span>
               </div>
+
 
               <div className="logo-loader__wordmark" aria-hidden="true">
                 <span className="logo-loader__ekiz">

@@ -8,14 +8,14 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 function CheckMark() {
   return (
     <span
-      className="mt-0.5 flex size-4 shrink-0 items-center justify-center border border-white/25 text-ice"
+      className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-sc-accent/15 text-sc-accent-text"
       aria-hidden
     >
       <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
         <path
           d="M1.6 5.2L3.8 7.3L8.4 2.4"
           stroke="currentColor"
-          strokeWidth="1.4"
+          strokeWidth="1.5"
         />
       </svg>
     </span>
@@ -29,7 +29,7 @@ function ArrowOut() {
       height="14"
       viewBox="0 0 14 14"
       fill="none"
-      className="shrink-0 text-white/40 transition-colors group-hover:text-ice"
+      className="shrink-0 text-sc-muted transition-colors group-hover:text-sc-accent-text"
       aria-hidden
     >
       <path
@@ -47,45 +47,40 @@ export default function WebPlan() {
   return (
     <section
       id="plan"
-      className="border-b border-black bg-ice/30"
+      className="sc-paper border-t border-sc-border"
       aria-labelledby="plan-title"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-4 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)_minmax(0,1fr)] lg:items-stretch">
+      <div className="sc-container grid gap-4 py-16 sm:py-24 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)_minmax(0,1fr)] lg:items-stretch">
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="flex flex-col border border-black bg-black p-6 text-white sm:p-8"
+          className="sc-root sc-card sc-card--lg flex flex-col p-6 sm:p-8"
         >
-          <p className="text-xs font-medium tracking-[0.2em] uppercase text-ice">
-            Tek plan
-          </p>
+          <p className="sc-eyebrow">Tek plan</p>
           <h2 id="plan-title" className="sr-only">
             Tek Paket. Tipik Proje {TYPICAL_PRICE} Lira
           </h2>
           <p className="mt-6 flex items-start gap-2 leading-none">
-            <span className="text-[clamp(3.4rem,8vw,5.4rem)] font-medium tracking-tight text-ice">
+            <span className="font-display text-[clamp(3.4rem,8vw,5.4rem)] tracking-tight text-sc-accent-text">
               {TYPICAL_PRICE}
             </span>
-            <span className="mt-2 text-sm font-medium tracking-[0.14em] text-white/50 uppercase">
+            <span className="mt-2 text-sm font-medium tracking-[0.14em] text-sc-muted uppercase">
               ₺
             </span>
           </p>
-          <p className="mt-3 text-sm text-white/70 sm:text-base">
+          <p className="mt-3 text-sm text-sc-text sm:text-base">
             Tipik Bir Proje İçin
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-white/45">
+          <p className="mt-2 text-sm leading-relaxed text-sc-muted">
             Sabit paket fiyatı değil. Kapsam keşifte netleşir; yazılı teklif
             görüşmeden sonra gelir.
           </p>
-          <a
-            href="#gorusme"
-            className="mt-8 inline-flex min-h-12 items-center justify-center border border-ice bg-ice px-5 text-sm font-medium text-black transition-colors hover:bg-white"
-          >
+          <a href="#gorusme" className="sc-btn sc-btn--primary mt-8">
             Görüşme ayarla
           </a>
-          <p className="mt-8 text-xs font-medium tracking-[0.2em] uppercase text-white/40">
+          <p className="mt-8 text-xs font-medium tracking-[0.16em] text-sc-muted uppercase">
             Neler dahil
           </p>
           <ul className="mt-4 flex flex-col gap-2.5">
@@ -100,7 +95,7 @@ export default function WebPlan() {
                   delay: 0.12 + i * 0.04,
                   ease: EASE,
                 }}
-                className="flex items-start gap-2.5 text-sm leading-relaxed text-white/80"
+                className="flex items-start gap-2.5 text-sm leading-relaxed text-sc-text"
               >
                 <CheckMark />
                 {item}
@@ -115,16 +110,12 @@ export default function WebPlan() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.65, delay: 0.08, ease: EASE }}
-            className="flex flex-1 flex-col justify-between border border-black bg-ice p-6 sm:p-7"
+            className="sc-card sc-card--lg flex flex-1 flex-col justify-between !bg-sc-accent/15 p-6 sm:p-7"
           >
-            <p className="text-xs font-medium tracking-[0.2em] uppercase text-black/50">
-              Referans
-            </p>
+            <p className="sc-eyebrow">Referans</p>
             <div className="mt-6">
-              <p className="text-2xl font-medium tracking-tight text-black sm:text-3xl">
-                Sabit Fiyat Değil
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-black/70">
+              <p className="sc-h3 !text-2xl sm:!text-3xl">Sabit Fiyat Değil</p>
+              <p className="sc-body mt-3 !text-sm !text-sc-text/75">
                 {TYPICAL_PRICE} ₺ kreş, okul veya ofis gibi sade bir tanıtım
                 sitesi için tipik tutar. Daha fazla sayfa veya özel iş teklifte
                 yazılır.
@@ -137,16 +128,12 @@ export default function WebPlan() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.65, delay: 0.14, ease: EASE }}
-            className="flex flex-1 flex-col justify-between border border-black bg-white p-6 sm:p-7"
+            className="sc-card sc-card--lg flex flex-1 flex-col justify-between p-6 sm:p-7"
           >
-            <p className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-              Yazılı teklif
-            </p>
+            <p className="sc-eyebrow">Yazılı teklif</p>
             <div className="mt-6">
-              <p className="text-2xl font-medium tracking-tight text-black sm:text-3xl">
-                Onaysız İş Yok
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-black/65">
+              <p className="sc-h3 !text-2xl sm:!text-3xl">Onaysız İş Yok</p>
+              <p className="sc-body mt-3 !text-sm">
                 Görüşmeden sonra teklif yazılı gelir. Onayınız olmadan işe
                 başlamayız. Alan adı ve hosting hesapları sizde kalır.
               </p>
@@ -160,19 +147,19 @@ export default function WebPlan() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, delay: 0.12, ease: EASE }}
-          className="flex flex-col border border-black bg-black p-6 text-white sm:p-8"
+          className="sc-root sc-card sc-card--lg flex flex-col p-6 sm:p-8"
         >
-          <h3 className="text-3xl font-medium tracking-tight text-white sm:text-5xl">
-            İşleri Gör
+          <h3 className="sc-h2 !text-4xl sm:!text-5xl">
+            İşleri <span className="sc-em">Gör</span>
           </h3>
-          <p className="mt-3 text-sm leading-relaxed text-white/50">
+          <p className="sc-body mt-3 !text-sm">
             Yayına aldığımız siteler. Hepsi işe özel tasarlandı.
           </p>
           <ul className="mt-8 flex flex-1 flex-col">
             {WORKS.map((work, i) => (
               <li
                 key={work.href}
-                className={i < WORKS.length - 1 ? "border-b border-white/12" : ""}
+                className={i < WORKS.length - 1 ? "border-b border-sc-border" : ""}
               >
                 <a
                   href={work.href}
@@ -181,10 +168,10 @@ export default function WebPlan() {
                   className="group flex items-center justify-between gap-4 py-5"
                 >
                   <span>
-                    <span className="block text-lg font-medium tracking-tight text-white">
+                    <span className="font-display block text-xl tracking-tight text-sc-text">
                       {work.name}
                     </span>
-                    <span className="mt-1 block text-xs tracking-[0.12em] text-white/40 uppercase">
+                    <span className="mt-1 block text-xs tracking-[0.12em] text-sc-muted uppercase">
                       {work.meta}
                     </span>
                   </span>

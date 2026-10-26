@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from
 import IntakeProcessModal, {
   type IntakeAnswers,
 } from "@/components/IntakeProcessModal";
-import Logo from "./Logo";
+import { ExamView } from "@/components/egitim/EgitimMockups";
 import { works } from "@/lib/works";
 
 const MAX_ATTEMPTS = 3;
@@ -359,14 +359,14 @@ export default function HeroIntake() {
   return (
     <section
       id="ust"
-      className="hero-intake relative flex min-h-[calc(100svh-3.5rem)] flex-col justify-center overflow-hidden border-b border-black"
+      className="relative flex min-h-[calc(100svh-4rem)] flex-col justify-center overflow-hidden"
       onMouseMove={handleHeroMouseMove}
       onMouseLeave={handleHeroMouseLeave}
     >
-      <div className="pointer-events-none absolute inset-0 z-0 hero-intake__wash" />
-      <div className="pointer-events-none absolute inset-0 z-0 hero-intake__grid" />
+      <div className="sc-glow pointer-events-none absolute inset-0 z-0" />
+      <div className="sc-grid pointer-events-none absolute inset-0 z-0" />
       <div
-        className="pointer-events-none absolute inset-0 z-[1] hero-intake__grid-bold"
+        className="sc-grid-bold pointer-events-none absolute inset-0 z-[1]"
         style={
           gridCursor
             ? ({
@@ -378,7 +378,6 @@ export default function HeroIntake() {
         }
         aria-hidden
       />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-1 bg-ice" />
 
       <IntakeProcessModal
         open={phase === "process"}
@@ -387,154 +386,164 @@ export default function HeroIntake() {
         onSuccess={handleProcessSuccess}
       />
 
-      <div className="relative z-10 mx-auto w-full min-w-0 max-w-3xl px-4 py-12 sm:px-6 sm:py-20">
-        <div className="ekiz-reveal ekiz-reveal--in mb-6 flex justify-center sm:mb-8">
-          <span className="sm:hidden">
-            <Logo
-              variant="full"
-              tone="onLight"
-              size={64}
-              layout="stacked"
-              assembleOnClick
-            />
-          </span>
-          <span className="hidden sm:inline">
-            <Logo
-              variant="full"
-              tone="onLight"
-              size={96}
-              layout="stacked"
-              assembleOnClick
-            />
-          </span>
+      <div className="sc-container relative z-10 grid min-w-0 items-center gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14">
+        <div className="min-w-0">
+          <p className="sc-chip ekiz-reveal ekiz-reveal--in">
+            <span className="size-1.5 rounded-full bg-sc-accent" aria-hidden />
+            Ankara merkezli · Türkiye genelinde uzaktan
+          </p>
+
+          <h1 className="sc-h1 mt-6">
+            Eğitim kurumları için öğrenci takip sistemi ve{" "}
+            <span className="sc-em">web sitesi</span>
+          </h1>
+
+          <p className="sc-lead mt-5 max-w-xl">
+            Yoklama, deneme analizi, ödev ve veli bildirimi tek uygulamada.
+            Kurumsal sitenizi de aynı yerden, tek muhatapla kuruyoruz.
+          </p>
+
+          {phase === "success" ? (
+            <div
+              className="sc-card sc-card--lg ekiz-reveal ekiz-reveal--in mt-8 px-6 py-8"
+              role="status"
+            >
+              <p className="sc-eyebrow">Talebiniz Alındı</p>
+              <p className="sc-h3 mt-3">En kısa sürede sizi arayacağız.</p>
+              <p className="sc-body mt-2 !text-sm">
+                Numaranızı aldık. Kısa süre içinde dönüş yapacağız.
+              </p>
+            </div>
+          ) : (
+            <div className="sc-card sc-card--lg mt-8 p-5 sm:p-6">
+              <form
+                onSubmit={handleProblemSubmit}
+                className="flex w-full min-w-0 flex-col gap-3"
+              >
+                <label
+                  htmlFor="problem"
+                  className="text-sm font-medium text-sc-text"
+                >
+                  Talebinizi bir cümlede anlatabilirsiniz
+                </label>
+                <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row">
+                  <input
+                    id="problem"
+                    type="text"
+                    value={problem}
+                    maxLength={500}
+                    disabled={problemLocked}
+                    onChange={(e) => {
+                      setProblem(e.target.value);
+                      setSelected(null);
+                      if (phase === "rejected" || phase === "error") {
+                        setPhase("idle");
+                        setFeedback("");
+                      }
+                    }}
+                    placeholder="Örn. Müşterilerimin sipariş verebileceği bir site lazım"
+                    className="sc-input flex-1 disabled:opacity-60"
+                  />
+                  <button
+                    type="submit"
+                    disabled={problemLocked || !problem.trim()}
+                    className="sc-btn sc-btn--primary"
+                  >
+                    {phase === "checking" ? "…" : "Gönder"}
+                  </button>
+                </div>
+
+                {feedback && (
+                  <p
+                    className={`rounded-xl border px-4 py-3 text-sm ${
+                      phase === "rejected" || phase === "capped" || phase === "error"
+                        ? "border-sc-border bg-sc-surface-2 text-sc-text"
+                        : "border-sc-accent/40 bg-sc-accent/10 text-sc-text"
+                    }`}
+                    role="status"
+                  >
+                    {feedback}
+                  </p>
+                )}
+              </form>
+
+              {phase !== "process" && (
+                <div className="mt-5 border-t border-sc-border pt-5">
+                  <p className="mb-3 text-xs font-medium tracking-[0.16em] text-sc-muted uppercase">
+                    Hazır çözümler
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {solutions.map((s) => {
+                      if ("href" in s) {
+                        return (
+                          <button
+                            key={s.id}
+                            type="button"
+                            disabled={problemLocked}
+                            onClick={() => router.push(s.href)}
+                            className="rounded-full border border-sc-accent/50 bg-sc-accent/10 px-4 py-2 text-sm font-medium text-sc-accent-text hover:bg-sc-accent hover:text-sc-on-accent disabled:opacity-50"
+                          >
+                            {s.label} →
+                          </button>
+                        );
+                      }
+                      const isActive = selected === s.id;
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          disabled={problemLocked}
+                          onClick={() => applySolution(s.id, s.prompt)}
+                          className={`rounded-full border px-4 py-2 text-sm font-medium disabled:opacity-50 ${
+                            isActive
+                              ? "border-sc-accent bg-sc-accent text-sc-on-accent"
+                              : "border-sc-border text-sc-muted hover:border-sc-accent hover:text-sc-text"
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="mt-6">
+            <Link
+              href="/isler"
+              className="group inline-flex items-center gap-3 text-[0.9375rem] font-medium text-sc-text hover:text-sc-accent-text"
+            >
+              Yaptığım işleri gör
+              <span className="text-sc-muted">{works.length} proje</span>
+              <span
+                aria-hidden
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              >
+                →
+              </span>
+            </Link>
+          </div>
         </div>
 
-        <h1 className="mb-8 text-center text-base font-medium tracking-tight text-black/70 sm:mb-12 sm:text-lg">
-          Eğitim Kurumları İçin Öğrenci Takip Sistemi Ve Web Sitesi
-        </h1>
-
-        {phase === "success" ? (
+        <div className="relative min-w-0">
           <div
-            className="ekiz-reveal ekiz-reveal--in border border-black bg-white px-6 py-10 text-center"
-            role="status"
-          >
-            <p className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-              Talebiniz Alındı
-            </p>
-            <p className="mt-3 text-xl font-medium tracking-tight text-black sm:text-2xl">
-              En Kısa Sürede Sizi Arayacağız.
-            </p>
-            <p className="mt-3 text-sm text-black/60">
-              Numaranızı aldık. Kısa süre içinde dönüş yapacağız.
+            className="pointer-events-none absolute -inset-8 rounded-full bg-sc-accent/10 blur-3xl"
+            aria-hidden
+          />
+          <div className="relative mx-auto w-full max-w-[34rem]">
+            <ExamView />
+            <p className="mt-4 text-center text-sm text-sc-muted">
+              Atlas Eğitim Kurumu’nda her gün kullanılıyor ·{" "}
+              <Link
+                href="/egitim"
+                className="text-sc-accent-text underline-offset-4 hover:underline"
+              >
+                Sistemi gör
+              </Link>
             </p>
           </div>
-        ) : (
-          <form
-            onSubmit={handleProblemSubmit}
-            className="flex w-full min-w-0 flex-col gap-4"
-          >
-            <label
-              htmlFor="problem"
-              className="text-center text-sm font-medium tracking-wide text-black/70"
-            >
-               Talebiniz bir cümlede anlatabilirsiniz
-            </label>
-            <div className="flex w-full min-w-0 flex-col gap-0 border border-black sm:flex-row">
-              <input
-                id="problem"
-                type="text"
-                value={problem}
-                maxLength={500}
-                disabled={problemLocked}
-                onChange={(e) => {
-                  setProblem(e.target.value);
-                  setSelected(null);
-                  if (phase === "rejected" || phase === "error") {
-                    setPhase("idle");
-                    setFeedback("");
-                  }
-                }}
-                placeholder="Örn. Müşterilerimin online sipariş verebileceği bir site lazım"
-                className="min-h-12 w-full min-w-0 flex-1 border-0 bg-white px-4 text-base text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice disabled:opacity-60"
-              />
-              <button
-                type="submit"
-                disabled={problemLocked || !problem.trim()}
-                className="min-h-12 border-t border-black bg-black px-6 text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:bg-black/85 disabled:cursor-not-allowed disabled:opacity-60 sm:border-t-0 sm:border-l"
-              >
-                {phase === "checking" ? "…" : "Gönder"}
-              </button>
-            </div>
-
-            {feedback && (
-              <p
-                className={`border px-4 py-3 text-center text-sm transition-opacity duration-300 ${
-                  phase === "rejected" || phase === "capped" || phase === "error"
-                    ? "border-black text-black"
-                    : "border-ice bg-ice/40 text-black"
-                }`}
-                role="status"
-              >
-                {feedback}
-              </p>
-            )}
-
-          </form>
-        )}
-
-        {phase !== "success" && phase !== "process" && (
-          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <span className="text-xs font-medium tracking-widest uppercase text-black/45">
-              Hazır Çözümler
-            </span>
-            <div className="flex flex-wrap justify-center gap-2">
-              {solutions.map((s) => {
-                if ("href" in s) {
-                  return (
-                    <button
-                      key={s.id}
-                      type="button"
-                      disabled={problemLocked}
-                      onClick={() => router.push(s.href)}
-                      className="border border-black bg-white px-4 py-2 text-sm font-medium text-black transition-colors duration-300 hover:bg-ice/50 disabled:opacity-50"
-                    >
-                      {s.label}
-                    </button>
-                  );
-                }
-                const isActive = selected === s.id;
-                const isFeatured = "featured" in s && s.featured;
-                return (
-                  <button
-                    key={s.id}
-                    type="button"
-                    disabled={problemLocked}
-                    onClick={() => applySolution(s.id, s.prompt)}
-                    className={`border px-4 py-2 text-sm font-medium transition-colors duration-300 disabled:opacity-50 ${
-                      isActive || isFeatured
-                        ? "border-black bg-ice text-black hover:bg-black hover:text-white"
-                        : "border-black bg-white text-black hover:bg-ice/50"
-                    }`}
-                  >
-                    {s.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-
-        <div className="mt-10 flex justify-center">
-          <Link
-            href="/isler"
-            className="group inline-flex min-h-12 items-center gap-3 border border-black bg-white px-5 text-sm font-medium tracking-wide text-black transition-colors duration-300 hover:bg-black hover:text-white"
-          >
-            Yaptığım işleri gör
-            <span className="text-black/45 transition-colors duration-300 group-hover:text-white/60">
-              {works.length} proje
-            </span>
-            <span aria-hidden>→</span>
-          </Link>
         </div>
       </div>
     </section>

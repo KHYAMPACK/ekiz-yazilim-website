@@ -30,11 +30,11 @@ export default function WebHero({ wa }: Props) {
   const collageScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
 
   return (
-    <section id="ust" className="overflow-hidden border-b border-black bg-white">
-      <div className="mx-auto grid w-full max-w-6xl gap-12 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-10 lg:py-24">
+    <section id="ust" className="sc-glow relative overflow-hidden">
+      <div className="sc-container grid gap-12 py-14 sm:py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-10 lg:py-28">
         <div className="mx-auto w-full max-w-xl text-center lg:mx-0 lg:max-w-none lg:text-left">
           <motion.p
-            className="mb-4 text-xs font-medium tracking-[0.2em] uppercase text-black/45"
+            className="sc-eyebrow mb-5"
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: EASE }}
@@ -42,7 +42,7 @@ export default function WebHero({ wa }: Props) {
             Web sitesi
           </motion.p>
 
-          <h1 className="text-[clamp(2.6rem,8vw,5.6rem)] leading-[1.05] font-medium tracking-tight text-black">
+          <h1 className="sc-h1 !text-[clamp(2.7rem,8vw,5.4rem)]">
             <span className="block overflow-hidden pb-[0.12em]">
               {LINE_A.map((word, i) => (
                 <motion.span
@@ -60,7 +60,7 @@ export default function WebHero({ wa }: Props) {
               {LINE_B.map((word, i) => (
                 <motion.span
                   key={word}
-                  className="mr-[0.22em] inline-block last:mr-0"
+                  className="sc-em mr-[0.22em] inline-block last:mr-0"
                   initial={reduce ? false : { y: "110%" }}
                   animate={{ y: "0%" }}
                   transition={{
@@ -76,7 +76,7 @@ export default function WebHero({ wa }: Props) {
           </h1>
 
           <motion.p
-            className="mt-6 text-base leading-relaxed text-black/70 sm:text-lg lg:max-w-md"
+            className="sc-lead mt-7 lg:max-w-md"
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.48, ease: EASE }}
@@ -93,7 +93,7 @@ export default function WebHero({ wa }: Props) {
           >
             <a
               href="#gorusme"
-              className="inline-flex min-h-12 w-full items-center justify-center border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black lg:w-auto"
+              className="sc-btn sc-btn--primary w-full lg:w-auto"
             >
               Görüşme ayarla
             </a>
@@ -102,7 +102,7 @@ export default function WebHero({ wa }: Props) {
                 href={wa}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-12 w-full items-center justify-center border border-black bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-ice/40 lg:w-auto"
+                className="sc-btn sc-btn--secondary w-full lg:w-auto"
               >
                 WhatsApp
               </a>
@@ -110,7 +110,7 @@ export default function WebHero({ wa }: Props) {
           </motion.div>
 
           <motion.p
-            className="mt-6 text-sm text-black/50"
+            className="mt-6 text-sm text-sc-muted"
             initial={reduce ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.72 }}
@@ -146,7 +146,7 @@ export default function WebHero({ wa }: Props) {
                     ease: EASE,
                   }}
                 >
-                  <div className="web-hero-frame overflow-hidden border border-black bg-black">
+                  <div className="overflow-hidden rounded-2xl border border-sc-border bg-sc-surface shadow-[0_20px_60px_-20px_rgba(229,138,92,0.35)]">
                     <Image
                       src={frame.src}
                       alt={frame.alt}

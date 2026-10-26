@@ -31,7 +31,9 @@ function PhotoFrame({
   className?: string;
 }) {
   return (
-    <div className={`overflow-hidden border border-white/20 bg-black ${className ?? ""}`}>
+    <div
+      className={`overflow-hidden rounded-2xl border border-sc-border bg-sc-surface shadow-[0_20px_60px_-20px_rgba(229,138,92,0.3)] ${className ?? ""}`}
+    >
       <Image
         src={src}
         alt={alt}
@@ -83,20 +85,18 @@ export default function WebPillars() {
     return (
       <section
         id="odak"
-        className="border-b border-black bg-black text-white"
+        className="border-t border-sc-border bg-sc-bg"
         aria-labelledby="odak-title"
       >
-        <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-ice">
-            Odak
-          </p>
+        <div className="sc-container py-16 sm:py-24">
+          <p className="sc-eyebrow mb-6">Odak</p>
           <h2 id="odak-title" className="sr-only">
             Keşif, Tasarım, Destek
           </h2>
           <ul className="grid gap-10 lg:grid-cols-3">
             {PILLARS.map((item) => (
               <li key={item.word}>
-                <p className="text-3xl font-medium tracking-tight text-white uppercase">
+                <p className="font-display text-4xl tracking-tight text-sc-text uppercase">
                   {item.word}
                 </p>
                 <div className="mt-4">
@@ -106,12 +106,8 @@ export default function WebPillars() {
                     className="aspect-[16/10]"
                   />
                 </div>
-                <p className="mt-4 text-lg font-medium tracking-tight text-white">
-                  {item.title}
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-white/60">
-                  {item.body}
-                </p>
+                <p className="sc-h3 mt-5">{item.title}</p>
+                <p className="sc-body mt-2">{item.body}</p>
               </li>
             ))}
           </ul>
@@ -123,16 +119,14 @@ export default function WebPillars() {
   return (
     <section
       id="odak"
-      className="border-b border-black bg-black text-white"
+      className="border-t border-sc-border bg-sc-bg"
       aria-labelledby="odak-title"
     >
       <div ref={ref} className="h-[600vh]">
-        <div className="sticky top-14 h-[calc(100svh-3.5rem)] overflow-hidden">
-          <div className="relative mx-auto grid h-full w-full max-w-6xl grid-rows-[auto_1fr] gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:grid-rows-1 lg:gap-16">
+        <div className="sticky top-16 h-[calc(100svh-4rem)] overflow-hidden">
+          <div className="sc-container relative grid h-full grid-rows-[auto_1fr] gap-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:grid-rows-1 lg:gap-16">
             <div className="flex flex-col items-center justify-center pt-8 text-center lg:items-start lg:pt-0 lg:text-left">
-              <p className="mb-6 text-xs font-medium tracking-[0.2em] uppercase text-ice">
-                Odak
-              </p>
+              <p className="sc-eyebrow mb-6">Odak</p>
               <h2 id="odak-title" className="sr-only">
                 Keşif, Tasarım, Destek
               </h2>
@@ -142,9 +136,9 @@ export default function WebPillars() {
                   return (
                     <li key={item.word}>
                       <motion.span
-                        className="block py-[0.04em] text-[clamp(2.8rem,8vw,6.4rem)] leading-[1.02] font-medium tracking-tight uppercase"
+                        className="font-display block py-[0.04em] text-[clamp(2.8rem,8vw,6.4rem)] leading-[1.02] tracking-tight uppercase"
                         animate={{
-                          color: on ? "#ffffff" : "rgba(255,255,255,0.16)",
+                          color: on ? "#e58a5c" : "rgba(243,240,232,0.14)",
                         }}
                         transition={{ duration: 0.35, ease: EASE }}
                       >
@@ -154,19 +148,19 @@ export default function WebPillars() {
                   );
                 })}
               </ul>
-              <p className="mt-8 text-sm text-white/40">
+              <p className="mt-8 text-sm text-sc-muted">
                 Her Biri Gerekli. Hepsi Birlikte.
               </p>
             </div>
 
             <div className="relative flex flex-col justify-center pb-8 pl-8 sm:pl-10 lg:h-full lg:pb-0">
               <div
-                className="absolute inset-y-0 left-[11px] w-px bg-white/15 sm:left-[15px]"
+                className="absolute inset-y-0 left-[11px] w-px bg-sc-border sm:left-[15px]"
                 aria-hidden
               />
               <motion.div
                 style={{ scaleY: line }}
-                className="absolute inset-y-0 left-[11px] w-px origin-top bg-ice sm:left-[15px]"
+                className="absolute inset-y-0 left-[11px] w-px origin-top bg-sc-accent sm:left-[15px]"
                 aria-hidden
               />
 
@@ -179,7 +173,7 @@ export default function WebPillars() {
                     exit={{ y: "-28%", opacity: 0 }}
                     transition={{ duration: 0.5, ease: EASE }}
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden border border-white/20 bg-black">
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-2xl border border-sc-border bg-sc-surface shadow-[0_20px_60px_-20px_rgba(229,138,92,0.3)]">
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={shot}
@@ -200,12 +194,8 @@ export default function WebPillars() {
                         </motion.div>
                       </AnimatePresence>
                     </div>
-                    <p className="mt-5 text-xl font-medium tracking-tight text-white sm:text-2xl">
-                      {current.title}
-                    </p>
-                    <p className="mt-3 max-w-md text-sm leading-relaxed text-white/60 sm:text-base">
-                      {current.body}
-                    </p>
+                    <p className="sc-h3 mt-5">{current.title}</p>
+                    <p className="sc-body mt-3 max-w-md">{current.body}</p>
                   </motion.div>
                 </AnimatePresence>
               </div>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import SiteFooter from "@/components/SiteFooter";
-import SiteHeader from "@/components/SiteHeader";
+import ScFooter from "@/components/ScFooter";
+import ScHeader from "@/components/ScHeader";
 import WebFaq from "@/components/websitesi/WebFaq";
 import WebHero from "@/components/websitesi/WebHero";
 import WebPains from "@/components/websitesi/WebPains";
@@ -124,13 +124,13 @@ export default function WebSitesiPage() {
   const wa = whatsappHref(WEB_WA);
 
   return (
-    <>
+    <div className="sc-root">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }}
       />
       <WebProgress />
-      <SiteHeader />
+      <ScHeader />
       <main>
         <WebHero wa={wa} />
         <WebTaskMarquee />
@@ -143,7 +143,7 @@ export default function WebSitesiPage() {
         <WebFaq />
         <WebScheduleSection />
       </main>
-      <SiteFooter />
-    </>
+      <ScFooter />
+    </div>
   );
 }

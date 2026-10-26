@@ -44,3 +44,6 @@ next-env.d.ts
 /reports
 /leads
 /reports-run.log
+
+# generated video output (frames, voice cache, mp4s)
+/video/out

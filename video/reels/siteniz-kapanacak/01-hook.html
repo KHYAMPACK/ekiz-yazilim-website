@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "SG"; src: url("__FONT__") format("truetype"); font-weight: 300 700; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; background: #000; overflow: hidden; font-family: "SG", sans-serif; color: #fff; }
+  #stage { position: absolute; inset: 0; width: 1080px; height: 1920px; transform-origin: 50% 45%; background:
+      radial-gradient(900px 700px at 80% 78%, rgba(191,213,235,0.10), rgba(0,0,0,0) 70%), #000; }
+  #mark { position: absolute; left: 90px; top: 270px; width: 84px; height: 84px; opacity: 0.55; }
+  .word { position: absolute; left: 0; width: 1080px; text-align: center; font-size: 168px; font-weight: 600; letter-spacing: -6px; line-height: 190px; white-space: nowrap;
+          opacity: 0; transform-origin: 50% 55%; will-change: transform, opacity; }
+  #w1 { top: 640px; }
+  #w2 { top: 820px; color: #ff4b3e; }
+  #bar { position: absolute; left: 240px; top: 1040px; height: 10px; width: 0; background: #ff4b3e; }
+  #ring { position: absolute; left: 0; top: 0; border: 5px solid #bfd5eb; border-radius: 50%; opacity: 0; }
+  #bubble { position: absolute; left: 375px; top: 1160px; width: 330px; height: 128px; background: #e8eef4; border-radius: 44px 44px 44px 10px;
+            display: flex; align-items: center; justify-content: center; gap: 18px; opacity: 0; will-change: transform, opacity; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; background: #55616d; }
+  #cap { position: absolute; left: 90px; right: 90px; top: 1450px; text-align: center; font-size: 62px; font-weight: 500; line-height: 1.2; opacity: 0; }
+  #cap b { background: #bfd5eb; color: #000; padding: 0 12px; font-weight: 600; }
+  #flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="mark" viewBox="0 0 100 100" fill="none">__MARK__</svg>
+  <div id="ring"></div>
+  <div class="word" id="w1">Siteniz</div>
+  <div class="word" id="w2">kapanacak.</div>
+  <div id="bar"></div>
+  <div id="bubble"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+  <div id="cap">Bir müşterim <b>bu mesajı</b> aldı.</div>
+  <div id="flash"></div>
+</div>
+<script>
+  // Section timing comes from build.mjs: voiceStart (seconds) and the section duration.
+  const TIMING = __TIMING__;
+  const V = TIMING.voiceStart;
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const easeOutBack = (x) => { const c1 = 1.5, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+  const $ = (id) => document.getElementById(id);
+
+  const T1 = 0.35, T2 = 0.62;          // the two slams
+  const DROP = 0.10;                    // time in flight before impact
+
+  // A word slams in from big and close to its place, then rings out with a small bounce.
+  function slam(el, t, t0, glitch) {
+    if (t < t0) { el.style.opacity = '0'; return; }
+    const p = clamp((t - t0) / DROP);
+    let s = 1.9 - 0.9 * p * p;
+    if (p >= 1) {
+      const q = t - t0 - DROP;
+      s = 1 + Math.exp(-q * 16) * 0.045 * Math.sin(q * 58);
+    }
+    el.style.opacity = String(clamp((t - t0) / 0.03));
+    el.style.transform = `scale(${s})`;
+    const g = Math.exp(-(t - t0) * 9) * glitch;
+    const j = Math.sign(Math.sin(t * 210)) * g;
+    el.style.textShadow = g > 0.6 ? `${-j}px 0 #bfd5eb, ${j}px 0 rgba(255,75,62,0.55)` : 'none';
+  }
+
+  window.draw = function (t) {
+    slam($('w1'), t, T1, 16);
+    slam($('w2'), t, T2, 26);
+
+    // camera shake from both impacts + slow push-in
+    let sx = 0, sy = 0;
+    [[T1, 20], [T2, 42]].forEach(([t0, a]) => {
+      if (t >= t0) { const k = a * Math.exp(-(t - t0) * 8.5); sx += k * Math.sin(t * 131 + 1.3); sy += k * Math.cos(t * 107 + 0.4); }
+    });
+    const push = 1 + 0.035 * seg(t, 0, TIMING.duration);
+    $('stage').style.transform = `translate(${sx}px, ${sy}px) scale(${push})`;
+
+    // white flash on impact
+    let f = 0;
+    if (t >= T1) f = Math.max(f, 0.5 * Math.exp(-(t - T1) * 30));
+    if (t >= T2) f = Math.max(f, 0.8 * Math.exp(-(t - T2) * 26));
+    $('flash').style.opacity = String(f);
+
+    // shock ring from the second word
+    if (t >= T2) {
+      const q = t - T2, r = 90 + q * 1500, cx = 540, cy = 915;
+      const ring = $('ring');
+      ring.style.width = ring.style.height = `${r * 2}px`;
+      ring.style.left = `${cx - r}px`; ring.style.top = `${cy - r}px`;
+      ring.style.opacity = String(0.7 * Math.exp(-q * 6.5));
+    }
+
+    // underline lands after the slam
+    $('bar').style.width = `${easeOut(seg(t, 0.95, 1.3)) * 600}px`;
+
+    // bubble pops just before the voice starts, typing dots run while he speaks, caption follows his words
+    const b = seg(t, V - 0.2, V + 0.25);
+    $('bubble').style.opacity = String(easeOut(seg(t, V - 0.2, V + 0.05)));
+    $('bubble').style.transform = `translateY(${(1 - easeOutBack(b)) * 140}px) scale(${0.92 + 0.08 * easeOutBack(b)})`;
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      const p = 0.5 + 0.5 * Math.sin((t - V) * 9 - i * 0.9);
+      d.style.transform = `translateY(${-10 * p}px)`;
+      d.style.opacity = String(0.45 + 0.55 * p);
+    });
+    const k = easeOut(seg(t, V - 0.05, V + 0.3));
+    $('cap').style.opacity = String(k);
+    $('cap').style.transform = `translateY(${(1 - k) * 30}px)`;
+  };
+  window.draw(0);
+</script>
+</body>
+</html>

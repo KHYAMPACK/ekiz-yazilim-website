@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img" aria-label="ekiz YAZILIM mark">
-  <!-- Black mark for light backgrounds. Transparent canvas. -->
-  <path fill="#000000" d="M0 0H81V5.1H5.1V81H0V0Z"/>
-  <path fill="#000000" d="M100 100H18.9V94.9H94.9V18.9H100V100Z"/>
-  <path fill="#000000" d="M29.9 12H73.7L84.6 30.8H40.8L51.7 50L40.8 69.1H84.6L73.7 87.9H29.9L19 69.1L29.9 50L19 30.8L29.9 12Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img" aria-label="Ekiz Yazılım mark">
+  <!-- Orange tile, black mark, no brackets. Transparent canvas. -->
+  <rect width="100" height="100" rx="26" fill="#e58a5c"/>
+  <path transform="translate(50 50) scale(0.58) translate(-51.8 -50)" fill="#141413" d="M29.9 12H73.7L84.6 30.8H40.8L51.7 50L40.8 69.1H84.6L73.7 87.9H29.9L19 69.1L29.9 50L19 30.8L29.9 12Z"/>
 </svg>

@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { whatsappHref } from "@/lib/site";
+import { isScPath } from "@/lib/theme";
 
 type Cta = {
   label: string;
@@ -28,23 +30,6 @@ const TOPICS: Topic[] = [
     ctas: [
       { label: "Eğitim kurumları", href: "/egitim", primary: true },
       { label: "Görüşme ayarla", href: "/egitim#gorusme" },
-    ],
-  },
-  {
-    id: "eticaret",
-    question: "E-ticarete başlamak istiyorum",
-    title: "Online mağaza birlikte kurulur",
-    body: "Butik ve giyim için vitrin, sepet, ödeme ve sipariş paneli. Sayfada süreci görebilirsiniz.",
-    ctas: [
-      {
-        label: "E-ticaret sayfası",
-        href: "/e-ticaret",
-        primary: true,
-      },
-      {
-        label: "Görüşme ayarla",
-        href: "/e-ticaret#gorusme",
-      },
     ],
   },
   {
@@ -118,6 +103,7 @@ function playCling() {
  */
 export default function FloatingAssistant() {
   const panelId = useId();
+  const themed = isScPath(usePathname());
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<View>("menu");
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -209,7 +195,7 @@ export default function FloatingAssistant() {
   }
 
   return (
-    <div className="ekiz-assistant ekiz-assistant--docked fixed right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex flex-col items-end gap-2.5 sm:right-5">
+    <div className={`ekiz-assistant ekiz-assistant--docked ${themed ? "ekiz-assistant--sc" : ""} fixed right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 flex flex-col items-end gap-2.5 sm:right-5`}>
       {panelMounted && (
         <div
           id={panelId}

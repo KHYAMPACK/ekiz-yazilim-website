@@ -33,39 +33,36 @@ export default function FaqSection() {
   return (
     <section
       id="sss"
-      className="border-b border-black bg-ice/30"
+      className="sc-paper border-t border-sc-border"
       aria-labelledby="sss-title"
     >
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <div className="mb-10 max-w-xl">
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            SSS
-          </p>
-          <h2
-            id="sss-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Sık Sorulanlar
+      <div className="sc-container sc-section grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+        <div>
+          <p className="sc-eyebrow mb-4">SSS</p>
+          <h2 id="sss-title" className="sc-h2">
+            Sık <span className="sc-em">sorulanlar</span>
           </h2>
         </div>
 
-        <ul className="divide-y divide-black border border-black bg-white">
+        <div className="divide-y divide-sc-border border-y border-sc-border">
           {faqs.map((item, i) => (
-            <li
-              key={item.q}
-              className={`grid min-w-0 gap-3 px-5 py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] sm:gap-10 sm:px-6 ${
-                i % 2 === 1 ? "bg-ice/30" : "bg-white"
-              }`}
-            >
-              <h3 className="text-base font-medium tracking-tight text-black sm:text-lg">
-                {item.q}
-              </h3>
-              <p className="min-w-0 text-base leading-relaxed text-black/65">
-                {item.a}
-              </p>
-            </li>
+            <details key={item.q} className="group" open={i === 0}>
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-left [&::-webkit-details-marker]:hidden">
+                <h3 className="sc-serif text-xl leading-snug text-sc-text sm:text-[1.375rem]">
+                  {item.q}
+                </h3>
+                <span
+                  className="relative size-6 shrink-0 text-sc-accent-text"
+                  aria-hidden
+                >
+                  <span className="absolute top-1/2 left-1/2 h-px w-4 -translate-x-1/2 bg-current" />
+                  <span className="absolute top-1/2 left-1/2 h-4 w-px -translate-y-1/2 bg-current transition-transform duration-300 group-open:scale-y-0" />
+                </span>
+              </summary>
+              <p className="sc-body pr-10 pb-6">{item.a}</p>
+            </details>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

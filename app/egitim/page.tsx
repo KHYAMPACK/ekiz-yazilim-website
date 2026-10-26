@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import EgitimMockups from "@/components/egitim/EgitimMockups";
 import EgitimScheduleSection from "@/components/egitim/EgitimScheduleSection";
-import SiteFooter from "@/components/SiteFooter";
-import SiteHeader from "@/components/SiteHeader";
+import ScFooter from "@/components/ScFooter";
+import ScHeader from "@/components/ScHeader";
 import { seo } from "@/lib/seo";
 import { site, whatsappHref } from "@/lib/site";
 
@@ -172,9 +172,7 @@ function jsonLd() {
   };
 }
 
-const eyebrow =
-  "mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45";
-const h2 = "text-3xl font-medium tracking-tight text-black sm:text-4xl";
+const wrap = "sc-container sc-section";
 
 export default function EgitimPage() {
   const wa = whatsappHref(
@@ -182,38 +180,37 @@ export default function EgitimPage() {
   );
 
   return (
-    <>
+    <div className="sc-root">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd()) }}
       />
-      <SiteHeader />
+      <ScHeader />
       <main>
-        <section className="border-b border-black bg-white">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-24">
-            <p className={eyebrow}>Eğitim kurumları için</p>
-            <h1 className="max-w-4xl text-[clamp(2.2rem,6vw,4.2rem)] leading-[1.08] font-medium tracking-tight text-black">
-              LGS hazırlık kurumları ve etüt merkezleri için öğrenci takip sistemi
+        <section className="sc-glow relative overflow-hidden">
+          <div className={`${wrap} text-center`}>
+            <p className="sc-eyebrow mb-5">Eğitim kurumları için</p>
+            <h1 className="sc-h1 mx-auto max-w-4xl">
+              LGS hazırlık kurumları ve etüt merkezleri için{" "}
+              <span className="sc-em">öğrenci takip</span> sistemi
             </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-black/70 sm:text-lg">
+            <p className="sc-lead mx-auto mt-6 max-w-2xl">
               Deneme sınavı analizi, yoklama, ödev ve veli bildirimi tek
-              uygulamada: <strong className="font-medium text-black">Scholares</strong>.
+              uygulamada:{" "}
+              <strong className="font-medium text-sc-text">Scholares</strong>.
               Kurumsal web sitenizi de aynı yerden, tek muhatapla kuruyoruz.
               Atlas Eğitim Kurumu’nda her gün kullanılıyor.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-wrap justify-center gap-3">
               <a
                 href={SCHOLARES_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex border border-black bg-black px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
+                className="sc-btn sc-btn--primary"
               >
                 Scholares’i incele
               </a>
-              <Link
-                href="#gorusme"
-                className="inline-flex border border-black px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-ice/40"
-              >
+              <Link href="#gorusme" className="sc-btn sc-btn--secondary">
                 Demo iste
               </Link>
               {wa && (
@@ -221,7 +218,7 @@ export default function EgitimPage() {
                   href={wa}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex border border-black px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-ice/40"
+                  className="sc-btn sc-btn--ghost"
                 >
                   WhatsApp’tan yaz
                 </a>
@@ -230,106 +227,110 @@ export default function EgitimPage() {
           </div>
         </section>
 
-        <section className="border-b border-black bg-ice/30" aria-labelledby="egitim-pains">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <p className={eyebrow}>Bugün nasıl yürüyor?</p>
-            <h2 id="egitim-pains" className={h2}>
-              Defter, Excel ve WhatsApp grupları yetmiyor.
+        <section className="border-t border-sc-border" aria-labelledby="egitim-pains">
+          <div className={wrap}>
+            <p className="sc-eyebrow mb-3">Bugün nasıl yürüyor?</p>
+            <h2 id="egitim-pains" className="sc-h2 max-w-3xl">
+              Defter, Excel ve WhatsApp grupları <span className="sc-em">yetmiyor.</span>
             </h2>
-            <ul className="mt-10 grid gap-px border border-black bg-black sm:grid-cols-3">
-              {PAINS.map((p) => (
-                <li key={p.title} className="bg-white p-6">
-                  <h3 className="text-lg font-medium tracking-tight text-black">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-black/70">{p.body}</p>
+            <ul className="mt-12 grid gap-4 sm:grid-cols-3">
+              {PAINS.map((p, i) => (
+                <li key={p.title} className="sc-card p-6 sm:p-7">
+                  <span className="font-display text-3xl text-sc-accent-text">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="sc-h3 mt-4">{p.title}</h3>
+                  <p className="sc-body mt-3 !text-[0.9375rem]">{p.body}</p>
                 </li>
               ))}
             </ul>
           </div>
         </section>
 
-        <section className="border-b border-black bg-white" aria-labelledby="egitim-features">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <p className={eyebrow}>Sistem</p>
-            <h2 id="egitim-features" className={h2}>
-              Hepsi tek uygulamada.
+        <section className="border-t border-sc-border" aria-labelledby="egitim-features">
+          <div className={wrap}>
+            <p className="sc-eyebrow mb-3">Sistem</p>
+            <h2 id="egitim-features" className="sc-h2">
+              Hepsi <span className="sc-em">tek uygulamada.</span>
             </h2>
-            <ul className="mt-10 grid gap-px border border-black bg-black sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {FEATURES.map((f) => (
-                <li key={f.title} className="bg-white p-6">
-                  <h3 className="text-lg font-medium tracking-tight text-black">
-                    {f.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-black/70">{f.body}</p>
+                <li key={f.title} className="sc-card p-6 sm:p-7">
+                  <span
+                    className="block h-1.5 w-8 rounded-full bg-sc-accent"
+                    aria-hidden
+                  />
+                  <h3 className="sc-h3 mt-5">{f.title}</h3>
+                  <p className="sc-body mt-3 !text-[0.9375rem]">{f.body}</p>
                 </li>
               ))}
             </ul>
-            <p className="mt-6 text-sm text-black/55">
+            <p className="sc-body mt-8 !text-sm">
               Telefona uygulama gibi eklenir (PWA); öğretmen ve veli ayrı bir
               mağaza uygulaması indirmek zorunda kalmaz.
             </p>
           </div>
         </section>
 
-        <section className="border-b border-black bg-ice/30" aria-labelledby="egitim-screens">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <p className={eyebrow}>Uygulamadan</p>
-            <h2 id="egitim-screens" className={h2}>
-              Öğretmen ne girer, veli ne görür?
+        <section
+          className="sc-glow border-t border-sc-border"
+          aria-labelledby="egitim-screens"
+        >
+          <div className={wrap}>
+            <p className="sc-eyebrow mb-3">Uygulamadan</p>
+            <h2 id="egitim-screens" className="sc-h2 max-w-3xl">
+              Öğretmen ne girer, <span className="sc-em">veli ne görür?</span>
             </h2>
-            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-black/65">
+            <p className="sc-body mt-4 max-w-2xl">
               Aşağıdaki ekranlar örnek verilerle hazırlanmış görünümlerdir.
             </p>
             <EgitimMockups />
           </div>
         </section>
 
-        <section className="border-b border-black bg-white" aria-labelledby="egitim-proof">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <p className={eyebrow}>Referanslar</p>
-            <h2 id="egitim-proof" className={h2}>
-              Eğitim kurumlarıyla çalışıyoruz.
+        <section className="border-t border-sc-border" aria-labelledby="egitim-proof">
+          <div className={wrap}>
+            <p className="sc-eyebrow mb-3">Referanslar</p>
+            <h2 id="egitim-proof" className="sc-h2 max-w-3xl">
+              Eğitim kurumlarıyla <span className="sc-em">çalışıyoruz.</span>
             </h2>
-            <ul className="mt-10 grid gap-px border border-black bg-black sm:grid-cols-2 lg:grid-cols-4">
+            <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {PROOF.map((p) => (
-                <li key={p.name} className="bg-white p-6">
-                  <h3 className="text-base font-medium tracking-tight text-black">
+                <li key={p.name} className="sc-card p-6">
+                  <h3 className="font-display text-xl tracking-tight text-sc-text">
                     {p.name}
                   </h3>
-                  <p className="mt-2 text-sm text-black/65">{p.note}</p>
+                  <p className="sc-body mt-2 !text-[0.9375rem]">{p.note}</p>
                 </li>
               ))}
             </ul>
             <Link
               href="/isler"
-              className="mt-6 inline-block text-sm font-medium text-black underline underline-offset-4"
+              className="mt-8 inline-block text-sm font-medium text-sc-accent-text underline underline-offset-4"
             >
               Tüm işleri gör →
             </Link>
           </div>
         </section>
 
-        <section className="border-b border-black bg-white" aria-labelledby="egitim-steps">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <p className={eyebrow}>Süreç</p>
-            <h2 id="egitim-steps" className={h2}>
-              Nasıl başlıyoruz?
+        <section className="border-t border-sc-border" aria-labelledby="egitim-steps">
+          <div className={wrap}>
+            <p className="sc-eyebrow mb-3">Süreç</p>
+            <h2 id="egitim-steps" className="sc-h2">
+              Nasıl <span className="sc-em">başlıyoruz?</span>
             </h2>
-            <ol className="mt-10 grid gap-px border border-black bg-black sm:grid-cols-2 lg:grid-cols-4">
+            <ol className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {STEPS.map((s, i) => (
-                <li key={s.title} className="bg-white p-6">
-                  <p className="text-xs font-medium tracking-[0.2em] text-black/45">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <h3 className="mt-2 text-lg font-medium tracking-tight text-black">
-                    {s.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-black/70">{s.body}</p>
+                <li key={s.title} className="sc-card p-6">
+                  <span className="grid size-9 place-items-center rounded-full bg-sc-accent/15 text-sm font-medium text-sc-accent-text">
+                    {i + 1}
+                  </span>
+                  <h3 className="sc-h3 mt-5">{s.title}</h3>
+                  <p className="sc-body mt-3 !text-[0.9375rem]">{s.body}</p>
                 </li>
               ))}
             </ol>
-            <p className="mt-6 max-w-2xl text-sm leading-relaxed text-black/65">
+            <p className="sc-body mt-8 max-w-2xl !text-sm">
               Önce yazılı kapsamlı ve başarı ölçütlü ücretli bir pilotla
               başlıyoruz; memnun kalırsanız öğrenci kapasitenize göre yıllık
               lisansa geçilir. İlk yıl kurulum ve eğitim dahil.
@@ -337,25 +338,31 @@ export default function EgitimPage() {
           </div>
         </section>
 
-        <section className="border-b border-black bg-ice/30" aria-labelledby="egitim-faq">
-          <div className="mx-auto w-full max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <p className={eyebrow}>SSS</p>
-            <h2 id="egitim-faq" className={h2}>
-              Sık Sorulanlar
+        <section className="sc-paper" aria-labelledby="egitim-faq">
+          <div className={wrap}>
+            <p className="sc-eyebrow mb-3">SSS</p>
+            <h2 id="egitim-faq" className="sc-h2">
+              Sık <span className="sc-em">Sorulanlar</span>
             </h2>
-            <div className="mt-10 border border-black bg-white">
+            <div className="mt-12 overflow-hidden rounded-3xl border border-sc-border bg-sc-surface">
               {FAQS.map((item, i) => (
                 <details
                   key={item.q}
-                  className={i > 0 ? "border-t border-black" : ""}
+                  className={`group ${i > 0 ? "border-t border-sc-border" : ""}`}
                   open={i === 0}
                 >
-                  <summary className="cursor-pointer list-none px-5 py-5 text-base font-medium tracking-tight text-black sm:px-6 sm:text-lg">
-                    {item.q}
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-5 sm:px-7 [&::-webkit-details-marker]:hidden">
+                    <span className="font-display text-lg tracking-tight text-sc-text sm:text-xl">
+                      {item.q}
+                    </span>
+                    <span
+                      className="text-xl leading-none text-sc-accent-text transition-transform group-open:rotate-45"
+                      aria-hidden
+                    >
+                      +
+                    </span>
                   </summary>
-                  <p className="px-5 pb-5 text-sm leading-relaxed text-black/70 sm:px-6 sm:text-base">
-                    {item.a}
-                  </p>
+                  <p className="sc-body px-5 pb-6 sm:px-7">{item.a}</p>
                 </details>
               ))}
             </div>
@@ -364,7 +371,7 @@ export default function EgitimPage() {
 
         <EgitimScheduleSection />
       </main>
-      <SiteFooter />
-    </>
+      <ScFooter />
+    </div>
   );
 }

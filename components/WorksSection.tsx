@@ -8,32 +8,26 @@ export default function WorksSection() {
   return (
     <section
       id="isler"
-      className="border-b border-black bg-white"
+      className="border-t border-sc-border bg-sc-surface"
       aria-labelledby="isler-title"
     >
-      <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <div className="mb-10 flex max-w-xl flex-col gap-4 sm:mb-12">
-          <p className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            İşler
-          </p>
-          <h2
-            id="isler-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Yaptıklarımız
-          </h2>
-          <p className="text-base text-black/65">
-            Seçilmiş yayındaki işler. Tam liste İşler sayfasında.
-          </p>
-          <Link
-            href="/isler"
-            className="inline-flex min-h-12 w-fit items-center border border-black bg-black px-5 text-sm font-medium tracking-wide text-white transition-colors hover:bg-black/85"
-          >
-            Tüm işler
+      <div className="sc-container sc-section">
+        <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-xl">
+            <p className="sc-eyebrow mb-4">İşler</p>
+            <h2 id="isler-title" className="sc-h2">
+              <span className="sc-em">Yaptıklarımız</span>
+            </h2>
+            <p className="sc-lead mt-4">
+              Seçilmiş yayındaki işler. Tam liste İşler sayfasında.
+            </p>
+          </div>
+          <Link href="/isler" className="sc-btn sc-btn--ghost shrink-0">
+            Tüm işler <span aria-hidden>→</span>
           </Link>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
             <WorkCard key={project.id} project={project} />
           ))}

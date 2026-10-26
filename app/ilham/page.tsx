@@ -5,6 +5,8 @@ import SiteFooter from "@/components/SiteFooter";
 import SiteHeader from "@/components/SiteHeader";
 
 export const metadata: Metadata = {
+  // Hidden: not linked from the site and kept out of search. Remove to re-publish.
+  robots: { index: false, follow: false },
   title: "İlham",
   description:
     "Beş kısa soruyla sitenizin yönünü bulun — sade, cesur, editoryal veya ürün odaklı. Sonuçla WhatsApp’tan konuşun.",

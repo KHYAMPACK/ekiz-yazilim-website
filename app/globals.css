@@ -22,7 +22,8 @@
   --font-sans: var(--font-space-grotesk);
 }
 
-* {
+/* Legacy (square) pages only; Scholares-themed pages (.sc-root) keep their radii. */
+body:not(:has(.sc-root)) * {
   border-radius: 0;
 }
 
@@ -1219,4 +1220,339 @@ html.logo-loader-active body {
     animation: none;
     transform: none;
   }
+}
+
+/* ==========================================================================
+   Scholares theme — orange + warm black, serif headlines.
+   Scoped to `.sc-root` (home, /egitim, /web-sitesi, /isler). Other pages keep
+   the original black/white/ice look.
+   Tokens are CSS variables so a `.sc-paper` band can flip them to light.
+   ========================================================================== */
+@theme inline {
+  --color-sc-bg: var(--sc-bg);
+  --color-sc-surface: var(--sc-surface);
+  --color-sc-surface-2: var(--sc-surface-2);
+  --color-sc-border: var(--sc-border);
+  --color-sc-text: var(--sc-text);
+  --color-sc-muted: var(--sc-muted);
+  --color-sc-accent: var(--sc-accent);
+  --color-sc-accent-text: var(--sc-accent-text);
+  --color-sc-on-accent: var(--sc-on-accent);
+  --font-display: var(--sc-serif);
+}
+
+html:has(.sc-root) {
+  color-scheme: dark;
+  background: #121211;
+}
+
+body:has(.sc-root) {
+  background: #121211;
+}
+
+.sc-root,
+.sc-paper {
+  --sc-bg: #121211;
+  --sc-surface: #1a1a18;
+  --sc-surface-2: #242422;
+  --sc-border: #32322e;
+  --sc-text: #f3f0e8;
+  --sc-muted: #a9a69c;
+  --sc-accent: #e58a5c;
+  --sc-accent-text: #e58a5c;
+  --sc-on-accent: #141413;
+  background: var(--sc-bg);
+  color: var(--sc-text);
+}
+
+.sc-root {
+  --sc-sans: var(--font-space-grotesk), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --sc-serif: var(--sc-sans);
+  /* Legacy widgets embedded on these pages (shop demo) pick up warm tints. */
+  --ekiz-white: #f3f0e8;
+  --ekiz-ice: #f2cfba;
+  font-family: var(--sc-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Claude-style warm paper band (light), same tokens flipped. */
+.sc-paper {
+  --sc-bg: #faf9f5;
+  --sc-surface: #ffffff;
+  --sc-surface-2: #f0eee6;
+  --sc-border: #e3dfd2;
+  --sc-text: #141413;
+  --sc-muted: #6b6860;
+  --sc-accent: #d97757;
+  --sc-accent-text: #b6512a;
+  --sc-on-accent: #ffffff;
+}
+
+.sc-root ::selection {
+  background: var(--sc-accent);
+  color: #141413;
+}
+
+.sc-root :focus-visible {
+  outline: 2px solid var(--sc-accent);
+  outline-offset: 3px;
+}
+
+@layer components {
+  .sc-container {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 640px) {
+    .sc-container {
+      padding-inline: 1.5rem;
+    }
+  }
+
+  .sc-section {
+    padding-block: clamp(4rem, 9vw, 7rem);
+  }
+
+  .sc-hairline {
+    border-top: 1px solid var(--sc-border);
+  }
+
+  /* —— Type —— */
+  .sc-serif {
+    font-family: var(--sc-serif);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .sc-h1,
+  .sc-h2,
+  .sc-h3 {
+    font-family: var(--sc-serif);
+    font-weight: 500;
+    color: var(--sc-text);
+    text-wrap: balance;
+  }
+  .sc-h1 {
+    font-size: clamp(2.5rem, 6.4vw, 4.6rem);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+  }
+  .sc-h2 {
+    font-size: clamp(2rem, 4.4vw, 3.2rem);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+  .sc-h3 {
+    font-size: clamp(1.3rem, 2.2vw, 1.65rem);
+    line-height: 1.22;
+    letter-spacing: -0.015em;
+  }
+
+  /* Accent word inside a serif headline. */
+  .sc-em {
+    color: var(--sc-accent-text);
+  }
+
+  .sc-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--sc-accent-text);
+  }
+
+  .sc-lead {
+    font-size: clamp(1.0625rem, 1.5vw, 1.2rem);
+    line-height: 1.65;
+    color: var(--sc-muted);
+  }
+
+  .sc-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--sc-muted);
+  }
+
+  /* —— Buttons (12px radius, like Scholares) —— */
+  .sc-btn {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 12px;
+    border: 1px solid transparent;
+    padding: 0 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .sc-btn--primary {
+    background: var(--sc-accent);
+    color: var(--sc-on-accent);
+  }
+  .sc-btn--primary:hover {
+    background: color-mix(in srgb, var(--sc-accent) 88%, #fff);
+  }
+  .sc-btn--secondary {
+    background: var(--sc-surface-2);
+    color: var(--sc-text);
+  }
+  .sc-btn--secondary:hover {
+    background: color-mix(in srgb, var(--sc-surface-2) 80%, var(--sc-text));
+  }
+  .sc-btn--ghost {
+    border-color: var(--sc-border);
+    color: var(--sc-text);
+  }
+  .sc-btn--ghost:hover {
+    border-color: var(--sc-accent);
+    color: var(--sc-accent-text);
+  }
+  .sc-btn--light {
+    background: #f3f0e8;
+    color: #141413;
+  }
+  .sc-btn--light:hover {
+    background: #ffffff;
+  }
+  .sc-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* —— Surfaces —— */
+  .sc-card {
+    background: var(--sc-surface);
+    border: 1px solid var(--sc-border);
+    border-radius: 20px;
+  }
+  .sc-card--lg {
+    border-radius: 28px;
+  }
+
+  .sc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--sc-border);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8125rem;
+    color: var(--sc-muted);
+  }
+
+  .sc-input {
+    min-height: 3rem;
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--sc-border);
+    border-radius: 12px;
+    background: var(--sc-bg);
+    padding: 0 1rem;
+    font-size: 1rem;
+    color: var(--sc-text);
+  }
+  textarea.sc-input {
+    padding-block: 0.8rem;
+  }
+  .sc-input::placeholder {
+    color: color-mix(in srgb, var(--sc-muted) 70%, transparent);
+  }
+  .sc-input:focus {
+    outline: none;
+    border-color: var(--sc-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sc-accent) 25%, transparent);
+  }
+  select.sc-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%23a9a69c' stroke-width='1.6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+  }
+
+  /* Warm glow behind hero / CTA blocks. */
+  .sc-glow {
+    background:
+      radial-gradient(60% 55% at 50% 0%, rgb(229 138 92 / 0.16), transparent 70%),
+      radial-gradient(40% 40% at 90% 30%, rgb(229 138 92 / 0.06), transparent 70%);
+  }
+
+  /* Hero grid + cursor-following bold lines (orange). */
+  .sc-grid {
+    background-image:
+      linear-gradient(to right, rgb(243 240 232 / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(243 240 232 / 0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+  }
+  .sc-grid-bold {
+    background-image:
+      linear-gradient(to right, rgb(229 138 92 / 0.55) 1.5px, transparent 1.5px),
+      linear-gradient(to bottom, rgb(229 138 92 / 0.55) 1.5px, transparent 1.5px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(
+      circle 360px at var(--hero-mx, -600px) var(--hero-my, -600px),
+      #000 0%,
+      #000 30%,
+      transparent 78%
+    );
+    mask-image: radial-gradient(
+      circle 360px at var(--hero-mx, -600px) var(--hero-my, -600px),
+      #000 0%,
+      #000 30%,
+      transparent 78%
+    );
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sc-grid-bold {
+      display: none;
+    }
+  }
+}
+
+/* Floating assistant on themed pages: dark panel, orange button. */
+.ekiz-assistant--sc {
+  --ekiz-black: #f3f0e8;
+  --ekiz-white: #1a1a18;
+  --ekiz-ice: #2b2a26;
+}
+.ekiz-assistant--sc .ekiz-assistant__panel {
+  border-color: #32322e;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.ekiz-assistant--sc .ekiz-assistant__fab {
+  border-color: #e58a5c;
+  border-radius: 999px;
+  background: #e58a5c;
+  color: #141413;
+}
+.ekiz-assistant--sc .ekiz-assistant__fab:hover,
+.ekiz-assistant--sc .ekiz-assistant__fab.is-open {
+  background: #f3f0e8;
+  border-color: #f3f0e8;
+  color: #141413;
+}
+.ekiz-assistant--sc .ekiz-assistant__fab-mark {
+  border-radius: 999px;
+  background: rgb(20 20 19 / 0.12);
+}
+.ekiz-assistant--sc .ekiz-assistant__fab-pulse {
+  border-color: #121211;
+  border-radius: 999px;
+  background: #f3f0e8;
+}
+.ekiz-assistant--sc .ekiz-assistant__panel {
+  background: #1a1a18;
+}
+.ekiz-assistant--sc [class*="border-black"],
+.ekiz-assistant--sc [class*="divide-black"] > * {
+  border-color: #32322e;
 }

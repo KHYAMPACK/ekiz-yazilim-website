@@ -24,12 +24,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${seo.siteUrl}/ilham`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.8,
-    },
-    {
       url: `${seo.siteUrl}/isler`,
       lastModified,
       changeFrequency: "weekly",
@@ -43,12 +37,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${seo.siteUrl}/web-sitesi`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.95,
-    },
-    {
-      url: `${seo.siteUrl}/e-ticaret`,
       lastModified,
       changeFrequency: "weekly",
       priority: 0.95,

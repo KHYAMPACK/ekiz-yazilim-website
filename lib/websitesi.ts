@@ -241,7 +241,7 @@ export const FAQS = [
   },
   {
     q: "Bu E-Ticaret Mi?",
-    a: "Hayır. Bu sayfa tanıtım ve kurumsal site içindir. Ürün satıp sepet ve ödeme istiyorsanız e-ticaret sayfasına bakın.",
+    a: "Hayır. Bu sayfa tanıtım ve kurumsal site içindir. Ürün satıp sepet ve ödeme istiyorsanız bizimle konuşun, ayrıca değerlendirelim.",
   },
   {
     q: "Hazır Şablon Mu Kullanıyorsunuz?",

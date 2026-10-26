@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-10-26T16:14:45.942Z",
+  "fonts": [
+    "SpaceGrotesk.ttf",
+    "arial.ttf",
+    "arialbd.ttf",
+    "ariali.ttf",
+    "ARIAL.TTF",
+    "segoeui.ttf",
+    "segoeuib.ttf",
+    "segoeuil.ttf"
+  ],
+  "results": [
+    {
+      "out": "ekiz-mark-512.png",
+      "bytes": 9104,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "out": "ekiz-mark-128.png",
+      "bytes": 2160,
+      "width": 128,
+      "height": 128
+    },
+    {
+      "out": "ekiz-mark-black-512.png",
+      "bytes": 9104,
+      "width": 512,
+      "height": 512
+    },
+    {
+      "out": "ekiz-mark-black-128.png",
+      "bytes": 2160,
+      "width": 128,
+      "height": 128
+    },
+    {
+      "out": "ekiz-logo-horizontal-white-1200.png",
+      "bytes": 19526,
+      "width": 1200,
+      "height": 316
+    },
+    {
+      "out": "ekiz-logo-horizontal-black-1200.png",
+      "bytes": 21742,
+      "width": 1200,
+      "height": 316
+    },
+    {
+      "out": "ekiz-powered-by-1600.png",
+      "bytes": 18239,
+      "width": 1600,
+      "height": 213
+    },
+    {
+      "out": "ekiz-powered-by-full-mark-1600.png",
+      "bytes": 16708,
+      "width": 1600,
+      "height": 192
+    },
+    {
+      "out": "ekiz-powered-by-800.png",
+      "bytes": 8127,
+      "width": 800,
+      "height": 107
+    },
+    {
+      "out": "ekiz-powered-by-full-mark-800.png",
+      "bytes": 7082,
+      "width": 800,
+      "height": 96
+    }
+  ]
+}

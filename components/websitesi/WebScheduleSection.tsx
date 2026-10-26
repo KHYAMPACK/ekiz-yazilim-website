@@ -66,42 +66,34 @@ export default function WebScheduleSection() {
   return (
     <section
       id="gorusme"
-      className="border-b border-black bg-white"
+      className="sc-glow border-t border-sc-border bg-sc-surface"
       aria-labelledby="web-gorusme-title"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14">
+      <div className="sc-container grid gap-10 py-16 sm:py-24 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-16">
         <div>
-          <p className="mb-3 text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-            Başlayalım
-          </p>
-          <h2
-            id="web-gorusme-title"
-            className="text-3xl font-medium tracking-tight text-black sm:text-4xl"
-          >
-            Hazırsanız, Keşif Görüşmesiyle Başlayalım.
+          <p className="sc-eyebrow mb-4">Başlayalım</p>
+          <h2 id="web-gorusme-title" className="sc-h2">
+            Hazırsanız, <span className="sc-em">keşif görüşmesiyle</span>{" "}
+            başlayalım.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-black/65">
+          <p className="sc-lead mt-5">
             Formu doldurun; sizi arayıp ihtiyacı 15–20 dakikada netleştirelim.
             Ardından yazılı teklif gelir.
           </p>
         </div>
 
-        <div className="border border-black bg-white p-5 sm:p-6">
+        <div className="sc-card sc-card--lg bg-sc-bg p-6 sm:p-8">
           {status === "ok" ? (
             <div role="status" className="py-6">
-              <p className="text-xs font-medium tracking-[0.2em] uppercase text-black/45">
-                Talebiniz alındı
-              </p>
-              <p className="mt-3 text-xl font-medium tracking-tight text-black">
-                En Kısa Sürede Sizi Arayacağız.
-              </p>
-              <p className="mt-2 text-sm text-black/60">
+              <p className="sc-eyebrow">Talebiniz alındı</p>
+              <p className="sc-h3 mt-3">En Kısa Sürede Sizi Arayacağız.</p>
+              <p className="sc-body mt-2 !text-sm">
                 Numaranızı aldık. Uygun bir zamanda dönüş yaparız.
               </p>
             </div>
           ) : step === 0 ? (
             <form onSubmit={nextFromNames} className="flex flex-col gap-3">
-              <p className="mb-1 text-xs font-medium tracking-[0.16em] uppercase text-black/45">
+              <p className="mb-1 text-xs font-medium tracking-[0.16em] text-sc-muted uppercase">
                 Görüşme ayarla
               </p>
               <label className="sr-only" htmlFor="web-ad">
@@ -114,7 +106,7 @@ export default function WebScheduleSection() {
                 value={ad}
                 onChange={(e) => setAd(e.target.value)}
                 placeholder="Ad"
-                className="min-h-12 border border-black bg-white px-4 text-base text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice"
+                className="sc-input"
               />
               <label className="sr-only" htmlFor="web-soyad">
                 Soyad
@@ -126,29 +118,26 @@ export default function WebScheduleSection() {
                 value={soyad}
                 onChange={(e) => setSoyad(e.target.value)}
                 placeholder="Soyad"
-                className="min-h-12 border border-black bg-white px-4 text-base text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice"
+                className="sc-input"
               />
               {error && (
-                <p className="text-sm text-black" role="alert">
+                <p className="text-sm text-sc-accent-text" role="alert">
                   {error}
                 </p>
               )}
               <div className="mt-2 flex items-center justify-between gap-3">
                 <div className="flex gap-1.5" aria-hidden>
-                  <span className="size-2 bg-black" />
-                  <span className="size-2 border border-black" />
+                  <span className="size-2 rounded-full bg-sc-accent" />
+                  <span className="size-2 rounded-full border border-sc-border" />
                 </div>
-                <button
-                  type="submit"
-                  className="inline-flex min-h-11 items-center border border-black bg-black px-5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black"
-                >
+                <button type="submit" className="sc-btn sc-btn--primary">
                   Devam →
                 </button>
               </div>
             </form>
           ) : (
             <form onSubmit={submitCall} className="flex flex-col gap-3">
-              <p className="mb-1 text-xs font-medium tracking-[0.16em] uppercase text-black/45">
+              <p className="mb-1 text-xs font-medium tracking-[0.16em] text-sc-muted uppercase">
                 Nasıl ulaşalım?
               </p>
               <label className="sr-only" htmlFor="web-tel">
@@ -164,7 +153,7 @@ export default function WebScheduleSection() {
                 onChange={(e) => setTelefon(e.target.value)}
                 placeholder="Telefon (05XX …)"
                 required
-                className="min-h-12 border border-black bg-white px-4 text-base text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice"
+                className="sc-input"
               />
               <label className="sr-only" htmlFor="web-not">
                 Not (isteğe bağlı)
@@ -175,10 +164,10 @@ export default function WebScheduleSection() {
                 value={not}
                 onChange={(e) => setNot(e.target.value)}
                 placeholder="Kısaca ne için arayalım? (isteğe bağlı)"
-                className="min-h-12 border border-black bg-white px-4 text-base text-black placeholder:text-black/35 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ice"
+                className="sc-input"
               />
               {error && (
-                <p className="text-sm text-black" role="alert">
+                <p className="text-sm text-sc-accent-text" role="alert">
                   {error}
                 </p>
               )}
@@ -191,19 +180,19 @@ export default function WebScheduleSection() {
                       setError("");
                       setStatus("idle");
                     }}
-                    className="text-sm text-black/55 underline-offset-2 hover:text-black hover:underline"
+                    className="text-sm text-sc-muted underline-offset-2 hover:text-sc-text hover:underline"
                   >
                     Geri
                   </button>
                   <div className="flex gap-1.5" aria-hidden>
-                    <span className="size-2 border border-black" />
-                    <span className="size-2 bg-black" />
+                    <span className="size-2 rounded-full border border-sc-border" />
+                    <span className="size-2 rounded-full bg-sc-accent" />
                   </div>
                 </div>
                 <button
                   type="submit"
                   disabled={status === "sending" || !telefon.trim()}
-                  className="inline-flex min-h-11 items-center border border-black bg-black px-5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black disabled:cursor-not-allowed disabled:opacity-50"
+                  className="sc-btn sc-btn--primary"
                 >
                   {status === "sending" ? "…" : "Görüşme ayarla →"}
                 </button>

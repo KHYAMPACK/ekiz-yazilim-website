@@ -15,20 +15,10 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#000000",
+          background: "transparent",
         }}
       >
-        <svg
-          width="36"
-          height="36"
-          viewBox="0 0 100 100"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d={LOGO_PATHS.bracketTl} fill="#ffffff" />
-          <path d={LOGO_PATHS.bracketBr} fill="#ffffff" />
-          <path d={LOGO_PATHS.core} fill="#ffffff" />
-        </svg>
+        <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="30" fill="#e58a5c" /><g transform="translate(50 50) scale(0.62) translate(-51.8 -50)" fill="#141413"><path d={LOGO_PATHS.core} /></g></svg>
       </div>
     ),
     { ...size },

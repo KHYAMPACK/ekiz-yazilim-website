@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "SG"; src: url("__FONT__") format("truetype"); font-weight: 300 700; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; background: #000; overflow: hidden; font-family: "SG", sans-serif; color: #fff; }
+  #stage { position: absolute; inset: 0; width: 1080px; height: 1920px; transform-origin: 50% 45%; background:
+      radial-gradient(900px 700px at 80% 78%, rgba(191,213,235,0.10), rgba(0,0,0,0) 70%), #000; }
+  #mark { position: absolute; left: 90px; top: 270px; width: 84px; height: 84px; opacity: 0.55; }
+  .word { position: absolute; left: 0; width: 1080px; text-align: center; font-size: 168px; font-weight: 600; letter-spacing: -6px; line-height: 190px; white-space: nowrap;
+          transform-origin: 50% 50%; will-change: transform; }
+  #w1 { top: 640px; }
+  #w2 { top: 820px; color: #ff4b3e; }
+  #bar { position: absolute; left: 240px; top: 1040px; height: 10px; width: 600px; background: #ff4b3e; }
+  #who { position: absolute; left: 100px; top: 560px; font-size: 32px; letter-spacing: 5px; text-transform: uppercase; color: #bfd5eb; opacity: 0; }
+  #card { position: absolute; background: #e8eef4; display: flex; align-items: center; justify-content: center; overflow: hidden; will-change: transform; }
+  .dot { width: 22px; height: 22px; border-radius: 50%; background: #55616d; margin: 0 9px; }
+  #msg { position: absolute; left: 56px; right: 56px; top: 50px; color: #0b0d10; font-size: 68px; font-weight: 500; line-height: 1.18; letter-spacing: -1px; opacity: 0; }
+  #msg .hl { background: linear-gradient(to right, rgba(255,75,62,0.38), rgba(255,75,62,0.38)) no-repeat 0 100% / var(--hl, 0%) 100%; border-radius: 6px; padding: 0 4px; margin: 0 -4px; }
+  #time { position: absolute; right: 44px; bottom: 28px; font-size: 28px; color: #6b7783; opacity: 0; }
+  #oldcap { position: absolute; left: 90px; right: 90px; top: 1450px; text-align: center; font-size: 62px; font-weight: 500; line-height: 1.2; }
+  #oldcap b { background: #bfd5eb; color: #000; padding: 0 12px; font-weight: 600; }
+  #cap { position: absolute; left: 90px; right: 90px; top: 1230px; height: 220px; font-size: 66px; font-weight: 500; line-height: 1.22; }
+  #cap .sent { position: absolute; left: 0; right: 0; top: 0; text-align: center; text-wrap: balance; }
+  #cap .sent span { display: inline-block; padding: 0 8px; margin: 0 -4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="mark" viewBox="0 0 100 100" fill="none">__MARK__</svg>
+  <div class="word" id="w1">Siteniz</div>
+  <div class="word" id="w2">kapanacak.</div>
+  <div id="bar"></div>
+  <div id="who">Siteyi yapan kişi</div>
+  <div id="card">
+    <div id="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <div id="msg"><span class="hl" id="hl">Alan adı ücreti</span> ödenmezse siteniz kapatılacak.</div>
+    <div id="time">şimdi</div>
+  </div>
+  <div id="oldcap">Bir müşterim <b>bu mesajı</b> aldı.</div>
+  <div id="cap"></div>
+  
+</div>
+<script>
+  // TIMING comes from build.mjs: voiceStart, duration, and every spoken word with start/end seconds.
+  const TIMING = __TIMING__;
+  const V = TIMING.voiceStart;
+  const WORDS = TIMING.words;
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const easeOutBack = (x) => { const c1 = 0.7, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const $ = (id) => document.getElementById(id);
+
+  __CAPTIONS__
+  const captions = makeCaptions($('cap'), WORDS);
+
+  // Layout of the card: starts as the typing bubble from the hook, grows into the full message.
+  const FROM = { left: 375, top: 1160, w: 330, h: 128, r: 44 };
+  const TO = { left: 90, top: 700, w: 900, h: 400, r: 56 };
+
+  window.draw = function (t) {
+    // stage: starts at the hook's final push-in (1.035) and relaxes, then drifts in slowly
+    const settle = easeOut(seg(t, 0, 0.7));
+    $('stage').style.transform = `scale(${lerp(1.035, 1.0, settle) + 0.025 * seg(t, 0.7, TIMING.duration)})`;
+
+    // headline shrinks to the top; the red underline fades
+    const h = easeInOut(seg(t, 0.05, 0.6));
+    const sc = lerp(1, 0.4, h);
+    $('w1').style.transform = `translateY(${lerp(0, -445, h)}px) scale(${sc})`;
+    $('w2').style.transform = `translateY(${lerp(0, -545, h)}px) scale(${sc})`;
+    $('bar').style.opacity = String(1 - seg(t, 0.05, 0.3));
+
+    // bubble grows into the message card
+    const g = easeOutBack(seg(t, 0.15, 0.65));
+    const c = $('card');
+    c.style.left = `${lerp(FROM.left, TO.left, g)}px`;
+    c.style.top = `${lerp(FROM.top, TO.top, g)}px`;
+    c.style.width = `${lerp(FROM.w, TO.w, g)}px`;
+    c.style.height = `${lerp(FROM.h, TO.h, g)}px`;
+    c.style.borderRadius = `${lerp(FROM.r, TO.r, g)}px ${lerp(FROM.r, TO.r, g)}px ${lerp(FROM.r, TO.r, g)}px 10px`;
+    const dotsOut = 1 - seg(t, 0.15, 0.4);
+    $('dots').style.opacity = String(dotsOut);
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      const p = 0.5 + 0.5 * Math.sin(t * 9 - i * 0.9);
+      d.style.transform = `translateY(${-10 * p}px)`;
+    });
+    $('msg').style.opacity = String(easeOut(seg(t, 0.4, 0.7)));
+    $('time').style.opacity = String(easeOut(seg(t, 0.6, 0.9)));
+
+    // who sent it, once he says "başka biri"
+    const who = $('who');
+    who.style.opacity = String(easeOut(seg(t, V + 0.05, V + 0.4)));
+    who.style.top = `${TO.top - 62}px`;
+    who.style.left = `${TO.left + 8}px`;
+
+    // highlight "kapatılacak." red when the second sentence reaches "alan adı ücreti"
+    const alan = WORDS.find((w) => /^alan/i.test(w.text));
+    const hlAt = alan ? alan.start : V + 2.5;
+    $('hl').style.setProperty('--hl', `${easeOut(seg(t, hlAt, hlAt + 0.35)) * 100}%`);
+
+    captions(t);
+
+    // the hook's caption fades out as the headline moves up
+    $('oldcap').style.opacity = String(1 - easeOut(seg(t, 0.0, 0.25)));
+  };
+  window.draw(0);
+</script>
+</body>
+</html>
