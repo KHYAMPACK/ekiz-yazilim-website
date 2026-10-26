@@ -30,9 +30,32 @@ function parseArgs(argv) {
   return args;
 }
 
+/** Quote-aware CSV line split (handles commas inside "quoted" cells). */
+function splitCsvLine(line) {
+  const cells = [];
+  let cur = "";
+  let quoted = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (quoted) {
+      if (ch === '"' && line[i + 1] === '"') {
+        cur += '"';
+        i++;
+      } else if (ch === '"') quoted = false;
+      else cur += ch;
+    } else if (ch === '"') quoted = true;
+    else if (ch === ",") {
+      cells.push(cur.trim());
+      cur = "";
+    } else cur += ch;
+  }
+  cells.push(cur.trim());
+  return cells;
+}
+
 function parseCsv(text) {
-  const lines = text.split(/\r?\n/).filter((l) => l.trim());
-  const split = (l) => l.split(/[,;]/).map((c) => c.trim().replace(/^"|"$/g, ""));
+  const lines = text.replace(/^﻿/, "").split(/\r?\n/).filter((l) => l.trim());
+  const split = splitCsvLine;
   const head = split(lines[0]).map((h) => h.toLowerCase());
   const nameIdx = head.findIndex((h) => ["name", "ad", "kurum", "isim"].includes(h));
   const urlIdx = head.findIndex((h) => ["url", "site", "website", "web"].includes(h));

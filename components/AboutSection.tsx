@@ -200,8 +200,8 @@ export default function AboutSection() {
               Nerede?
             </p>
             <p className="p-6 text-base leading-relaxed text-black/80">
-              Merkezimiz Denizli; Türkiye genelinde uzaktan çalışıyoruz.
-              Görüşme, kurulum ve eğitim online yapılır.
+              Merkezimiz Ankara; Türkiye genelinde uzaktan çalışıyoruz.
+              Görüşme, kurulum ve eğitim online yapılır; Ankara’da yüz yüze de görüşebiliriz.
             </p>
           </div>
         </div>

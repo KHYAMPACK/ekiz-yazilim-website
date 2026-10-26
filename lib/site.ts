@@ -1,7 +1,7 @@
 /** Public site facts */
 export const site = {
   name: "Ekiz Yazılım",
-  city: "Denizli",
+  city: "Ankara",
   email: "ekizmert3@gmail.com",
   /** Digits only with country code */
   phone: process.env.NEXT_PUBLIC_PHONE ?? "905515998156",

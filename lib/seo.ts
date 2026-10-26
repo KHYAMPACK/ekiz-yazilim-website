@@ -49,7 +49,7 @@ const faqItems = [
   },
   {
     q: "Başka şehirlerden çalışıyor musunuz?",
-    a: "Evet. Merkezimiz Denizli, ama Türkiye genelinde uzaktan çalışıyoruz. Görüşme, kurulum ve eğitim online yapılır.",
+    a: "Evet. Ankara merkezliyiz ve Türkiye genelinde uzaktan çalışıyoruz. Görüşme, kurulum ve eğitim online yapılır; Ankara’da isterseniz yüz yüze de görüşebiliriz.",
   },
 ] as const;
 

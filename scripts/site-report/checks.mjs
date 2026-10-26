@@ -314,6 +314,19 @@ function looksLikeHtml(body) {
   return /^\s*<(?:!doctype|html)/i.test(body);
 }
 
+async function publicResolves(host) {
+  const resolver = new dns.Resolver();
+  resolver.setServers(["8.8.8.8", "1.1.1.1"]);
+  for (const fn of ["resolve4", "resolve6"]) {
+    try {
+      if ((await resolver[fn](host)).length) return true;
+    } catch {
+      /* not found on this resolver */
+    }
+  }
+  return false;
+}
+
 /** Run every check for one site. */
 export async function checkSite(input, { psi = false } = {}) {
   const raw = input.trim();
@@ -332,11 +345,13 @@ export async function checkSite(input, { psi = false } = {}) {
 
   const facts = { input: raw, host, checkedAt: new Date().toISOString() };
 
-  // 1) TLS certificate + HTTPS availability
+  // 1) TLS certificate + HTTPS availability (one retry so a network hiccup is not reported as a problem)
   facts.cert = await readCertificate(host);
+  if (!facts.cert.connected) facts.cert = await readCertificate(host);
 
   // 2) Homepage over HTTPS (retry ignoring cert errors so we can still read the page)
   let home = await get(`${origin}/`);
+  if (!home.ok && !CERT_ERRORS.has(home.error)) home = await get(`${origin}/`);
   let certBrokenOnFetch = false;
   if (!home.ok && CERT_ERRORS.has(home.error)) {
     certBrokenOnFetch = true;
@@ -358,6 +373,8 @@ export async function checkSite(input, { psi = false } = {}) {
 
   if (!page.ok) {
     facts.unreachable = true;
+    // "Domain not connected" is only claimed when public resolvers (Google, Cloudflare) agree.
+    if (facts.https.error === "ENOTFOUND") facts.dnsConfirmed = !(await publicResolves(host));
     facts.domain = await domainExpiry(host);
     return facts;
   }

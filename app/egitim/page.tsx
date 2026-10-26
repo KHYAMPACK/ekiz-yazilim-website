@@ -106,7 +106,7 @@ const FAQS = [
   },
   {
     q: "Başka şehirdeysek çalışabilir miyiz?",
-    a: "Evet. Merkezimiz Denizli, ama Türkiye genelinde uzaktan çalışıyoruz. Görüşme, kurulum ve eğitim online yapılır.",
+    a: "Evet. Ankara merkezliyiz ve Türkiye genelinde uzaktan çalışıyoruz. Görüşme, kurulum ve eğitim online yapılır; Ankara’da isterseniz yüz yüze de görüşebiliriz.",
   },
   {
     q: "Veriler kime ait?",

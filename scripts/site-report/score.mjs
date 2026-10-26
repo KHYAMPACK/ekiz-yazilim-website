@@ -33,7 +33,7 @@ export function evaluate(facts) {
 
   // ---------- Site did not load at all ----------
   if (facts.unreachable) {
-    const noDns = facts.https?.error === "ENOTFOUND";
+    const noDns = facts.https?.error === "ENOTFOUND" && facts.dnsConfirmed === true;
     if (facts.domain?.hold) {
       add(
         "security",
@@ -53,13 +53,14 @@ export function evaluate(facts) {
         "Alan adı kayıt ve DNS ayarları kontrol edilmeli.",
       );
     } else {
+      // Could be a temporary network problem on our side: informational only, never a claim.
       add(
         "security",
-        "critical",
+        "low",
         "unreachable",
-        "Siteye ulaşılamadı",
-        "Otomatik kontrolümüz siteyi açamadı. Ziyaretçiler de açamıyor olabilir.",
-        "Barındırma ve sunucu ayarlarının kontrol edilmesi gerekir.",
+        "Site otomatik kontrol sırasında açılmadı (doğrulanamadı)",
+        "Bu geçici bir bağlantı sorunu olabilir; sitenin gerçekten kapalı olduğunu söylemiyoruz.",
+        "Kontrol tekrarlanmalı; kapalıysa barındırma ve sunucu ayarlarına bakılmalı.",
       );
     }
     if (facts.domain?.found && facts.domain.daysLeft >= 0) {
@@ -137,7 +138,7 @@ export function evaluate(facts) {
   if (facts.httpRedirect === false && !httpsMissing) {
     add(
       "security",
-      "high",
+      "medium",
       "no-redirect",
       "http:// adresi https:// adresine yönlendirmiyor",
       "Eski bağlantıyla gelen ziyaretçi güvensiz sürüme düşer.",
