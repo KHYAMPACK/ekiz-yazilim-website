@@ -77,7 +77,7 @@ export default function WebScheduleSection() {
             başlayalım.
           </h2>
           <p className="sc-lead mt-5">
-            Formu doldurun; sizi arayıp ihtiyacı 15–20 dakikada netleştirelim.
+            Formu doldurun; sizi arayıp ihtiyacı 10 dakikada netleştirelim.
             Ardından yazılı teklif gelir.
           </p>
         </div>

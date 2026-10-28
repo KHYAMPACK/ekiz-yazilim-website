@@ -78,7 +78,7 @@ export const PILLARS = [
   {
     word: "Keşif",
     title: "Önce İhtiyacı Netleştiririz.",
-    body: "15–20 dakikalık görüşmede işinizi, müşterilerinizi ve siteden beklentinizi konuşuruz. Yazılı teklif bundan sonra gelir.",
+    body: "10 dakikalık görüşmede işinizi, müşterilerinizi ve siteden beklentinizi konuşuruz. Yazılı teklif bundan sonra gelir.",
     imageAlt: "Keşif görüşmesi",
     images: [
       "/websitesi/kesif/01.jpg",
@@ -120,7 +120,7 @@ export const STEPS = [
   {
     n: "01",
     title: "Keşif",
-    body: "15–20 dakikalık görüşme. İşinizi, müşterilerinizi ve siteden beklentinizi konuşuruz.",
+    body: "10 dakikalık görüşme. İşinizi, müşterilerinizi ve siteden beklentinizi konuşuruz.",
   },
   {
     n: "02",
@@ -149,18 +149,64 @@ export const STEPS = [
   },
 ] as const;
 
-export const TYPICAL_PRICE = "10.000";
-
-export const INCLUDED = [
-  "İşinize özel tasarım — hazır şablon değil",
-  "İhtiyacınız olan sayfalar (keşifte netleşir)",
-  "Metin desteği",
-  "Mobil uyumlu yapı",
-  "SEO temelleri (başlık, açıklama, site haritası)",
-  "İletişim formu veya WhatsApp",
-  "Alan adı ve hosting kurulumu — hesaplar sizde",
-  "Yayından sonra sürekli destek",
+/** Prices include VAT (KDV). Edit here; the /web-sitesi price section and FAQ read from these. */
+export const PACKAGES = [
+  {
+    id: "kurumsal",
+    name: "Kurumsal Site",
+    price: "20.000",
+    lead: "Etüt merkezi, kreş, okul ve işletmeler için.",
+    items: [
+      "İşinize özel tasarım, hazır şablon değil",
+      "Keşifte netleşen sayfalar ve alt sayfalar",
+      "İçeriklerinizi biz siteye gireriz",
+      "Mobil uyumlu yapı",
+      "Ön kayıt formu, WhatsApp ve tek dokunuşla arama",
+      "SEO temelleri: başlık, açıklama, site haritası",
+      "Ziyaretçi ölçümü",
+      "Alan adı sizin adınıza kurulur",
+      "Yayına alma sürecindeki her türlü düzeltme",
+    ],
+  },
+  {
+    id: "buyume",
+    name: "Büyüme Paketi",
+    price: "38.000",
+    lead: "Kurumsal Site'ye ek olarak:",
+    items: [
+      "Google işletme profili kurulumu ve düzenlemesi",
+      "5 program veya şube sayfası",
+      "Yorum toplama sistemi: QR ve mesaj şablonu",
+      "Reklam hesaplarının kurulumu (bütçe hariç)",
+      "İlk 3 ay aylık rapor",
+      "Yazılı 90 günlük plan",
+    ],
+  },
+  {
+    id: "tam",
+    name: "Tam Paket",
+    price: "60.000",
+    lead: "Büyüme Paketi'ne ek olarak:",
+    items: [
+      "Öğrenci takip sistemi, 1 yıllık lisans (200 öğrenciye kadar)",
+      "Kurulum ve eğitim",
+      "Veli bildirimi",
+    ],
+  },
 ] as const;
+
+export const CARE = {
+  price: "2.500",
+  badge: "İlk ay ücretsiz",
+  title: "Aylık bakım paketi",
+  lead: "Site yayına girince iş bitmez. Bakım paketiyle sitenizin her şeyini biz üstleniriz.",
+  items: [
+    "Barındırma, güvenlik, yedek ve sertifika",
+    "Her türlü düzeltme: metin, görsel, yerleşim",
+    "İçerik güncellemeleri: haber, etkinlik, takvim, galeri",
+    "Temel SEO ve aylık rapor",
+  ],
+} as const;
 
 export const WORKS = [
   {
@@ -219,8 +265,8 @@ export const COMPARE_ROWS = [
     diy: "Yalnızca şablon",
   },
   {
-    label: "Metin Ve Hosting",
-    ekiz: "Dahil",
+    label: "Alan Adı Ve Hosting",
+    ekiz: "Sizin adınıza",
     agency: "Çoğu zaman ekstra",
     freelance: "Nadiren dahil",
     diy: "Hepsi size kalır",
@@ -253,7 +299,7 @@ export const FAQS = [
   },
   {
     q: "Fiyat Nasıl Belirleniyor?",
-    a: "Tipik bir tanıtım sitesi 20.000 ₺ civarında çıkar. Bu sabit bir paket fiyatı değil — kapsam keşifte netleşir. Görüşmeden sonra yazılı teklif gelir; sonradan eklenen gizli ücret yok.",
+    a: "Kurumsal Site 20.000 ₺, Büyüme Paketi 38.000 ₺, Tam Paket 60.000 ₺; fiyatlara KDV dahil. Kapsam görüşmede netleşir ve görüşmeden sonra yazılı teklif gelir. Sonradan eklenen gizli ücret yok.",
   },
   {
     q: "Logom Veya Fotoğrafım Yoksa?",
@@ -261,11 +307,11 @@ export const FAQS = [
   },
   {
     q: "Hosting Ve Alan Adı Sizde Mi Kalır?",
-    a: "Hayır. Kurulumu biz yaparız; hesaplar ve mülkiyet sizde kalır.",
+    a: "Hayır. Alan adı sizin adınıza kaydedilir; hesaplar ve mülkiyet sizde kalır. Barındırmayı biz yönetiriz, bakım paketine dahildir.",
   },
   {
     q: "Yayından Sonra Destek Var Mı?",
-    a: "Evet. Site yayına çıktıktan sonra da yanınızdayız. Metin, görsel ve küçük güncellemeler için her zaman yazabilirsiniz. Daha büyük eklemeler ayrıca konuşulur.",
+    a: "Evet. Aylık bakım paketi 2.500 ₺ (ilk ay ücretsiz): barındırma, her türlü düzeltme, içerik güncellemeleri, temel SEO ve aylık rapor. Yeni bir bölüm ya da sistem eklemek gibi büyük değişiklikler ayrıca konuşulur.",
   },
   {
     q: "Başka Şehirlerden Çalışır Mısınız?",

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { INCLUDED, TYPICAL_PRICE, WORKS } from "@/lib/websitesi";
+import { CARE, PACKAGES, WORKS } from "@/lib/websitesi";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -41,8 +41,26 @@ function ArrowOut() {
   );
 }
 
+function Price({ value, size }: { value: string; size: "lg" | "md" }) {
+  const big =
+    size === "lg"
+      ? "text-[clamp(3.4rem,8vw,5.4rem)]"
+      : "text-[clamp(2.4rem,4vw,3.2rem)]";
+  return (
+    <p className="flex items-start gap-2 leading-none">
+      <span className={`font-display tracking-tight text-sc-accent-text ${big}`}>
+        {value}
+      </span>
+      <span className="mt-1.5 text-sm font-medium tracking-[0.14em] text-sc-muted uppercase">
+        ₺
+      </span>
+    </p>
+  );
+}
+
 export default function WebPlan() {
   const reduce = useReducedMotion();
+  const [kurumsal, buyume, tam] = PACKAGES;
 
   return (
     <section
@@ -50,7 +68,11 @@ export default function WebPlan() {
       className="sc-paper border-t border-sc-border"
       aria-labelledby="plan-title"
     >
-      <div className="sc-container grid gap-4 py-16 sm:py-24 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)_minmax(0,1fr)] lg:items-stretch">
+      <div className="sc-container grid gap-4 py-16 sm:py-24 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.95fr)_minmax(0,0.95fr)] lg:items-stretch">
+        <h2 id="plan-title" className="sr-only">
+          Paketler ve fiyatlar
+        </h2>
+
         <motion.div
           initial={reduce ? false : { opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -58,24 +80,14 @@ export default function WebPlan() {
           transition={{ duration: 0.7, ease: EASE }}
           className="sc-root sc-card sc-card--lg flex flex-col p-6 sm:p-8"
         >
-          <p className="sc-eyebrow">Tek plan</p>
-          <h2 id="plan-title" className="sr-only">
-            Tek Paket. Tipik Proje {TYPICAL_PRICE} Lira
-          </h2>
-          <p className="mt-6 flex items-start gap-2 leading-none">
-            <span className="font-display text-[clamp(3.4rem,8vw,5.4rem)] tracking-tight text-sc-accent-text">
-              {TYPICAL_PRICE}
-            </span>
-            <span className="mt-2 text-sm font-medium tracking-[0.14em] text-sc-muted uppercase">
-              ₺
-            </span>
-          </p>
-          <p className="mt-3 text-sm text-sc-text sm:text-base">
-            Tipik Bir Proje İçin
-          </p>
+          <p className="sc-eyebrow">{kurumsal.name}</p>
+          <div className="mt-6">
+            <Price value={kurumsal.price} size="lg" />
+          </div>
+          <p className="mt-3 text-sm text-sc-text sm:text-base">KDV dahil</p>
           <p className="mt-2 text-sm leading-relaxed text-sc-muted">
-            Sabit paket fiyatı değil. Kapsam keşifte netleşir; yazılı teklif
-            görüşmeden sonra gelir.
+            {kurumsal.lead} Kapsam görüşmede netleşir; yazılı teklif görüşmeden
+            sonra gelir.
           </p>
           <a href="#gorusme" className="sc-btn sc-btn--primary mt-8">
             Görüşme ayarla
@@ -84,7 +96,7 @@ export default function WebPlan() {
             Neler dahil
           </p>
           <ul className="mt-4 flex flex-col gap-2.5">
-            {INCLUDED.map((item, i) => (
+            {kurumsal.items.map((item, i) => (
               <motion.li
                 key={item}
                 initial={reduce ? false : { opacity: 0, x: 10 }}
@@ -105,40 +117,36 @@ export default function WebPlan() {
         </motion.div>
 
         <div className="flex flex-col gap-4">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.65, delay: 0.08, ease: EASE }}
-            className="sc-card sc-card--lg flex flex-1 flex-col justify-between !bg-sc-accent/15 p-6 sm:p-7"
-          >
-            <p className="sc-eyebrow">Referans</p>
-            <div className="mt-6">
-              <p className="sc-h3 !text-2xl sm:!text-3xl">Sabit Fiyat Değil</p>
-              <p className="sc-body mt-3 !text-sm !text-sc-text/75">
-                {TYPICAL_PRICE} ₺ kreş, okul veya ofis gibi sade bir tanıtım
-                sitesi için tipik tutar. Daha fazla sayfa veya özel iş teklifte
-                yazılır.
-              </p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.65, delay: 0.14, ease: EASE }}
-            className="sc-card sc-card--lg flex flex-1 flex-col justify-between p-6 sm:p-7"
-          >
-            <p className="sc-eyebrow">Yazılı teklif</p>
-            <div className="mt-6">
-              <p className="sc-h3 !text-2xl sm:!text-3xl">Onaysız İş Yok</p>
-              <p className="sc-body mt-3 !text-sm">
-                Görüşmeden sonra teklif yazılı gelir. Onayınız olmadan işe
-                başlamayız. Alan adı ve hosting hesapları sizde kalır.
-              </p>
-            </div>
-          </motion.div>
+          {[buyume, tam].map((pkg, i) => (
+            <motion.div
+              key={pkg.id}
+              initial={reduce ? false : { opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.65, delay: 0.08 + i * 0.06, ease: EASE }}
+              className={`sc-card sc-card--lg flex flex-1 flex-col p-6 sm:p-7 ${
+                i === 0 ? "!bg-sc-accent/15" : ""
+              }`}
+            >
+              <p className="sc-eyebrow">{pkg.name}</p>
+              <div className="mt-5">
+                <Price value={pkg.price} size="md" />
+              </div>
+              <p className="mt-2 text-xs text-sc-muted">KDV dahil</p>
+              <p className="mt-4 text-sm font-medium text-sc-text">{pkg.lead}</p>
+              <ul className="mt-3 flex flex-col gap-2">
+                {pkg.items.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-2.5 text-sm leading-relaxed text-sc-text"
+                  >
+                    <CheckMark />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
         </div>
 
         <motion.div
@@ -147,7 +155,7 @@ export default function WebPlan() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.7, delay: 0.12, ease: EASE }}
-          className="sc-root sc-card sc-card--lg flex flex-col p-6 sm:p-8"
+          className="sc-root sc-card sc-card--lg flex flex-col p-6 sm:p-8 lg:col-span-1"
         >
           <h3 className="sc-h2 !text-4xl sm:!text-5xl">
             İşleri <span className="sc-em">Gör</span>
@@ -181,6 +189,44 @@ export default function WebPlan() {
             ))}
           </ul>
         </motion.div>
+
+        <motion.div
+          initial={reduce ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="sc-card sc-card--lg grid gap-8 p-6 sm:p-8 lg:col-span-3 lg:grid-cols-[1.1fr_1fr_auto] lg:items-center"
+        >
+          <div>
+            <p className="sc-eyebrow">Yayından sonra</p>
+            <p className="sc-h3 mt-4 !text-2xl sm:!text-3xl">{CARE.title}</p>
+            <p className="sc-body mt-3 !text-sm">{CARE.lead}</p>
+          </div>
+          <ul className="flex flex-col gap-2.5">
+            {CARE.items.map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2.5 text-sm leading-relaxed text-sc-text"
+              >
+                <CheckMark />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <div className="lg:text-right">
+            <Price value={CARE.price} size="md" />
+            <p className="mt-2 text-sm text-sc-muted">aylık, KDV dahil</p>
+            <span className="mt-3 inline-block rounded-full bg-sc-accent px-3 py-1 text-[0.6875rem] font-bold tracking-wider text-sc-on-accent uppercase">
+              {CARE.badge}
+            </span>
+          </div>
+        </motion.div>
+
+        <p className="text-sm leading-relaxed text-sc-muted lg:col-span-3">
+          Onayınız olmadan işe başlamayız. Alan adı ve hosting hesapları sizde
+          kalır. Yeni bir bölüm ya da sistem eklemek gibi büyük değişiklikler
+          ayrıca konuşulur.
+        </p>
       </div>
     </section>
   );
