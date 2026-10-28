@@ -47,3 +47,6 @@ next-env.d.ts
 
 # generated video output (frames, voice cache, mp4s)
 /video/out
+
+# client proposals (contain agreed prices and terms)
+/proposals
