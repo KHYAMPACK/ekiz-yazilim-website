@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { whatsappHref } from "@/lib/site";
 import type { CheckResult, Item, Level } from "@/lib/sitecheck/present";
 
@@ -21,6 +21,92 @@ const LEVEL_CHIP: Record<Level, string> = {
   high: "bg-sc-accent text-sc-on-accent",
   medium: "border border-sc-border text-sc-muted",
 };
+
+/**
+ * The server answers once, after about half a minute, so the bar is an estimate of the wait:
+ * it climbs quickly, slows down towards 92% and jumps to 100% when the answer arrives.
+ * The step labels are the real checks the server runs, in the order it runs them.
+ */
+const STEPS: { from: number; label: string }[] = [
+  { from: 0, label: "Alan adı kaydı ve bağlantısı kontrol ediliyor" },
+  { from: 16, label: "Güvenlik sertifikası okunuyor" },
+  { from: 36, label: "Sayfa hızı ve telefon uyumu ölçülüyor" },
+  { from: 58, label: "Google ayarları kontrol ediliyor: başlık, açıklama, site haritası" },
+  { from: 78, label: "İletişim butonları ve güncellik bakılıyor" },
+  { from: 92, label: "Sonuçlar hazırlanıyor" },
+];
+
+function stepLabel(progress: number) {
+  let label = STEPS[0].label;
+  for (const s of STEPS) if (progress >= s.from) label = s.label;
+  return label;
+}
+
+/** State and submit handler shared by every place the checker appears (own page, /web-sitesi hero). */
+export function useSiteCheck() {
+  const [url, setUrl] = useState("");
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<CheckResult | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Climb towards 92% while we wait.
+  useEffect(() => {
+    if (!loading) return;
+    const started = Date.now();
+    const id = window.setInterval(() => {
+      const t = (Date.now() - started) / 1000;
+      setProgress(Math.min(92, 92 * (1 - Math.exp(-t / 11))));
+    }, 250);
+    return () => window.clearInterval(id);
+  }, [loading]);
+
+  function close() {
+    abortRef.current?.abort();
+    setOpen(false);
+  }
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (loading || !url.trim()) return;
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
+    setOpen(true);
+    setLoading(true);
+    setProgress(0);
+    setError(null);
+    setResult(null);
+    try {
+      const res = await fetch("/api/site-kontrol", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+        signal: ctrl.signal,
+      });
+      const data = (await res.json()) as { result?: CheckResult; error?: string };
+      if (!res.ok || !data.result) {
+        setError(data.error ?? "Kontrol tamamlanamadı. Lütfen tekrar deneyin.");
+      } else {
+        // Let the bar reach the end before the findings replace it.
+        setProgress(100);
+        await new Promise((r) => setTimeout(r, 450));
+        if (!ctrl.signal.aborted) setResult(data.result);
+      }
+    } catch {
+      if (!ctrl.signal.aborted) {
+        setError("Bağlantı kurulamadı. İnternetinizi kontrol edip tekrar deneyin.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return { url, setUrl, open, loading, progress, error, result, submit, close };
+}
+
+export type SiteCheckState = ReturnType<typeof useSiteCheck>;
 
 function Finding({ item, index }: { item: Item; index: number }) {
   return (
@@ -71,7 +157,7 @@ function Result({ result }: { result: CheckResult }) {
   });
 
   return (
-    <section aria-live="polite" className="mt-10">
+    <section aria-live="polite">
       <div className="sc-card p-6 sm:p-8">
         <p className="sc-eyebrow mb-2">{result.host}</p>
         <h2 className="text-2xl font-semibold leading-tight tracking-tight text-sc-text sm:text-3xl">
@@ -139,39 +225,11 @@ function Result({ result }: { result: CheckResult }) {
   );
 }
 
-export default function SiteCheckTool() {
-  const [url, setUrl] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<CheckResult | null>(null);
-
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (loading) return;
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const res = await fetch("/api/site-kontrol", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
-      });
-      const data = (await res.json()) as { result?: CheckResult; error?: string };
-      if (!res.ok || !data.result) {
-        setError(data.error ?? "Kontrol tamamlanamadı. Lütfen tekrar deneyin.");
-      } else {
-        setResult(data.result);
-      }
-    } catch {
-      setError("Bağlantı kurulamadı. İnternetinizi kontrol edip tekrar deneyin.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
+/** The address field and button. */
+export function SiteCheckForm({ state }: { state: SiteCheckState }) {
+  const { url, setUrl, loading, submit } = state;
   return (
-    <div>
+    <>
       <form onSubmit={submit} className="flex flex-col gap-3 sm:flex-row" noValidate>
         <label htmlFor="site-url" className="sr-only">
           Web sitesi adresi
@@ -198,18 +256,128 @@ export default function SiteCheckTool() {
       <p id="site-url-help" className="mt-2 text-sm text-sc-muted">
         Adresi yazmanız yeterli. Kontrol yaklaşık yarım dakika sürer.
       </p>
+    </>
+  );
+}
 
-      {loading && (
-        <p className="mt-6 text-sc-muted" role="status">
-          Alan adı, güvenlik sertifikası, hız ve Google ayarları kontrol ediliyor…
-        </p>
-      )}
-      {error && (
-        <p className="mt-6 rounded-xl border border-sc-border bg-sc-surface p-4 text-sc-text" role="alert">
-          {error}
-        </p>
-      )}
-      {result && <Result result={result} />}
+/**
+ * A modal window that takes over while the check runs and then shows the findings, so the visitor's
+ * attention stays on it. Built on the native <dialog>: it traps focus, closes with Esc and dims the page.
+ */
+export function SiteCheckDialog({ state }: { state: SiteCheckState }) {
+  const { open, loading, progress, error, result, url, close } = state;
+  const ref = useRef<HTMLDialogElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const d = ref.current;
+    if (!d) return;
+    if (open && !d.open) d.showModal();
+    if (!open && d.open) d.close();
+  }, [open]);
+
+  // The page behind the window should not scroll.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+    return () => {
+      document.documentElement.style.overflow = prev;
+    };
+  }, [open]);
+
+  // Start the findings from the top.
+  useEffect(() => {
+    if (result) bodyRef.current?.scrollTo({ top: 0 });
+  }, [result]);
+
+  const pct = Math.round(progress);
+  const host = result?.host ?? url.trim();
+
+  return (
+    <dialog
+      ref={ref}
+      onClose={close}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) close();
+      }}
+      aria-labelledby="site-check-title"
+      className="m-auto w-[min(94vw,46rem)] max-w-none overflow-hidden rounded-3xl border border-sc-border bg-sc-bg p-0 text-sc-text shadow-2xl backdrop:bg-black/75 backdrop:backdrop-blur-sm"
+    >
+      <div className="flex max-h-[88vh] flex-col">
+        <div className="flex items-center justify-between gap-4 border-b border-sc-border px-5 py-4 sm:px-7">
+          <div className="min-w-0">
+            <p className="sc-eyebrow">Site kontrolü</p>
+            <p id="site-check-title" className="truncate text-base font-semibold text-sc-text">
+              {host}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={close}
+            className="sc-btn sc-btn--ghost !min-h-0 shrink-0 !px-4 !py-2 text-sm"
+          >
+            Kapat
+          </button>
+        </div>
+
+        <div ref={bodyRef} className="overflow-y-auto px-5 py-6 sm:px-7 sm:py-8">
+          {loading && (
+            <div className="py-6 sm:py-10">
+              <p className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                Siteniz kontrol ediliyor
+              </p>
+              <p className="mt-2 text-sc-muted" role="status" aria-live="polite">
+                {stepLabel(progress)}
+              </p>
+
+              <div
+                role="progressbar"
+                aria-label="Kontrol ilerlemesi"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={pct}
+                className="mt-8 h-3 w-full overflow-hidden rounded-full bg-sc-surface-2"
+              >
+                <div
+                  className="h-full rounded-full bg-sc-accent transition-[width] duration-300 ease-out motion-reduce:transition-none"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <div className="mt-3 flex items-center justify-between text-sm text-sc-muted">
+                <span>Yaklaşık yarım dakika sürer.</span>
+                <span className="tabular-nums">%{pct}</span>
+              </div>
+              <p className="mt-6 text-xs text-sc-muted">
+                Çubuk tahmini süreyi gösterir. Yalnızca sitenizin herkese açık sayfaları okunur.
+              </p>
+            </div>
+          )}
+
+          {!loading && error && (
+            <div className="py-6 sm:py-10" role="alert">
+              <p className="text-2xl font-semibold tracking-tight">Kontrol tamamlanamadı</p>
+              <p className="mt-3 text-sc-muted">{error}</p>
+              <button type="button" onClick={close} className="sc-btn sc-btn--primary mt-6">
+                Adresi düzelt
+              </button>
+            </div>
+          )}
+
+          {!loading && result && <Result result={result} />}
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
+/** Form and window together, for the stand-alone /site-kontrol page. */
+export default function SiteCheckTool() {
+  const state = useSiteCheck();
+  return (
+    <div>
+      <SiteCheckForm state={state} />
+      <SiteCheckDialog state={state} />
     </div>
   );
 }
