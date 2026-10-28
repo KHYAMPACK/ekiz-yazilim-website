@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ekiz Okulları | Örnek okul sitesi</title>
+<meta name="robots" content="noindex">
+<style>
+  .back-pill { position: fixed; left: 16px; bottom: 16px; z-index: 60; background: #141413; color: #faf9f5; padding: 10px 16px; border-radius: 99px; font: 600 13px/1 "Space Grotesk", system-ui, sans-serif; text-decoration: none; box-shadow: 0 10px 30px rgba(20,20,19,.25); }
+  html.embed .back-pill { display: none; }
+</style>
+<meta name="description" content="Ekiz Okulları: motion odaklı örnek okul sitesi (Ekiz Yazılım showcase).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@1&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+  /* Showcase only. One file, tweakable: colours and the school name live in the theme block below. */
+  :root {
+    --paper: #faf9f5; --card: #ffffff; --ink: #141413; --muted: #6b6860; --line: #e3dfd2;
+    --accent: #e58a5c; --deep: #b6512a; --cream: #f3f0e8;
+    --font: "Space Grotesk", system-ui, sans-serif; --serif: "Instrument Serif", Georgia, serif;
+    --pad: clamp(18px, 4vw, 56px);
+  }
+  :root[data-theme="zeytin"] { --paper: #f6f7f0; --ink: #16190f; --accent: #a5c47f; --deep: #4d6a2d; --line: #dfe3d0; --cream: #eef1e3; --muted: #5f6650; }
+  :root[data-theme="lacivert"] { --paper: #f3f5fb; --ink: #0f1424; --accent: #8fa6ff; --deep: #2b46b8; --line: #dbe0f0; --cream: #e9edfa; --muted: #5a6280; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--paper); }
+  html.lenis, html.lenis body { height: auto; }
+  body { font-family: var(--font); color: var(--ink); background: var(--paper); line-height: 1.5; overflow-x: hidden; transition: background .6s, color .6s; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .serif { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -.01em; }
+  .acc { color: var(--deep); }
+
+  /* intro */
+  #intro { position: fixed; inset: 0; z-index: 100; background: var(--ink); color: var(--cream); display: grid; place-items: center; }
+  #intro .mark { width: clamp(90px, 14vw, 150px); height: auto; overflow: visible; }
+  #intro .mark path { fill: var(--accent); fill-opacity: 0; stroke: var(--accent); stroke-width: 2.2; stroke-linejoin: round; }
+  #intro .count { position: absolute; left: var(--pad); bottom: var(--pad); font-size: clamp(48px, 10vw, 120px); font-weight: 600; letter-spacing: -.05em; line-height: 1; font-variant-numeric: tabular-nums; }
+  #intro .tag { position: absolute; right: var(--pad); bottom: var(--pad); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+
+  /* page-transition wipe */
+  #wipe { position: fixed; inset: 0; z-index: 90; background: var(--accent); pointer-events: none; clip-path: circle(0 at 50% 50%); }
+
+  /* nav */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; padding: 18px var(--pad); mix-blend-mode: normal; }
+  nav .bar { position: absolute; inset: 0; background: color-mix(in srgb, var(--paper) 82%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); opacity: 0; transition: opacity .3s; }
+  nav.solid .bar { opacity: 1; }
+  .logo { position: relative; display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.03em; font-size: 18px; background: none; border: 0; }
+  .logo svg { width: 34px; height: 34px; }
+  .links { position: relative; display: flex; gap: 6px; align-items: center; }
+  .links button.l { background: none; border: 0; padding: 8px 14px; border-radius: 99px; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .2s, background .2s; }
+  .links button.l:hover, .links button.l.on { color: var(--ink); background: color-mix(in srgb, var(--accent) 28%, transparent); }
+  .themes { display: flex; gap: 6px; margin-left: 10px; padding-left: 12px; border-left: 1px solid var(--line); }
+  .themes button { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--paper); box-shadow: 0 0 0 1.5px var(--line); }
+  .themes button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--ink); }
+
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 16px 26px; border-radius: 99px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 600; font-size: 15px; text-decoration: none; will-change: transform; }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.acc { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+  .btn i { font-style: normal; transition: transform .3s; }
+  .btn:hover i { transform: translateX(4px); }
+
+  .view { display: none; }
+  .view.on { display: block; }
+  section { position: relative; }
+  .wrap { padding-inline: var(--pad); max-width: 1400px; margin: 0 auto; }
+  .eyebrow { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--deep); font-weight: 600; }
+  h1, h2 { font-weight: 600; letter-spacing: -.045em; line-height: .98; }
+  .line { display: block; overflow: hidden; padding-bottom: .08em; }
+  .line > span { display: block; will-change: transform; }
+
+  /* hero */
+  .hero { min-height: 100svh; display: grid; align-items: center; padding-top: 110px; padding-bottom: 60px; overflow: hidden; }
+  .hero .wrap { width: 100%; }
+  .hero h1 { font-size: clamp(54px, 10.4vw, 168px); }
+  .hero p.lead { font-size: clamp(16px, 1.5vw, 20px); color: var(--muted); max-width: 46ch; margin: 28px 0 34px; }
+  .hero .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .shape { position: absolute; will-change: transform; pointer-events: none; }
+  .s1 { width: clamp(120px, 18vw, 260px); aspect-ratio: 1; border-radius: 50%; background: var(--accent); right: 8%; top: 16%; }
+  .s2 { width: clamp(90px, 13vw, 190px); aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--ink); right: 24%; bottom: 14%; }
+  .s3 { width: clamp(60px, 8vw, 120px); aspect-ratio: 1; border-radius: 28%; background: var(--ink); right: 4%; bottom: 22%; }
+  .polaroid { position: absolute; right: clamp(8px, 7vw, 120px); top: 50%; width: clamp(180px, 24vw, 340px); background: var(--card); padding: 12px 12px 18px; border-radius: 8px; box-shadow: 0 20px 50px rgba(20,20,19,.18); transform: translateY(-48%) rotate(5deg); }
+  .ph { aspect-ratio: 4/3; border-radius: 4px; background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 60%, var(--paper)), color-mix(in srgb, var(--deep) 40%, var(--paper))); display: grid; place-items: center; font-size: 11px; letter-spacing: .24em; color: rgba(20,20,19,.55); font-weight: 600; position: relative; overflow: hidden; }
+  .ph::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(45deg, transparent 0 14px, rgba(255,255,255,.12) 14px 28px); }
+  .polaroid .cap { font-family: var(--serif); font-style: italic; font-size: 22px; text-align: center; margin-top: 10px; }
+
+  /* marquee */
+  .marquee { border-block: 1.5px solid var(--ink); overflow: hidden; white-space: nowrap; background: var(--ink); color: var(--paper); }
+  .marquee .track { display: inline-flex; gap: 48px; padding: 18px 0; font-size: clamp(22px, 3vw, 40px); font-weight: 600; letter-spacing: -.03em; will-change: transform; }
+  .marquee span::after { content: "✦"; margin-left: 48px; color: var(--accent); }
+
+  /* statement + stats */
+  .statement { padding: clamp(90px, 14vw, 200px) 0; }
+  .statement p { font-size: clamp(28px, 4.6vw, 70px); line-height: 1.08; letter-spacing: -.04em; font-weight: 600; max-width: 22ch; }
+  .statement .w { opacity: .14; display: inline-block; margin-right: .22em; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1.5px solid var(--ink); }
+  .stat { padding: 56px 24px 52px 36px; border-right: 1px solid var(--line); }
+  .stat:first-child { padding-left: 0; }
+  .stat:last-child { border-right: 0; }
+  .stat b { display: block; font-size: clamp(44px, 7vw, 104px); letter-spacing: -.055em; line-height: 1; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .stat span { color: var(--muted); font-size: 14px; }
+  .foot-note { margin-top: 14px; font-size: 12px; color: var(--muted); }
+
+  /* day: pinned horizontal */
+  .day { overflow: hidden; background: var(--ink); color: var(--cream); }
+  .day .pin { height: 100svh; display: flex; align-items: center; position: relative; }
+  .day .intro { flex: none; width: min(46vw, 560px); align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding-left: var(--pad); position: relative; z-index: 2; background: var(--ink); box-shadow: 40px 0 40px 10px var(--ink); }
+  .day h2 { font-size: clamp(40px, 6vw, 92px); }
+  .clock { width: clamp(120px, 15vw, 190px); aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--accent); position: relative; margin-top: 34px; }
+  .clock .h { position: absolute; left: 50%; top: 50%; width: 3px; height: 38%; background: var(--accent); transform-origin: 50% 0; transform: rotate(180deg); border-radius: 3px; }
+  .clock .c { position: absolute; left: 50%; top: 50%; width: 12px; height: 12px; margin: -6px; border-radius: 50%; background: var(--cream); }
+  .clock { margin-bottom: 44px; }
+  .clock .t { position: absolute; left: 0; right: 0; top: 100%; margin-top: 12px; text-align: center; font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: .08em; color: var(--accent); }
+  .day .track { display: flex; gap: 22px; padding-right: var(--pad); will-change: transform; }
+  .slot { flex: none; width: clamp(260px, 30vw, 400px); aspect-ratio: 3/4; border-radius: 24px; padding: 26px; display: flex; flex-direction: column; justify-content: space-between; background: color-mix(in srgb, var(--cream) 8%, var(--ink)); border: 1px solid rgba(243,240,232,.14); }
+  .slot { background-image: radial-gradient(circle at 72% 38%, color-mix(in srgb, var(--accent) 38%, transparent) 0 17%, transparent 17.5%), radial-gradient(circle at 30% 58%, transparent 0 9%, rgba(243,240,232,.22) 9.4% 10%, transparent 10.4%); }
+  .slot .tm { font-size: clamp(44px, 5vw, 72px); font-weight: 600; letter-spacing: -.05em; color: var(--accent); line-height: 1; }
+  .slot h3 { font-size: 26px; letter-spacing: -.03em; margin-bottom: 6px; }
+  .slot p { color: rgba(243,240,232,.7); font-size: 15px; }
+
+  /* schools grid */
+  .schools { padding: clamp(80px, 12vw, 170px) 0; }
+  .schools h2 { font-size: clamp(40px, 6.4vw, 100px); margin: 14px 0 50px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .sc { background: var(--card); border: 1px solid var(--line); border-radius: 26px; padding: 18px; display: flex; flex-direction: column; gap: 16px; text-align: left; transition: transform .35s, box-shadow .35s; }
+  .sc:hover { transform: translateY(-8px); box-shadow: 0 24px 50px rgba(20,20,19,.12); }
+  .sc .ph { aspect-ratio: 1; border-radius: 18px; }
+  .sc h3 { font-size: 24px; letter-spacing: -.035em; }
+  .sc small { color: var(--muted); font-size: 14px; }
+  .sc .go { margin-top: auto; font-weight: 600; font-size: 14px; color: var(--deep); }
+
+  .cta-big { padding: clamp(80px, 12vw, 170px) 0; background: var(--accent); color: var(--ink); text-align: center; overflow: hidden; }
+  .cta-big h2 { font-size: clamp(44px, 9vw, 150px); margin-bottom: 40px; }
+  footer { padding: 40px var(--pad); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+
+  /* schools view + apply view */
+  .page-head { padding-top: 150px; padding-bottom: 40px; }
+  .page-head h1 { font-size: clamp(48px, 9vw, 140px); }
+  .row { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(24px, 5vw, 80px); align-items: center; padding: clamp(36px, 6vw, 80px) 0; border-top: 1px solid var(--line); }
+  .row:nth-child(even) .ph { order: 2; }
+  .row .ph { aspect-ratio: 5/4; border-radius: 28px; }
+  .row h3 { font-size: clamp(32px, 4.4vw, 64px); letter-spacing: -.045em; line-height: 1; margin: 10px 0 16px; }
+  .row p { color: var(--muted); max-width: 46ch; }
+  .form { display: grid; gap: 14px; max-width: 640px; }
+  .form label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+  .form input, .form select, .form textarea { font: inherit; font-size: 16px; padding: 15px 16px; border-radius: 16px; border: 1.5px solid var(--line); background: var(--card); color: var(--ink); width: 100%; }
+  .form input:focus, .form select:focus, .form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .ok { display: none; padding: 28px; border-radius: 22px; background: var(--accent); font-size: 22px; font-weight: 600; letter-spacing: -.03em; max-width: 640px; }
+
+  /* campus sketch */
+  .campus { padding: clamp(50px, 8vw, 110px) 0 clamp(20px, 4vw, 60px); }
+  .campus svg { width: 100%; height: auto; display: block; overflow: visible; margin-top: 18px; }
+  .sk .dr { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linejoin: round; stroke-linecap: round; }
+  .sk .dr.thin { stroke-width: 1; opacity: .5; }
+  .sk .dr.edge { stroke-width: 3.4; }
+  .sk .occ { fill: var(--paper); transition: fill .6s; }
+  .sk .shade { fill: var(--ink); stroke: none; opacity: 0; }
+  .sk .fillin { fill: var(--accent); stroke: none; opacity: 0; }
+
+  /* schools: richer rows */
+  .row { position: relative; }
+  .row .art { aspect-ratio: 5/4; border-radius: 28px; background: color-mix(in srgb, var(--accent) 34%, var(--paper)); position: relative; overflow: hidden; display: grid; place-items: center; }
+  .row:nth-child(even) .art { order: 2; background: var(--ink); }
+  .row .art svg { width: 78%; height: auto; }
+  .row .art svg * { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+  .row:nth-child(even) .art svg * { stroke: var(--cream); }
+  .row .art svg .f { fill: var(--accent); stroke: none; }
+  .row .no { position: absolute; left: 22px; top: 14px; font-size: clamp(56px, 8vw, 110px); font-weight: 600; letter-spacing: -.06em; line-height: 1; color: rgba(20,20,19,.12); }
+  .row:nth-child(even) .no { color: rgba(243,240,232,.14); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 0; }
+  .chips span { padding: 7px 14px; border-radius: 99px; border: 1.5px solid var(--ink); font-size: 13px; font-weight: 600; }
+  .spec { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 26px; border-top: 1px solid var(--line); }
+  .spec div { padding: 16px 14px 0 0; }
+  .spec b { display: block; font-size: 26px; letter-spacing: -.04em; font-weight: 600; }
+  .spec small { color: var(--muted); font-size: 12px; }
+  .cmp-wrap { padding-block: clamp(40px, 6vw, 90px); }
+  .cmp-wrap h2 { font-size: clamp(36px, 5.4vw, 80px); margin: 12px 0 34px; }
+  .cmp { width: 100%; border-collapse: collapse; font-size: 15px; }
+  .cmp th, .cmp td { text-align: left; padding: 18px 14px 18px 0; border-top: 1px solid var(--line); vertical-align: top; }
+  .cmp th { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); font-weight: 600; border-top: 1.5px solid var(--ink); }
+  .cmp td:first-child { font-weight: 600; font-size: 17px; letter-spacing: -.02em; }
+  .cmp tr.hl td { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+  .faq { padding-bottom: clamp(60px, 8vw, 110px); }
+  section.wrap.faq, section.wrap.cmp-wrap { padding-inline: var(--pad); }
+  .faq h2 { font-size: clamp(36px, 5.4vw, 80px); margin: 12px 0 30px; }
+  .faq details { border-top: 1px solid var(--line); padding: 22px 0; }
+  .faq details:last-child { border-bottom: 1px solid var(--line); }
+  .faq summary { cursor: pointer; font-size: clamp(19px, 2vw, 26px); font-weight: 600; letter-spacing: -.03em; list-style: none; display: flex; justify-content: space-between; gap: 20px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; font-size: 28px; line-height: 1; color: var(--deep); transition: transform .3s; }
+  .faq details[open] summary::after { transform: rotate(45deg); }
+  .faq p { color: var(--muted); margin-top: 12px; max-width: 60ch; }
+
+  /* apply: form + map */
+  .apply-grid { display: grid; grid-template-columns: minmax(0, 560px) 1fr; gap: clamp(28px, 5vw, 80px); align-items: start; }
+  .mapbox { position: relative; border-radius: 28px; overflow: hidden; background: color-mix(in srgb, var(--accent) 12%, var(--cream)); border: 1.5px solid var(--ink); min-height: 520px; height: 100%; }
+  .mapbox svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .mapbox .tag, .mapbox .addr { z-index: 2; }
+  .mapbox .addr { position: absolute; left: 16px; right: 16px; bottom: 16px; background: var(--card); border-radius: 18px; padding: 16px 18px; box-shadow: 0 14px 34px rgba(20,20,19,.16); }
+  .mapbox .addr b { display: block; font-size: 17px; letter-spacing: -.02em; }
+  .mapbox .addr span { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+  .mapbox .addr a { display: inline-block; margin-top: 10px; font-weight: 600; font-size: 14px; color: var(--deep); }
+  .mapbox .tag { position: absolute; left: 16px; top: 16px; background: var(--ink); color: var(--paper); padding: 6px 12px; border-radius: 99px; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; }
+  #pin { transform-box: fill-box; transform-origin: 50% 100%; }
+  .pulse { transform-box: fill-box; transform-origin: 50% 50%; }
+
+  @media (max-width: 860px) {
+    .links button.l:not(.on) { display: none; }
+    .themes { margin-left: 4px; padding-left: 8px; }
+    .polaroid { display: none; }
+    .hero .wrap { position: relative; z-index: 1; }
+    .s1 { width: 84px; right: 5%; top: 11%; }
+    .s2 { width: 64px; right: 14%; bottom: 8%; }
+    .s3 { width: 48px; right: 4%; bottom: 20%; }
+    .grid { grid-template-columns: 1fr 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .stat:nth-child(2) { border-right: 0; }
+    .stat:nth-child(3) { padding-left: 0; }
+    .stat { padding-top: 36px; padding-bottom: 32px; }
+    .mapbox { min-height: 340px; }
+    .apply-grid { grid-template-columns: 1fr; }
+    .spec { grid-template-columns: 1fr 1fr; }
+    .cmp { font-size: 13px; }
+    .row { grid-template-columns: 1fr; }
+    .row:nth-child(even) .ph { order: 0; }
+    .day .pin { height: auto; display: block; padding: 90px 0; }
+    .day .intro { width: auto; padding-right: var(--pad); margin-bottom: 40px; }
+    .day .track { flex-direction: column; padding-inline: var(--pad); }
+    .slot { width: 100%; aspect-ratio: auto; min-height: 180px; }
+    .clock { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .statement .w { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div id="intro" aria-hidden="true">
+  <svg class="mark" viewBox="10 4 84 92"><path id="markPath" d="M29.9 12H73.7L84.6 30.8H40.8L51.7 50L40.8 69.1H84.6L73.7 87.9H29.9L19 69.1L29.9 50L19 30.8L29.9 12Z"/></svg>
+  <div class="count" id="count">0</div>
+  <div class="tag" data-brand>Ekiz Okulları</div>
+</div>
+<div id="wipe" aria-hidden="true"></div>
+<a class="back-pill" href="/web-sitesi">← Ekiz Yazılım'a dön</a>
+
+<nav id="nav">
+  <div class="bar"></div>
+  <button class="logo" data-go="home" aria-label="Ana sayfa">
+    <svg viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="var(--accent)"/><g transform="translate(50 50) scale(0.58) translate(-51.8 -50)" fill="#141413"><path d="M29.9 12H73.7L84.6 30.8H40.8L51.7 50L40.8 69.1H84.6L73.7 87.9H29.9L19 69.1L29.9 50L19 30.8L29.9 12Z"/></g></svg>
+    <span data-brand>Ekiz Okulları</span>
+  </button>
+  <div class="links">
+    <button class="l on" data-go="home">Ana sayfa</button>
+    <button class="l" data-go="schools">Okullarımız</button>
+    <button class="l" data-go="apply">Kayıt</button>
+    <div class="themes" role="group" aria-label="Tema">
+      <button data-theme="ekiz" aria-pressed="true" aria-label="Turuncu" style="background:#e58a5c"></button>
+      <button data-theme="zeytin" aria-pressed="false" aria-label="Zeytin" style="background:#a5c47f"></button>
+      <button data-theme="lacivert" aria-pressed="false" aria-label="Lacivert" style="background:#8fa6ff"></button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <!-- HOME -->
+  <div class="view on" data-view="home">
+    <section class="hero">
+      <div class="wrap">
+        <p class="eyebrow" data-fade>Anaokulu · İlkokul · Ortaokul</p>
+        <h1 style="margin-top:18px">
+          <span class="line"><span>Her çocuk</span></span>
+          <span class="line"><span class="serif acc">merakla</span></span>
+          <span class="line"><span>başlar.</span></span>
+        </h1>
+        <p class="lead" data-fade>Çocuğunuzun kendi yolunu keşfettiği, öğretmenlerin her gün yanında olduğu bir okul. Örnek içerik: bu sayfa Ekiz Yazılım vitrinidir.</p>
+        <div class="cta" data-fade>
+          <button class="btn mag" data-go="schools">Okullarımızı keşfedin <i>→</i></button>
+          <button class="btn ghost mag" data-go="apply">Kayıt görüşmesi</button>
+        </div>
+      </div>
+      <div class="shape s1" data-depth="40"></div>
+      <div class="shape s2" data-depth="-30"></div>
+      <div class="shape s3" data-depth="60"></div>
+      <div class="polaroid" data-depth="-20"><div class="ph">FOTOĞRAF</div><div class="cap">Bugün ne öğrendin?</div></div>
+    </section>
+
+    <section class="campus" id="campus"><div class="wrap">
+      <p class="eyebrow">Kampüs</p>
+      <svg class="sk" id="sk" viewBox="0 0 1200 560" role="img" aria-label="Okul binasının çizimi">
+        <defs><filter id="rough" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/></filter></defs>
+        <g filter="url(#rough)"><g id="skg"></g></g>
+      </svg>
+      <p class="foot-note">Kampüs çizimi kodla yapıldı; gerçek fotoğraf geldiğinde yerini alır.</p>
+    </div></section>
+
+    <div class="marquee" aria-hidden="true"><div class="track" id="mq"><span>Anaokulu</span><span>İlkokul</span><span>Ortaokul</span><span>Etüt</span><span>Spor</span><span>Sanat</span><span>Bilim</span><span>Anaokulu</span><span>İlkokul</span><span>Ortaokul</span><span>Etüt</span><span>Spor</span><span>Sanat</span><span>Bilim</span></div></div>
+
+    <section class="statement"><div class="wrap">
+      <p id="stmt">Not için değil, merak için öğrenen çocuklar yetiştiriyoruz. Her sınıf bir keşif, her gün yeni bir soru.</p>
+    </div></section>
+
+    <section class="wrap" style="padding-bottom:clamp(80px,12vw,170px)">
+      <div class="stats">
+        <div class="stat"><b data-n="1000" data-plus="+">0</b><span>öğrenci</span></div>
+        <div class="stat"><b data-n="3">0</b><span>kampüs</span></div>
+        <div class="stat"><b data-n="25" data-plus="+">0</b><span>etkinlik dalı</span></div>
+        <div class="stat"><b data-n="20">0</b><span>yıllık deneyim</span></div>
+      </div>
+      <p class="foot-note">Örnek rakamlar, gerçek bir okulun verisi değildir.</p>
+    </section>
+
+    <section class="day" id="day">
+      <div class="pin">
+        <div class="intro">
+          <p class="eyebrow" style="color:var(--accent)">Bir gün</p>
+          <h2 style="margin-top:14px">Sabah gelen,<br><span class="serif" style="color:var(--accent)">akşam gülen.</span></h2>
+          <div class="clock" aria-hidden="true"><div class="h" id="hand"></div><div class="c"></div><div class="t" id="clk">07:30</div></div>
+        </div>
+        <div class="track" id="dtrack">
+          <div class="slot"><div class="tm">07:30</div><div><h3>Güne hoş geldin</h3><p>Erken bırakma ve kahvaltı. Çocuk, okula sakin başlar.</p></div></div>
+          <div class="slot"><div class="tm">08:15</div><div><h3>Dersler</h3><p>Akademik çalışmalar, küçük gruplarda ve bol soruyla.</p></div></div>
+          <div class="slot"><div class="tm">12:00</div><div><h3>Yemek ve oyun</h3><p>Birlikte yemek, bahçede serbest oyun ve nefes.</p></div></div>
+          <div class="slot"><div class="tm">15:30</div><div><h3>Etkinlik dersi</h3><p>Spor, sanat, bilim: çocuk kendi dalını seçer.</p></div></div>
+          <div class="slot"><div class="tm">16:30</div><div><h3>Servis ve etüt</h3><p>Evde ödev kalmasın diye okulda çalışma saati.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="schools"><div class="wrap">
+      <p class="eyebrow">Okullarımız</p>
+      <h2>Her yaşın bir <span class="serif acc">evi</span> var.</h2>
+      <div class="grid">
+        <button class="sc" data-go="schools"><div class="ph">ANAOKULU</div><h3>Anaokulu</h3><small>3–5 yaş · oyunla öğrenme</small><span class="go">Keşfet →</span></button>
+        <button class="sc" data-go="schools"><div class="ph">İLKOKUL</div><h3>İlkokul</h3><small>6–9 yaş · temel beceriler</small><span class="go">Keşfet →</span></button>
+        <button class="sc" data-go="schools"><div class="ph">ORTAOKUL</div><h3>Ortaokul</h3><small>10–13 yaş · LGS hazırlığı</small><span class="go">Keşfet →</span></button>
+        <button class="sc" data-go="schools"><div class="ph">ETÜT</div><h3>Etüt Merkezi</h3><small>Okul sonrası destek</small><span class="go">Keşfet →</span></button>
+      </div>
+    </div></section>
+
+    <section class="cta-big"><div class="wrap">
+      <h2><span class="line"><span>Kampüsü</span></span><span class="line"><span class="serif">yerinde görün.</span></span></h2>
+      <button class="btn mag" data-go="apply">Kayıt görüşmesi al <i>→</i></button>
+    </div></section>
+  </div>
+
+  <!-- SCHOOLS -->
+  <div class="view" data-view="schools">
+    <section class="page-head wrap">
+      <p class="eyebrow">Okullarımız</p>
+      <h1 style="margin-top:14px"><span class="line"><span>Dört okul,</span></span><span class="line"><span class="serif acc">tek aile.</span></span></h1>
+    </section>
+    <section class="wrap" style="padding-bottom:40px">
+      <div class="row"><div class="art rv"><span class="no">01</span><svg viewBox="0 0 200 160"><rect x="40" y="96" width="46" height="46" rx="4"/><rect x="92" y="96" width="46" height="46" rx="4"/><rect x="66" y="50" width="46" height="46" rx="4"/><circle class="f" cx="160" cy="34" r="16"/><path d="M160 8 V0 M160 60 V68 M134 34 H126 M186 34 H194"/><path d="M52 124 h22 M104 124 h22 M78 78 h22"/></svg></div><div class="rt"><p class="eyebrow">3–5 yaş</p><h3>Anaokulu</h3><p>Oyunla, dokunarak, hayal ederek öğrenme. Küçük gruplar, sıcak sınıflar ve her gün bahçede vakit.</p><div class="chips"><span>Oyun temelli</span><span>Bahçe saati</span><span>Müzik ve hareket</span><span>Günlük veli notu</span></div><div class="spec"><div><b>12</b><small>sınıf mevcudu</small></div><div><b>2</b><small>öğretmen</small></div><div><b>08:00</b><small>başlangıç</small></div><div><b>Servis</b><small>var</small></div></div></div></div>
+      <div class="row"><div class="art rv"><span class="no">02</span><svg viewBox="0 0 200 160"><path d="M30 40 C60 28 86 30 100 44 C114 30 140 28 170 40 V124 C140 112 114 114 100 128 C86 114 60 112 30 124 Z"/><path d="M100 44 V128"/><path d="M46 62 H84 M46 80 H84 M116 62 H154 M116 80 H154"/><circle class="f" cx="150" cy="112" r="10"/></svg></div><div class="rt"><p class="eyebrow">6–9 yaş</p><h3>İlkokul</h3><p>Okuma, yazma ve sayı sevgisini birlikte kuruyoruz. Her çocuğun hızına göre, öğretmen takibiyle.</p><div class="chips"><span>Okuma atölyesi</span><span>Matematik kulübü</span><span>İngilizce</span><span>Yüzme</span></div><div class="spec"><div><b>18</b><small>sınıf mevcudu</small></div><div><b>1+1</b><small>öğretmen + yardımcı</small></div><div><b>08:15</b><small>başlangıç</small></div><div><b>Servis</b><small>var</small></div></div></div></div>
+      <div class="row"><div class="art rv"><span class="no">03</span><svg viewBox="0 0 200 160"><ellipse cx="100" cy="80" rx="64" ry="24"/><ellipse cx="100" cy="80" rx="64" ry="24" transform="rotate(60 100 80)"/><ellipse cx="100" cy="80" rx="64" ry="24" transform="rotate(120 100 80)"/><circle class="f" cx="100" cy="80" r="9"/><circle class="f" cx="160" cy="62" r="5"/></svg></div><div class="rt"><p class="eyebrow">10–13 yaş</p><h3>Ortaokul</h3><p>Akademik başarı, LGS hazırlığı ve ilgi alanları bir arada. Düzenli deneme analizi, veliye açık takip.</p><div class="chips"><span>LGS hazırlık</span><span>Deneme analizi</span><span>Bilim laboratuvarı</span><span>Robotik</span></div><div class="spec"><div><b>22</b><small>sınıf mevcudu</small></div><div><b>Haftalık</b><small>deneme</small></div><div><b>08:15</b><small>başlangıç</small></div><div><b>Servis</b><small>var</small></div></div></div></div>
+      <div class="row"><div class="art rv"><span class="no">04</span><svg viewBox="0 0 200 160"><circle cx="100" cy="82" r="50"/><path d="M100 82 V50 M100 82 L124 96"/><circle class="f" cx="100" cy="82" r="5"/><path d="M52 30 L36 18 M148 30 L164 18"/><path d="M60 146 H140"/></svg></div><div class="rt"><p class="eyebrow">Okul sonrası</p><h3>Etüt Merkezi</h3><p>Ders sonrası çalışma saati, eksik konu tamamlama ve ödev desteği. Evde ödev stresi biter.</p><div class="chips"><span>Ödev desteği</span><span>Eksik konu</span><span>Sessiz çalışma</span><span>Rehberlik</span></div><div class="spec"><div><b>8</b><small>grup mevcudu</small></div><div><b>16:30</b><small>başlangıç</small></div><div><b>18:30</b><small>bitiş</small></div><div><b>Servis</b><small>var</small></div></div></div></div>
+    </section>
+
+    <section class="wrap cmp-wrap">
+      <p class="eyebrow">Bir bakışta</p>
+      <h2>Hangisi <span class="serif acc">size</span> uygun?</h2>
+      <table class="cmp">
+        <thead><tr><th>Okul</th><th>Yaş</th><th>Sınıf mevcudu</th><th>Ders saati</th><th>Öne çıkan</th></tr></thead>
+        <tbody>
+          <tr><td>Anaokulu</td><td>3–5</td><td>12</td><td>08:00–15:30</td><td>Oyun ve bahçe</td></tr>
+          <tr><td>İlkokul</td><td>6–9</td><td>18</td><td>08:15–15:30</td><td>Okuma ve sayı</td></tr>
+          <tr class="hl"><td>Ortaokul</td><td>10–13</td><td>22</td><td>08:15–16:00</td><td>LGS ve deneme takibi</td></tr>
+          <tr><td>Etüt Merkezi</td><td>6–13</td><td>8</td><td>16:30–18:30</td><td>Ödev ve eksik konu</td></tr>
+        </tbody>
+      </table>
+      <p class="foot-note">Örnek veriler, gerçek bir okulun bilgisi değildir.</p>
+    </section>
+
+    <section class="wrap faq">
+      <p class="eyebrow">Sık sorulanlar</p>
+      <h2>Aklınızdaki <span class="serif acc">sorular.</span></h2>
+      <details><summary>Kayıt için ne gerekiyor?</summary><p>Önce bir görüşme planlıyoruz. Okulu geziyor, sınıfları görüyor, sorularınızı soruyorsunuz. Karar sizin.</p></details>
+      <details><summary>Servis hangi bölgelere gidiyor?</summary><p>Çevre mahallelere sabah ve akşam servis var. Adresinizi görüşmede paylaşırsanız güzergâha birlikte bakarız.</p></details>
+      <details><summary>Öğretmenle nasıl iletişim kuruyoruz?</summary><p>Günlük kısa notlar ve haftalık bir özet gelir. İsterseniz telefonla da görüşebilirsiniz.</p></details>
+      <details><summary>Deneme günü var mı?</summary><p>Evet, çocuğunuz bir gün sınıfta misafir olabilir. Böylece hem o hem siz okulu tanırsınız.</p></details>
+    </section>
+    <section class="cta-big"><div class="wrap"><h2><span class="line"><span>Tanışalım.</span></span></h2><button class="btn mag" data-go="apply">Kayıt görüşmesi al <i>→</i></button></div></section>
+  </div>
+
+  <!-- APPLY -->
+  <div class="view" data-view="apply">
+    <section class="page-head wrap">
+      <p class="eyebrow">Kayıt &amp; İletişim</p>
+      <h1 style="margin-top:14px"><span class="line"><span>Bir kahve</span></span><span class="line"><span class="serif acc">içelim.</span></span></h1>
+    </section>
+    <section class="wrap" style="padding-bottom:120px">
+      <div class="apply-grid">
+        <div>
+          <form class="form" id="form">
+            <label>Veli adı soyadı<input required placeholder="Adınız"></label>
+            <label>Telefon<input required type="tel" placeholder="05xx xxx xx xx"></label>
+            <label>Çocuğunuzun sınıfı<select><option>Anaokulu</option><option>İlkokul</option><option>Ortaokul</option><option>Etüt</option></select></label>
+            <label>Notunuz<textarea rows="3" placeholder="İsterseniz yazın"></textarea></label>
+            <button class="btn acc mag" type="submit">Görüşme talep et <i>→</i></button>
+          </form>
+          <div class="ok" id="ok">Teşekkürler! Sizi en kısa sürede arayacağız. (Bu bir örnek formdur, hiçbir şey gönderilmez.)</div>
+        </div>
+        <div class="mapbox" id="mapbox"><span class="tag">Örnek harita</span>
+          <svg viewBox="0 0 600 640" preserveAspectRatio="xMidYMid slice" aria-label="Okulun konumunu gösteren örnek harita">
+            <g>
+              <path d="M0 470 C90 450 150 520 260 500 C360 482 430 540 600 520 V640 H0 Z" style="fill:color-mix(in srgb,var(--deep) 22%,var(--paper))"/>
+              <rect x="40" y="70" width="130" height="90" rx="14" style="fill:color-mix(in srgb,var(--accent) 45%,var(--paper))"/>
+              <rect x="420" y="250" width="140" height="110" rx="14" style="fill:color-mix(in srgb,var(--accent) 45%,var(--paper))"/>
+              <g style="fill:none;stroke:var(--paper);stroke-linecap:round">
+                <path d="M-10 210 H610" stroke-width="22"/><path d="M-10 400 H610" stroke-width="16"/>
+                <path d="M170 -10 V650" stroke-width="18"/><path d="M380 -10 V650" stroke-width="22"/>
+                <path d="M-10 90 L610 150" stroke-width="12"/><path d="M270 210 V470" stroke-width="10"/><path d="M480 400 V650" stroke-width="10"/>
+              </g>
+              <g style="fill:none;stroke:var(--line);stroke-width:1.5;stroke-dasharray:10 10">
+                <path d="M-10 210 H610"/><path d="M380 -10 V650"/>
+              </g>
+              <g style="fill:var(--ink);opacity:.08">
+                <rect x="190" y="230" width="70" height="60"/><rect x="190" y="310" width="70" height="70"/><rect x="290" y="230" width="70" height="60"/><rect x="290" y="310" width="70" height="70"/>
+                <rect x="400" y="60" width="90" height="60"/><rect x="400" y="150" width="90" height="40"/><rect x="40" y="230" width="110" height="60"/><rect x="40" y="310" width="110" height="70"/>
+              </g>
+              <text x="14" y="205" style="font:600 12px var(--font);fill:var(--muted);letter-spacing:.12em">MERAK CADDESİ</text>
+              <text x="388" y="440" transform="rotate(90 388 440)" style="font:600 12px var(--font);fill:var(--muted);letter-spacing:.12em">ÖRNEK BULVARI</text>
+              <text x="62" y="120" style="font:600 11px var(--font);fill:var(--ink);opacity:.6;letter-spacing:.12em">PARK</text>
+            </g>
+            <circle class="pulse" id="pulse" cx="270" cy="210" r="46" style="fill:var(--accent);opacity:.35"/>
+            <g id="pin"><path d="M270 210 C250 182 244 168 244 154 A26 26 0 1 1 296 154 C296 168 290 182 270 210 Z" style="fill:var(--ink)"/><circle cx="270" cy="154" r="10" style="fill:var(--accent)"/></g>
+          </svg>
+          <div class="addr"><b><span data-brand>Ekiz Okulları</span> · Ana Kampüs</b><span>Örnek Mah. Merak Cad. No: 1, Çankaya / Ankara (örnek adres)</span><a href="#" onclick="return false">Yol tarifi al →</a></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer><span><b data-brand>Ekiz Okulları</b> · Örnek okul sitesi</span><span>Ekiz Yazılım vitrini · ekizyazilim.com</span></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var BRAND = { ekiz: 'Ekiz Okulları', zeytin: 'Zeytin Koleji', lacivert: 'Lacivert Akademi' };
+
+  if (!window.gsap) { var i0 = $('#intro'); if (i0) i0.remove(); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
+  /* smooth scroll */
+  var lenis = null;
+  if (!reduce && window.Lenis) {
+    lenis = new Lenis({ lerp: 0.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  /* nav solid on scroll */
+  window.addEventListener('scroll', function () { $('#nav').classList.toggle('solid', window.scrollY > 40); }, { passive: true });
+
+  /* theme + brand name */
+  $$('.themes button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var t = b.dataset.theme;
+      if (t === 'ekiz') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t);
+      $$('.themes button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      $$('[data-brand]').forEach(function (el) { el.textContent = BRAND[t]; });
+    });
+  });
+
+  /* magnetic buttons */
+  if (!reduce) {
+    $$('.mag').forEach(function (el) {
+      var qx = gsap.quickTo(el, 'x', { duration: .4, ease: 'power3' }), qy = gsap.quickTo(el, 'y', { duration: .4, ease: 'power3' });
+      el.addEventListener('mousemove', function (e) { var r = el.getBoundingClientRect(); qx((e.clientX - r.left - r.width / 2) * .25); qy((e.clientY - r.top - r.height / 2) * .35); });
+      el.addEventListener('mouseleave', function () { qx(0); qy(0); });
+    });
+  }
+
+  /* ---- per-view scroll animations, built once the first time a view is shown ---- */
+  var built = {};
+  function lines(root) {
+    $$('.line > span', root).forEach(function (s) { gsap.set(s, { yPercent: 110 }); });
+    return $$('.line > span', root);
+  }
+  function revealLines(root, trigger) {
+    var ls = lines(root);
+    gsap.to(ls, { yPercent: 0, duration: 1.1, ease: 'power4.out', stagger: .12, scrollTrigger: trigger ? { trigger: trigger, start: 'top 80%' } : undefined });
+  }
+  /* the school sketch: a two-point perspective corner building, built from real projection maths */
+  function campus() {
+    var svg = $('#sk'); if (!svg) return;
+    var NS = 'http://www.w3.org/2000/svg', g = $('#skg');
+    var seed = 11; function rnd() { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    function J(v, k) { return v + (rnd() - .5) * 2 * k; }
+    var X0 = 640, Y0 = 440, UY = -340, KL = .35, LX = -490, LY = 70, KR = .9, RX = 1350, RY = 180;
+    function P(a, b, h) { var W = 1 + a * KL + b * KR; return [(X0 + a * LX + b * RX) / W, (Y0 + a * LY + b * RY + h * UY) / W]; }
+    function f(n) { return n.toFixed(1); }
+    function poly(arr, j) { return 'M' + arr.map(function (p) { return f(J(p[0], j || 0)) + ' ' + f(J(p[1], j || 0)); }).join(' L') + ' Z'; }
+    function seg(p, q, j, over) {
+      var dx = q[0] - p[0], dy = q[1] - p[1], o = over == null ? .02 : over;
+      return 'M' + f(J(p[0] - dx * o, j)) + ' ' + f(J(p[1] - dy * o, j)) + ' L' + f(J(q[0] + dx * o, j)) + ' ' + f(J(q[1] + dy * o, j));
+    }
+    function E(cls, st, d, o) {
+      var e = document.createElementNS(NS, 'path');
+      e.setAttribute('class', cls); e.setAttribute('data-s', st); e.setAttribute('d', d);
+      if (o != null) e.setAttribute('data-o', o);
+      g.appendChild(e); return e;
+    }
+    var NF = 5, A = 1.15, B = 1.5, NL = 7, NR = 6;
+
+    /* ground: kerbs, road strokes */
+    E('dr', 0, seg(P(-.14, -.14, 0), P(1.45, -.14, 0), 1, .01));
+    E('dr thin', 0, seg(P(-.14, -.17, 0), P(1.45, -.17, 0), 1, .01));
+    E('dr', 0, seg(P(-.14, -.14, 0), P(-.14, 1.75, 0), 1, .01));
+    E('dr thin', 0, seg(P(-.17, -.14, 0), P(-.17, 1.75, 0), 1, .01));
+    var d = '', i, j, k;
+    for (i = 0; i < 26; i++) { var a0 = -.1 + rnd() * 1.3, b0 = -.36 + rnd() * .14; d += seg(P(a0, b0, 0), P(a0 + .1 + rnd() * .25, b0, 0), .6, 0); }
+    E('dr thin', 8, d);
+    d = '';
+    for (i = 0; i < 12; i++) { var a1 = -.36 + rnd() * .14, b1 = -.05 + rnd() * 1.5; d += seg(P(a1, b1, 0), P(a1, b1 + .1 + rnd() * .2, 0), .6, 0); }
+    E('dr thin', 8, d);
+    d = '';
+    for (i = 0; i < 40; i++) { var a2 = .02 + i * .035; d += seg(P(a2, -.01, 0), P(a2 + .04, -.06, 0), .5, 0); }
+    E('dr thin', 8, d);
+
+    /* rooftop boxes, back to front (the facades hide their feet) */
+    function box(a1, a2, b1, b2, h1, h2, st) {
+      var L = [P(a1, b1, h1), P(a2, b1, h1), P(a2, b1, h2), P(a1, b1, h2)];
+      var R = [P(a1, b1, h1), P(a1, b2, h1), P(a1, b2, h2), P(a1, b1, h2)];
+      E('dr occ', st, poly(L, .6)); E('shade', st, poly(L, 0), .2);
+      E('dr occ', st, poly(R, .6)); E('shade', st, poly(R, 0), .38);
+      var m = h1 + (h2 - h1) * .45;
+      E('dr thin', st, seg(P(a1, b1, m), P(a2, b1, m), .4, 0) + seg(P(a1, b1, m), P(a1, b2, m), .4, 0));
+    }
+    box(.55, .98, .55, 1.15, 1, 1.13, 7);
+    box(.18, .55, .3, .85, 1, 1.09, 7);
+    box(.02, .27, .02, .5, 1, 1.22, 7);
+    /* flag on the core */
+    var fp = P(.14, .2, 1.22), ft = P(.14, .2, 1.34);
+    E('dr', 9, seg(fp, ft, .4, 0));
+    E('fillin', 9, 'M' + f(ft[0]) + ' ' + f(ft[1]) + ' l22 6 l-22 6 Z', 1);
+
+    /* the two facades */
+    var LF = [P(0, 0, 0), P(A, 0, 0), P(A, 0, 1), P(0, 0, 1)];
+    var RF = [P(0, 0, 0), P(0, B, 0), P(0, B, 1), P(0, 0, 1)];
+    E('dr occ', 1, poly(LF, .5)); E('shade', 1, poly(LF, 0), .3);
+    E('dr occ', 1, poly(RF, .5)); E('shade', 1, poly(RF, 0), .46);
+    E('dr edge', 1, seg(P(0, 0, 0), P(0, 0, 1), .5, .03));
+
+    function win(plane, bay, fl, n, len, st) {
+      var u0 = len * bay / n, u1 = len * (bay + 1) / n, ins = (u1 - u0) * .08, a = u0 + ins, b = u1 - ins, mid = (a + b) / 2;
+      var v0 = fl / NF + .018, v1 = (fl + 1) / NF - .024;
+      function q(u, v) { return plane === 'L' ? P(u, 0, v) : P(0, u, v); }
+      var quad = [q(a, v0), q(b, v0), q(b, v1), q(a, v1)];
+      var vt = v0 + (v1 - v0) * .72;
+      E('dr occ', st, poly(quad, .7) + ' ' + seg(q(mid, v0), q(mid, v1), .4, 0) + ' ' + seg(q(a, vt), q(b, vt), .4, 0));
+      E('fillin', st + 1, poly(quad, 0), .07);
+      var w = b - a;
+      E('dr thin', st + 1, seg(q(a + w * .1, v1), q(a + w * .5, v0), .3, 0) + ' ' + seg(q(a + w * .5, v1), q(a + w * .9, v0), .3, 0));
+    }
+    for (i = 0; i < NL; i++) for (j = 0; j < NF; j++) {
+      if (i === 3 && j === 0) continue;
+      win('L', i, j, NL, A, 2 + i * .42 + j * .06);
+    }
+    for (i = 0; i < NR; i++) for (j = 0; j < NF; j++) win('R', i, j, NR, B, 2 + i * .42 + j * .06);
+    /* entrance: tall door on the ground floor, canopy above */
+    var du0 = A * 3 / NL, du1 = A * 4 / NL, di = (du1 - du0) * .16;
+    var door = [P(du0 + di, 0, 0), P(du1 - di, 0, 0), P(du1 - di, 0, .17), P(du0 + di, 0, .17)];
+    E('dr occ', 4, poly(door, .6) + ' ' + seg(P((du0 + du1) / 2, 0, 0), P((du0 + du1) / 2, 0, .17), .3, 0));
+    E('fillin', 5, poly(door, 0), .7);
+    E('dr', 5, seg(P(du0, -.02, .22), P(du1, -.02, .22), .5, .04) + ' ' + seg(P(du0, -.02, .22), P(du0, 0, .2), .3, 0) + ' ' + seg(P(du1, -.02, .22), P(du1, 0, .2), .3, 0));
+
+    /* trees: scribbled blobs */
+    function blob(cx, cy, r, st) {
+      var out = '';
+      for (var l = 0; l < 3; l++) {
+        var n = 9, pts = [], rr = r * (1 - l * .16);
+        for (var t = 0; t < n; t++) { var an = t / n * Math.PI * 2; pts.push([cx + Math.cos(an) * rr * (.8 + rnd() * .5), cy + Math.sin(an) * rr * (.8 + rnd() * .5)]); }
+        var mid = function (a, b) { return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2]; };
+        var m0 = mid(pts[n - 1], pts[0]);
+        out += 'M' + f(m0[0]) + ' ' + f(m0[1]);
+        for (t = 0; t < n; t++) { var m = mid(pts[t], pts[(t + 1) % n]); out += ' Q' + f(pts[t][0]) + ' ' + f(pts[t][1]) + ' ' + f(m[0]) + ' ' + f(m[1]); }
+        out += ' Z ';
+      }
+      return out;
+    }
+    function tree(cx, cy, r, st) {
+      E('dr', st, seg([cx - 2, cy + r + 38], [cx, cy + r - 6], .5, 0) + ' ' + seg([cx + 5, cy + r + 38], [cx + 3, cy + r - 6], .5, 0));
+      E('dr occ', st, blob(cx, cy, r, st));
+      E('shade', st + 1, blob(cx, cy, r * .95, st), .1);
+    }
+    tree(1092, 330, 34, 9);
+    tree(1148, 318, 27, 9.4);
+    tree(26, 362, 26, 9.4);
+    /* a few kids in front of the entrance */
+    function kid(x, y, sc, flip, st) {
+      var q = function (px, py) { return f(x + px * sc * flip) + ' ' + f(y + py * sc); };
+      E('dr', st, 'M' + q(0, -28) + ' L' + q(0, -12) + ' M' + q(0, -12) + ' L' + q(-5, 0) + ' M' + q(0, -12) + ' L' + q(5, 0) + ' M' + q(0, -25) + ' L' + q(-8, -17) + ' M' + q(0, -25) + ' L' + q(8, -19) + ' M' + q(-6, -34) + ' a' + f(6 * sc) + ' ' + f(6 * sc) + ' 0 1 0 ' + f(12 * sc) + ' 0 a' + f(6 * sc) + ' ' + f(6 * sc) + ' 0 1 0 ' + f(-12 * sc) + ' 0');
+      E('fillin', st, 'M' + q(1.5, -27) + ' h' + f(7 * sc * flip) + ' v' + f(12 * sc) + ' h' + f(-7 * sc * flip) + ' Z', 1);
+    }
+    kid(262, 452, 1.35, 1, 10);
+    kid(292, 458, 1.1, -1, 10.2);
+    kid(352, 454, 1.25, 1, 10.4);
+
+    var dr = $$('.dr', svg), fi = $$('.fillin, .shade', svg);
+    if (reduce) { fi.forEach(function (e) { e.style.opacity = e.dataset.o || 1; }); return; }
+    var steps = {};
+    dr.forEach(function (e) { e.setAttribute('pathLength', 1); (steps[e.dataset.s] = steps[e.dataset.s] || []).push(e); });
+    gsap.set(dr, { strokeDasharray: '1 1', strokeDashoffset: 1 });
+    var tl = gsap.timeline({ paused: true });
+    Object.keys(steps).sort(function (x, y) { return x - y; }).forEach(function (key) {
+      tl.to(steps[key], { strokeDashoffset: 0, duration: 1, ease: 'power1.inOut', stagger: .012 }, +key * .42);
+    });
+    var end = tl.duration();
+    fi.forEach(function (e, n) { tl.to(e, { opacity: +(e.dataset.o || 1), duration: 1.1, ease: 'sine.inOut' }, Math.max(0, end - 2.2) + (n % 9) * .1); });
+    ScrollTrigger.create({ trigger: svg, start: 'top 78%', once: true, onEnter: function () { tl.play(); } });
+  }
+  var builders = {
+    home: function (v) {
+      /* hero lines are played by the intro; the CTA headline reveals on scroll */
+      var cta = $('.cta-big', v); if (cta) revealLines(cta, cta);
+      /* mouse parallax */
+      if (!reduce) {
+        var depth = $$('[data-depth]', v);
+        var setters = depth.map(function (el) { return { x: gsap.quickTo(el, 'x', { duration: 1, ease: 'power3' }), y: gsap.quickTo(el, 'y', { duration: 1, ease: 'power3' }), d: +el.dataset.depth }; });
+        window.addEventListener('mousemove', function (e) {
+          var nx = e.clientX / innerWidth - .5, ny = e.clientY / innerHeight - .5;
+          setters.forEach(function (s) { s.x(nx * s.d); s.y(ny * s.d); });
+        });
+        gsap.to($('.s1', v), { rotation: 360, duration: 40, repeat: -1, ease: 'none' });
+        gsap.to($('.s3', v), { rotation: -360, duration: 28, repeat: -1, ease: 'none' });
+        gsap.to($('.hero', v), { yPercent: 12, ease: 'none', scrollTrigger: { trigger: $('.hero', v), start: 'top top', end: 'bottom top', scrub: true } });
+      }
+      campus();
+      /* marquee */
+      var mq = $('#mq'); if (mq && !reduce) gsap.to(mq, { xPercent: -50, duration: 28, ease: 'none', repeat: -1 });
+      /* statement words */
+      var st = $('#stmt');
+      if (st) {
+        st.innerHTML = st.textContent.split(' ').map(function (w) { return '<span class="w">' + w + '</span>'; }).join('');
+        if (!reduce) gsap.to($$('.w', st), { opacity: 1, stagger: .08, ease: 'none', scrollTrigger: { trigger: st, start: 'top 78%', end: 'bottom 45%', scrub: true } });
+      }
+      /* count up */
+      $$('[data-n]', v).forEach(function (el) {
+        var n = +el.dataset.n, plus = el.dataset.plus || '', o = { v: 0 };
+        if (reduce) { el.textContent = n + plus; return; }
+        gsap.to(o, { v: n, duration: 2, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%', once: true }, onUpdate: function () { el.textContent = Math.round(o.v) + plus; }, onComplete: function () { el.textContent = n + plus; } });
+      });
+      /* pinned horizontal day */
+      var mm = gsap.matchMedia();
+      mm.add('(min-width: 861px)', function () {
+        if (reduce) return;
+        var track = $('#dtrack'), day = $('#day'), hand = $('#hand'), clk = $('#clk');
+        var dist = function () { return Math.max(0, track.scrollWidth - (innerWidth - $('.day .intro').offsetWidth)); };
+        gsap.to(track, {
+          x: function () { return -dist(); }, ease: 'none',
+          scrollTrigger: {
+            trigger: day, start: 'top top', end: function () { return '+=' + dist(); }, pin: $('.pin', day), scrub: .6, invalidateOnRefresh: true,
+            onUpdate: function (self) {
+              var min = 7 * 60 + 30 + self.progress * (9 * 60); /* 07:30 → 16:30 */
+              var h = Math.floor(min / 60), m = Math.floor(min % 60);
+              clk.textContent = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m;
+              gsap.set(hand, { rotation: 180 + (min / 60 % 12) * 30 });
+            }
+          }
+        });
+      });
+      /* school cards */
+      gsap.from($$('.sc', v), { y: 60, opacity: 0, duration: .9, ease: 'power3.out', stagger: .1, scrollTrigger: { trigger: $('.grid', v), start: 'top 82%' } });
+    },
+    schools: function (v) {
+      revealLines(v, null);
+      $$('.row', v).forEach(function (r) {
+        gsap.fromTo($('.rv', r), { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.2, ease: 'power4.out', scrollTrigger: { trigger: r, start: 'top 78%' } });
+        gsap.from($('.rt', r), { y: 40, opacity: 0, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: r, start: 'top 78%' } });
+      });
+      var cta = $('.cta-big', v); revealLines(cta, cta);
+    },
+    apply: function (v) {
+      revealLines(v, null);
+      gsap.from($$('.form label, .form .btn', v), { y: 30, opacity: 0, duration: .8, stagger: .08, ease: 'power3.out', delay: .4 });
+      /* map: pin drops in, then the location pulses */
+      if (!reduce) {
+        gsap.from('#mapbox', { clipPath: 'inset(0 0 100% 0)', duration: 1.2, ease: 'power4.out', delay: .5 });
+        gsap.from('#pin', { y: -180, opacity: 0, duration: .9, ease: 'bounce.out', delay: 1.3 });
+        gsap.fromTo('#pulse', { scale: .2, opacity: .5 }, { scale: 1.6, opacity: 0, duration: 1.8, ease: 'power1.out', repeat: -1, delay: 2 });
+      }
+    }
+  };
+  function build(name) {
+    if (built[name]) return; built[name] = true;
+    if (reduce) { $$('.line > span', $('[data-view="' + name + '"]')).forEach(function (s) { s.style.transform = 'none'; }); }
+    builders[name]($('[data-view="' + name + '"]'));
+  }
+
+  /* ---- page transitions: circle wipe from the click point ---- */
+  var current = 'home', busy = false;
+  function show(name) {
+    $$('.view').forEach(function (v) { v.classList.toggle('on', v.dataset.view === name); });
+    $$('.links button.l').forEach(function (b) { b.classList.toggle('on', b.dataset.go === name); });
+    current = name;
+    if (lenis) lenis.scrollTo(0, { immediate: true }); else window.scrollTo(0, 0);
+    build(name);
+    ScrollTrigger.refresh();
+  }
+  function go(name, x, y) {
+    if (busy || name === current) { if (name === current) window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (reduce) { show(name); return; }
+    busy = true;
+    var wipe = $('#wipe'), px = x == null ? innerWidth / 2 : x, py = y == null ? innerHeight / 2 : y;
+    gsap.set(wipe, { clipPath: 'circle(0px at ' + px + 'px ' + py + 'px)' });
+    var R = Math.hypot(Math.max(px, innerWidth - px), Math.max(py, innerHeight - py)) + 20;
+    gsap.timeline({ onComplete: function () { busy = false; } })
+      .to(wipe, { clipPath: 'circle(' + R + 'px at ' + px + 'px ' + py + 'px)', duration: .7, ease: 'power3.inOut' })
+      .add(function () { show(name); })
+      .to(wipe, { clipPath: 'circle(' + R + 'px at ' + px + 'px ' + (-R) + 'px)', duration: .7, ease: 'power3.inOut' })
+      .set(wipe, { clipPath: 'circle(0px at 50% 50%)' });
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-go]'); if (!b) return;
+    e.preventDefault(); go(b.dataset.go, e.clientX, e.clientY);
+  });
+
+  /* form */
+  $('#form').addEventListener('submit', function (e) {
+    e.preventDefault(); this.style.display = 'none';
+    var ok = $('#ok'); ok.style.display = 'block';
+    if (!reduce) gsap.from(ok, { y: 30, opacity: 0, duration: .7, ease: 'power3.out' });
+  });
+
+  /* ---- intro ---- */
+  function startHero() {
+    build('home');
+    var hero = $('.hero');
+    var ls = $$('.line > span', hero);
+    if (reduce) { ls.forEach(function (s) { s.style.transform = 'none'; }); return; }
+    var tl = gsap.timeline();
+    tl.to(ls, { yPercent: 0, duration: 1.2, ease: 'power4.out', stagger: .14 }, 0)
+      .from($$('[data-fade]', hero), { y: 24, opacity: 0, duration: .9, ease: 'power3.out', stagger: .1 }, .3)
+      .from($$('.shape, .polaroid', hero), { scale: .6, opacity: 0, duration: 1.1, ease: 'back.out(1.6)', stagger: .12 }, .2);
+  }
+  var intro = $('#intro');
+  var embed = /[?&]embed/.test(location.search);
+  if (embed) document.documentElement.classList.add('embed');
+  if (reduce) { intro.remove(); startHero(); }
+  else if (embed) { intro.remove(); lines($('.hero')); startHero(); }
+  else {
+    var path = $('#markPath'), len = path.getTotalLength(), cnt = $('#count'), o = { v: 0 };
+    gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+    gsap.timeline({ onComplete: function () { intro.remove(); } })
+      .to(path, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' }, 0)
+      .to(path, { fillOpacity: 1, duration: 1.3, ease: 'sine.inOut' }, .8)
+      .to(o, { v: 100, duration: 1.9, ease: 'power2.inOut', onUpdate: function () { cnt.textContent = Math.round(o.v); } }, 0)
+      .to('#intro .mark', { scale: 1.12, duration: .5, ease: 'power2.in' }, 1.9)
+      .to(intro, { yPercent: -100, duration: .9, ease: 'power4.inOut' }, 2.2)
+      .add(startHero, 2.5);
+    /* the hero lines start hidden until the curtain lifts */
+    lines($('.hero'));
+  }
+  if (reduce) { /* nothing hidden */ } else { /* hero lines hidden by lines() above */ }
+})();
+</script>
+</body>
+</html>

@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  async rewrites() {
+    return [{ source: "/demo/okul", destination: "/demo/okul/index.html" }];
+  },
   // Exact paths only: /denizli-e-ticaret/* still serves files from /public.
   async redirects() {
     return [

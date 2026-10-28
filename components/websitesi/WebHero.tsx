@@ -1,14 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef } from "react";
-const HERO_FRAMES = [
-  { src: "/websitesi/hero/basak.jpg", alt: "Özel Başak Akademi web sitesi" },
-  { src: "/websitesi/hero/oncu.jpg", alt: "Şahika Öncü Minikler web sitesi" },
-  { src: "/websitesi/hero/lider.jpg", alt: "Lider Çocuklar Anaokulu web sitesi" },
-  { src: "/websitesi/hero/lila.jpg", alt: "Lila Boutique web sitesi" },
-] as const;
+import { motion, useReducedMotion } from "motion/react";
+import WebDemoPreview from "./WebDemoPreview";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -21,13 +14,6 @@ type Props = {
 
 export default function WebHero({ wa }: Props) {
   const reduce = useReducedMotion();
-  const stageRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: stageRef,
-    offset: ["start start", "end start"],
-  });
-  const collageY = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const collageScale = useTransform(scrollYProgress, [0, 1], [1, 0.94]);
 
   return (
     <section id="ust" className="sc-glow relative overflow-hidden">
@@ -119,50 +105,7 @@ export default function WebHero({ wa }: Props) {
           </motion.p>
         </div>
 
-        <div
-          ref={stageRef}
-          className="relative mx-auto h-[24rem] w-full max-w-lg sm:h-[28rem] lg:h-[30rem]"
-        >
-          <motion.div
-            style={reduce ? undefined : { y: collageY, scale: collageScale }}
-            className="absolute inset-0"
-          >
-            {HERO_FRAMES.map((frame, i) => {
-              const poses = [
-                "left-[0%] top-[20%] z-0 w-[48%] -rotate-8",
-                "top-[2%] right-[0%] z-10 w-[50%] rotate-4",
-                "bottom-[4%] left-[6%] z-20 w-[50%] rotate-[6deg]",
-                "bottom-[6%] right-[2%] z-30 w-[46%] -rotate-[3deg]",
-              ];
-              return (
-                <motion.div
-                  key={frame.src}
-                  className={`absolute ${poses[i]}`}
-                  initial={reduce ? false : { opacity: 0, y: 28 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.8,
-                    delay: 0.35 + i * 0.12,
-                    ease: EASE,
-                  }}
-                >
-                  <div className="overflow-hidden rounded-2xl border border-sc-border bg-sc-surface shadow-[0_20px_60px_-20px_rgba(229,138,92,0.35)]">
-                    <Image
-                      src={frame.src}
-                      alt={frame.alt}
-                      width={1600}
-                      height={1000}
-                      className="aspect-video h-auto w-full object-cover"
-                      sizes="(max-width: 1024px) 60vw, 320px"
-                      priority
-                      unoptimized
-                    />
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
+        <WebDemoPreview />
       </div>
     </section>
   );
