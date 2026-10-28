@@ -7,6 +7,7 @@ import WebPains from "@/components/websitesi/WebPains";
 import WebPillars from "@/components/websitesi/WebPillars";
 import WebPlan from "@/components/websitesi/WebPlan";
 import WebProcess from "@/components/websitesi/WebProcess";
+import WebResearch from "@/components/websitesi/WebResearch";
 import WebProgress from "@/components/websitesi/WebProgress";
 import WebScheduleSection from "@/components/websitesi/WebScheduleSection";
 import WebTaskMarquee from "@/components/websitesi/WebTaskMarquee";
@@ -135,6 +136,7 @@ export default function WebSitesiPage() {
         <WebHero wa={wa} />
         <WebTaskMarquee />
         <WebPains />
+        <WebResearch />
         <WebProcess />
         <WebPillars />
         <WebPlan />
