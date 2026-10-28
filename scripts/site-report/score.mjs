@@ -24,11 +24,55 @@ const fmtDate = (iso) =>
   new Date(iso).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 const sn = (n) => String(n).replace(".", ",");
 
+/**
+ * What WE do about each finding. The report is a sales document: every problem is paired with the work
+ * Ekiz does to solve it, never a do-it-yourself instruction.
+ */
+export const FIX_BY_ID = {
+  "domain-hold": "Alan adı kayıt firmasıyla yazışıp askıyı kaldırtır, alan adını sizin adınıza güvene alırız.",
+  "no-dns": "Alan adı ayarlarını düzeltir, sitenizi yeniden yayına alırız.",
+  unreachable: "Sunucuyu inceler, sorun varsa sitenizi sağlam bir barındırmaya taşırız.",
+  "wix-expired": "Siteyi sizin için yeniden yayına alırız: yeni barındırmaya taşır, alan adını ve hesapları sizin adınıza açarız.",
+  "router-page": "Alan adını gerçek bir barındırmaya bağlar, siteyi yayına alırız.",
+  "no-https": "SSL sertifikasını kurar, tüm adresleri güvenli bağlantıya yönlendiririz.",
+  "cert-expired": "Sertifikayı yeniler ve otomatik yenilemeyi kurarız; bir daha dolmaz.",
+  "cert-mismatch": "Alan adınıza uygun sertifikayı kurar, uyarıyı kaldırırız.",
+  "cert-invalid": "Güvenilir bir sertifika kurar, uyarıyı kaldırırız.",
+  "cert-soon": "Otomatik yenilemeyi kurarız; unutulma riski kalmaz.",
+  "cert-30": "Otomatik yenilemeyi kurarız; unutulma riski kalmaz.",
+  "no-redirect": "Tüm adresleri güvenli sürüme yönlendiririz.",
+  mixed: "Güvensiz yüklenen dosyaları düzeltiriz.",
+  hsts: "Güvenlik ayarlarını tamamlarız.",
+  "no-viewport": "Siteyi telefona uygun hale getiririz.",
+  "slow-server": "Barındırma ve önbelleği düzenleyip sitenizi hızlandırırız.",
+  heavy: "Sayfayı sadeleştirip hafifletiriz.",
+  "psi-low": "Görselleri ve kodu optimize edip mobil hızı yükseltiriz.",
+  "psi-mid": "Görselleri ve kodu optimize edip mobil hızı yükseltiriz.",
+  noindex: "Gizleme etiketini kaldırır, siteyi Google’a yeniden açarız.",
+  "no-title": "Kurum adınızı ve hizmetinizi içeren başlığı yazarız.",
+  "title-len": "Başlığı arama sonuçlarına uygun hale getiririz.",
+  "no-description": "Hizmetinizi anlatan arama açıklamasını yazarız.",
+  "no-h1": "Sayfa yapısını Google’ın anlayacağı şekilde düzeltiriz.",
+  "multi-h1": "Sayfa yapısını Google’ın anlayacağı şekilde düzeltiriz.",
+  "no-sitemap": "Site haritasını oluşturup Google’a bildiririz.",
+  "no-robots": "Arama motoru ayarlarını tamamlarız.",
+  alt: "Görsellere açıklamaları ekleriz.",
+  "no-canonical": "Tekrar eden adresleri düzeltiriz.",
+  "no-og": "WhatsApp ve sosyal medya paylaşım önizlemesini ayarlarız.",
+  "no-lang": "Dil ayarını düzeltiriz.",
+  "no-contact": "Tek dokunuşla arama ve WhatsApp butonlarını ekleriz.",
+  "stale-year": "İçeriği güncelleyip yılı otomatik hale getiririz.",
+  "no-favicon": "Logonuzdan sekme simgesini ekleriz.",
+  "domain-expired": "Alan adını hemen yenileyip sizin adınıza güvene alırız.",
+  "domain-soon": "Yenilemeyi ve otomatik yenilemeyi sizin adınıza ayarlarız.",
+  "domain-60": "Yenilemeyi ve otomatik yenilemeyi sizin adınıza ayarlarız.",
+};
+
 export function evaluate(facts) {
   const findings = [];
   const passed = [];
   const add = (category, severity, id, title, meaning, fix) =>
-    findings.push({ category, severity, id, title, meaning, fix });
+    findings.push({ category, severity, id, title, meaning, fix: FIX_BY_ID[id] ?? fix });
   const ok = (text) => passed.push(text);
 
   // ---------- Site did not load at all ----------
@@ -71,6 +115,40 @@ export function evaluate(facts) {
 
   const c = facts.cert ?? {};
   const p = facts.page;
+
+  // The site builder redirects visitors to its own "expired" page: the site is effectively down.
+  if (/(^|\.)expiredwixdomain\.com/i.test(new URL(p.finalUrl).hostname)) {
+    facts.noSite = true;
+    add(
+      "security",
+      "critical",
+      "wix-expired",
+      "Site Wix’in “süresi dolmuş” sayfasına yönleniyor",
+      "Wix paketi veya alan adı bağlantısı sona ermiş görünüyor. Ziyaretçiler sitenizi değil Wix’in uyarı sayfasını görüyor ve site Google’dan da gizleniyor.",
+      "Wix paketi yenilenmeli ya da site yeni bir barındırmaya taşınmalı.",
+    );
+    if (facts.domain?.found && facts.domain.daysLeft >= 0) {
+      passed.push(`Alan adı kaydı ${fmtDate(facts.domain.expires)} tarihine kadar geçerli`);
+    }
+    return finish(facts, findings, passed);
+  }
+
+  // The address opens a modem/router page, not a website: nothing else about it is meaningful.
+  if (p.routerPage) {
+    facts.noSite = true;
+    add(
+      "security",
+      "critical",
+      "router-page",
+      "Alan adı bir web sitesine değil, bir modemin ayar sayfasına açılıyor",
+      "Ziyaretçiler boş bir sayfa görür ve sitenize hiç ulaşamaz. Google'daki web sitesi bağlantınız da bu adrese gidiyor.",
+      "Alan adı gerçek bir web sitesine (barındırmaya) bağlanmalı.",
+    );
+    if (facts.domain?.found && facts.domain.daysLeft >= 0) {
+      passed.push(`Alan adı kaydı ${fmtDate(facts.domain.expires)} tarihine kadar geçerli`);
+    }
+    return finish(facts, findings, passed);
+  }
 
   // ---------- Security ----------
   const certProblem =
@@ -462,11 +540,11 @@ function finish(facts, findings, passed) {
     let score = 100 - mine.reduce((sum, f) => sum + PENALTY[f.severity], 0);
     if (mine.some((f) => f.severity === "critical")) score = Math.min(score, 35);
     // A site that is down cannot be measured on speed, search or content.
-    if (facts.unreachable && cat.id !== "security") return { ...cat, score: null };
+    if ((facts.unreachable || facts.noSite) && cat.id !== "security") return { ...cat, score: null };
     return { ...cat, score: Math.max(0, score) };
   });
 
-  const overall = facts.unreachable
+  const overall = (facts.unreachable || facts.noSite)
     ? 10
     : Math.round(categories.reduce((sum, cat) => sum + cat.score * cat.weight, 0));
 
@@ -474,7 +552,7 @@ function finish(facts, findings, passed) {
   let headline;
   const lowerFirst = (t) =>
     /^[A-ZÇĞİÖŞÜ]{2}/.test(t) ? t : t.charAt(0).toLocaleLowerCase("tr") + t.slice(1);
-  if (facts.unreachable) headline = `${findings[0].title}.`;
+  if (facts.unreachable || facts.noSite) headline = `${findings[0].title}.`;
   else if (urgent.length > 0)
     headline = `${urgent.length} konu öncelikli: ${lowerFirst(urgent[0].title)}.`;
   else if (findings.length > 0)

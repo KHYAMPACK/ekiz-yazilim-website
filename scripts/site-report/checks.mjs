@@ -5,8 +5,73 @@
 import dns from "node:dns/promises";
 import http from "node:http";
 import https from "node:https";
+import net from "node:net";
 import tls from "node:tls";
 import zlib from "node:zlib";
+
+/**
+ * The checker is reachable from a public web page, so it must never be turned into a tool for
+ * reaching internal addresses (SSRF). We refuse private and special-use ranges, IP literals,
+ * unusual ports and single-label or local-looking names. Redirects are held to the same rules.
+ */
+function isPrivateAddress(ip) {
+  const v4 = ip.toLowerCase().startsWith("::ffff:") ? ip.slice(7) : ip;
+  if (net.isIPv4(v4)) {
+    const [a, b] = v4.split(".").map(Number);
+    return (
+      a === 0 ||
+      a === 10 ||
+      a === 127 ||
+      (a === 100 && b >= 64 && b <= 127) ||
+      (a === 169 && b === 254) ||
+      (a === 172 && b >= 16 && b <= 31) ||
+      (a === 192 && b === 0) ||
+      (a === 192 && b === 168) ||
+      (a === 198 && (b === 18 || b === 19)) ||
+      a >= 224
+    );
+  }
+  const v6 = ip.toLowerCase();
+  return v6 === "::" || v6 === "::1" || /^f[cd]/.test(v6) || /^fe[89ab]/.test(v6);
+}
+
+function blockedTarget(u) {
+  const host = u.hostname.replace(/^\[|\]$/g, "").toLowerCase();
+  if (net.isIP(host)) return true;
+  if (u.port && u.port !== "80" && u.port !== "443") return true;
+  if (!host.includes(".")) return true;
+  return /(^|\.)(localhost|local|internal|lan|home|corp|intranet)$/.test(host);
+}
+
+// Resolve names through public DNS only. Home routers and ISP resolvers often answer failed or
+// filtered lookups with their own address (e.g. 192.168.1.1), which makes healthy sites look broken.
+const publicResolver = new dns.Resolver();
+publicResolver.setServers(["8.8.8.8", "1.1.1.1"]);
+
+function publicLookup(hostname, options, cb) {
+  if (typeof options === "function") {
+    cb = options;
+    options = {};
+  }
+  const order = options && options.family === 6 ? ["resolve6", "resolve4"] : ["resolve4", "resolve6"];
+  const done = (all, fam) => {
+    const addrs = all.filter((a) => !isPrivateAddress(a));
+    if (!addrs.length) {
+      return cb(Object.assign(new Error("blocked address for " + hostname), { code: "EBLOCKED", hostname }));
+    }
+    return options && options.all
+      ? cb(null, addrs.map((address) => ({ address, family: fam })))
+      : cb(null, addrs[0], fam);
+  };
+  publicResolver[order[0]](hostname).then(
+    (a) => done(a, order[0] === "resolve4" ? 4 : 6),
+    () =>
+      publicResolver[order[1]](hostname).then(
+        (a) => done(a, order[1] === "resolve4" ? 4 : 6),
+        () => cb(Object.assign(new Error("getaddrinfo ENOTFOUND " + hostname), { code: "ENOTFOUND", hostname })),
+      ),
+  );
+}
 
 const UA =
   "Mozilla/5.0 (compatible; EkizSiteReport/1.0; +https://ekizyazilim.com)";
@@ -38,6 +103,7 @@ export function get(
     if (u.protocol !== "http:" && u.protocol !== "https:") {
       return resolve({ ok: false, error: "BAD_PROTOCOL", chain });
     }
+    if (blockedTarget(u)) return resolve({ ok: false, error: "BLOCKED", chain });
     const lib = u.protocol === "https:" ? https : http;
     const started = performance.now();
     let settled = false;
@@ -53,6 +119,7 @@ export function get(
       {
         method: "GET",
         rejectUnauthorized: !insecure,
+        lookup: publicLookup,
         timeout,
         headers: {
           "user-agent": UA,
@@ -127,6 +194,7 @@ export function get(
 /** Read the TLS certificate of host:443 (even if it is invalid). */
 export function readCertificate(host, timeout = 8000) {
   return new Promise((resolve) => {
+    if (blockedTarget(new URL(`https://${host}`))) return resolve({ connected: false, error: "BLOCKED" });
     let settled = false;
     const done = (v) => {
       if (!settled) {
@@ -135,7 +203,7 @@ export function readCertificate(host, timeout = 8000) {
       }
     };
     const socket = tls.connect(
-      { host, port: 443, servername: host, rejectUnauthorized: false, timeout },
+      { host, port: 443, servername: host, rejectUnauthorized: false, lookup: publicLookup, timeout },
       () => {
         const cert = socket.getPeerCertificate();
         const authorized = socket.authorized;
@@ -242,12 +310,23 @@ export function analyseHtml(html, pageUrl) {
     imagesNoAlt: imgNoAlt,
     scripts: (html.match(/<script\b[^>]*\bsrc=/gi) ?? []).length,
     mixedContent: mixed,
+    // A domain pointed at a router/modem: the "page" only redirects to a private address (192.168.x.x etc.).
+    routerPage:
+      decode(bodyTextOnly(html)).length < 300 &&
+      /https?:\/\/(?:192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(?:1[6-9]|2\d|3[01])\.\d+\.\d+)/i.test(html),
     phoneLink: /href=["']tel:/i.test(html),
     whatsappLink: /wa\.me\/|api\.whatsapp\.com|web\.whatsapp\.com|whatsapp:\/\//i.test(html),
     copyrightYear,
     platform,
     textLength: decode(bodyText).length,
   };
+}
+
+function bodyTextOnly(html) {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<[^>]+>/g, " ");
 }
 
 const TWO_LEVEL_TLD = new Set([
@@ -336,7 +415,7 @@ export async function checkSite(input, { psi = false } = {}) {
 
   // Many sites only answer on www. (or only on the bare domain): if the name
   // does not resolve at all, try the other form before calling the site down.
-  const resolves = (h) => dns.lookup(h).then(() => true, () => false);
+  const resolves = (h) => publicResolves(h);
   if (!(await resolves(host))) {
     const alt = host.startsWith("www.") ? host.slice(4) : `www.${host}`;
     if (await resolves(alt)) host = alt;
