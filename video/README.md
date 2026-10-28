@@ -15,8 +15,13 @@ video/
 ## Build a section
 
 ```bash
-node video/reels/siteniz-kapanacak/build.mjs hook
+node video/reels/siteniz-kapanacak/build.mjs hook     # one section: hook, threat, fear, check, turn, fix, close
+node video/reels/siteniz-kapanacak/build.mjs all      # every section, then the final reel
+node video/reels/siteniz-kapanacak/build.mjs join     # only re-join the built sections
 ```
+
+The final reel is `video/out/siteniz-kapanacak/siteniz-kapanacak.mp4`. Captions follow the voice word by word
+(`lib/captions.js`), and `lib/probe.mjs` reports sudden jumps between frames when something looks like a twitch.
 
 ## How to change things
 

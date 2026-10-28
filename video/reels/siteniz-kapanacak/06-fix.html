@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "SG"; src: url("__FONT__") format("truetype"); font-weight: 300 700; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; background: #000; overflow: hidden; font-family: "SG", sans-serif; color: #fff; }
+  #stage { position: absolute; inset: 0; width: 1080px; height: 1920px; transform-origin: 50% 45%; background:
+      radial-gradient(900px 700px at 80% 78%, rgba(191,213,235,0.10), rgba(0,0,0,0) 70%), #000; }
+  #mark { position: absolute; left: 90px; top: 270px; width: 84px; height: 84px; opacity: 0.55; }
+
+  /* section 5 as it ended */
+  #prev { position: absolute; inset: 0; }
+  .word { position: absolute; left: 0; width: 1080px; text-align: center; font-size: 168px; font-weight: 600; letter-spacing: -6px; line-height: 190px; white-space: nowrap;
+          transform-origin: 50% 50%; }
+  #w1 { top: 640px; transform: translateY(-175px) scale(0.72); }
+  #w2 { top: 820px; color: rgb(120,128,138); transform: translateY(-235px) scale(0.72); }
+  #w2t { position: relative; display: inline-block; }
+  #strike { position: absolute; left: -2%; top: 50%; height: 16px; margin-top: -2px; width: 104%; background: #fff; border-radius: 8px; }
+  #big { position: absolute; left: 80px; right: 80px; top: 1000px; text-align: center; font-size: 104px; font-weight: 600; letter-spacing: -3px; line-height: 1.08; text-wrap: balance; }
+  #big .yes { color: #5cc592; }
+  #oldcap { position: absolute; left: 90px; right: 90px; top: 1400px; text-align: center; font-size: 66px; font-weight: 500; line-height: 1.22; text-wrap: balance; }
+
+  /* the fix: three promises */
+  #list { position: absolute; left: 90px; right: 70px; top: 720px; display: flex; flex-direction: column; gap: 60px; }
+  .item { display: flex; align-items: center; gap: 28px; opacity: 0; white-space: nowrap; }
+  .item svg { width: 82px; height: 82px; flex: none; }
+  .item svg circle { fill: rgba(92,197,146,0.16); stroke: #5cc592; stroke-width: 3; }
+  .item svg path { fill: none; stroke: #5cc592; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 60; stroke-dashoffset: 60; }
+  .item span { font-size: 60px; font-weight: 600; letter-spacing: -2px; line-height: 1.05; }
+  .item span em { font-style: normal; color: #5cc592; }
+
+  #cap { position: absolute; left: 90px; right: 90px; top: 1360px; height: 220px; font-size: 66px; font-weight: 500; line-height: 1.22; }
+  #cap .sent { position: absolute; left: 0; right: 0; top: 0; text-align: center; text-wrap: balance; }
+  #cap .sent span { display: inline-block; padding: 0 8px; margin: 0 -4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="mark" viewBox="0 0 100 100" fill="none">__MARK__</svg>
+  <div id="prev">
+    <div class="word" id="w1">Siteniz</div>
+    <div class="word" id="w2"><span id="w2t">kapanacak.<i id="strike"></i></span></div>
+    <div id="big">Kapanacak bir şey <span class="yes">yoktu.</span></div>
+  </div>
+  <div id="oldcap">Yani kapanma tehdidi doğru değildi.</div>
+
+  <div id="list">
+    <div class="item" id="i1"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="M14 24.5 21 31.5 34 17"/></svg><span>Alan adı <em>sizin adınıza</em></span></div>
+    <div class="item" id="i2"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="M14 24.5 21 31.5 34 17"/></svg><span>Hosting <em>bizden</em></span></div>
+    <div class="item" id="i3"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22"/><path d="M14 24.5 21 31.5 34 17"/></svg><span>Her masraf <em>yazılı</em></span></div>
+  </div>
+
+  <div id="cap"></div>
+</div>
+<script>
+  // TIMING from build.mjs: voiceStart, duration, words.
+  const TIMING = __TIMING__;
+  const V = TIMING.voiceStart;
+  const WORDS = TIMING.words;
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const $ = (id) => document.getElementById(id);
+
+  __CAPTIONS__
+  const captions = makeCaptions($('cap'), WORDS);
+
+  const find = (re) => WORDS.find((w) => re.test(w.text));
+  const first = WORDS[0] || { start: V };
+  const aldik = find(/^aldık/i) || { start: V + 1.4, end: V + 1.8 };
+  const her = find(/^her$/i) || { start: V + 2.0, end: V + 2.2 };
+
+  // each promise: fade/slide in, then its check mark draws
+  function item(id, t, t0) {
+    const k = easeOut(seg(t, t0, t0 + 0.35));
+    const el = $(id);
+    el.style.opacity = String(k);
+    el.style.transform = `translateX(${(1 - k) * -40}px)`;
+    el.querySelector('path').style.strokeDashoffset = String(60 * (1 - easeInOut(seg(t, t0 + 0.12, t0 + 0.45))));
+  }
+
+  window.draw = function (t) {
+    // section 5 ended at 1.04; settle back and drift
+    $('stage').style.transform = `scale(${lerp(1.04, 1.0, easeInOut(seg(t, 0, 0.6))) + 0.02 * seg(t, 0.6, TIMING.duration)})`;
+
+    // the previous scene clears
+    const out = easeInOut(seg(t, 0, 0.35));
+    $('prev').style.opacity = String(1 - out);
+    $('prev').style.transform = `translateY(${-30 * out}px)`;
+    $('oldcap').style.opacity = String(1 - easeOut(seg(t, 0, 0.2)));
+
+    // promises appear with his words: 1 as he starts, 2 as he finishes the first sentence, 3 on "Her masraf"
+    item('i1', t, Math.max(0.3, first.start - 0.05));
+    item('i2', t, aldik.start);
+    item('i3', t, her.start - 0.05);
+
+    captions(t);
+  };
+  window.draw(0);
+</script>
+</body>
+</html>

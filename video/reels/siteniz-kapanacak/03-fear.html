@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "SG"; src: url("__FONT__") format("truetype"); font-weight: 300 700; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1920px; background: #000; overflow: hidden; font-family: "SG", sans-serif; color: #fff; }
+  #stage { position: absolute; inset: 0; width: 1080px; height: 1920px; transform-origin: 50% 45%; background:
+      radial-gradient(900px 700px at 80% 78%, rgba(191,213,235,0.10), rgba(0,0,0,0) 70%), #000; }
+  #mark { position: absolute; left: 90px; top: 270px; width: 84px; height: 84px; opacity: 0.55; }
+  .word { position: absolute; left: 0; width: 1080px; text-align: center; font-size: 168px; font-weight: 600; letter-spacing: -6px; line-height: 190px; white-space: nowrap;
+          transform-origin: 50% 50%; }
+  #w1 { top: 640px; transform: translateY(-445px) scale(0.4); }
+  #w2 { top: 820px; color: #ff4b3e; transform: translateY(-545px) scale(0.4); }
+
+  /* the message from section 2, as it ended */
+  #msggroup { position: absolute; inset: 0; transform-origin: 540px 900px; }
+  #who { position: absolute; left: 98px; top: 638px; font-size: 32px; letter-spacing: 5px; text-transform: uppercase; color: #bfd5eb; }
+  #card { position: absolute; left: 90px; top: 700px; width: 900px; height: 400px; border-radius: 56px 56px 56px 10px; background: #e8eef4; }
+  #msg { position: absolute; left: 56px; right: 56px; top: 50px; color: #0b0d10; font-size: 68px; font-weight: 500; line-height: 1.18; letter-spacing: -1px; }
+  #msg .hl { background: rgba(255,75,62,0.38); border-radius: 6px; padding: 0 4px; margin: 0 -4px; }
+  #time { position: absolute; right: 44px; bottom: 28px; font-size: 28px; color: #6b7783; }
+
+  /* the payment panel */
+  #pay { position: absolute; left: 130px; top: 930px; width: 820px; padding: 44px 48px 48px; background: #12171d; border: 2px solid #28303a; border-radius: 36px;
+         opacity: 0; transform-origin: 50% 50%; }
+  #pay .label { font-size: 34px; color: #93a0ad; letter-spacing: 1px; }
+  #pay .amount { margin-top: 10px; font-size: 104px; font-weight: 600; letter-spacing: -2px; filter: blur(14px); }
+  #btn { margin-top: 30px; height: 120px; border-radius: 22px; background: #ff4b3e; color: #fff; font-size: 56px; font-weight: 600;
+         display: flex; align-items: center; justify-content: center; transform-origin: 50% 50%; }
+  #glow { position: absolute; left: 0; right: 0; bottom: 48px; height: 120px; margin: 0 48px; border-radius: 22px; box-shadow: 0 0 0 0 rgba(255,75,62,0.0); pointer-events: none; }
+
+  /* a finger-like pointer drifting toward the button */
+  #tap { position: absolute; width: 74px; height: 74px; border-radius: 50%; background: rgba(255,255,255,0.92); box-shadow: 0 6px 30px rgba(0,0,0,0.5); opacity: 0; }
+  #tapring { position: absolute; width: 74px; height: 74px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.8); opacity: 0; }
+
+  /* fear: a red heartbeat at the edges */
+  #pulse { position: absolute; inset: 0; pointer-events: none; opacity: 0;
+           background: radial-gradient(ellipse at 50% 50%, rgba(255,30,20,0.06) 20%, rgba(255,35,25,0.45) 62%, rgba(255,40,30,0.85) 100%); }
+
+  #oldcap { position: absolute; left: 90px; right: 90px; top: 1230px; text-align: center; font-size: 66px; font-weight: 500; line-height: 1.22; text-wrap: balance; }
+  #cap { position: absolute; left: 90px; right: 90px; top: 1380px; height: 220px; font-size: 66px; font-weight: 500; line-height: 1.22; }
+  #cap .sent { position: absolute; left: 0; right: 0; top: 0; text-align: center; text-wrap: balance; }
+  #cap .sent span { display: inline-block; padding: 0 8px; margin: 0 -4px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <svg id="mark" viewBox="0 0 100 100" fill="none">__MARK__</svg>
+  <div class="word" id="w1">Siteniz</div>
+  <div class="word" id="w2">kapanacak.</div>
+  <div id="msggroup">
+    <div id="who">Siteyi yapan kişi</div>
+    <div id="card">
+      <div id="msg"><span class="hl">Alan adı ücreti</span> ödenmezse siteniz kapatılacak.</div>
+      <div id="time">şimdi</div>
+    </div>
+  </div>
+  <div id="pay">
+    <div class="label">Alan adı ücreti</div>
+    <div class="amount">₺ 4.850,00</div>
+    <div id="btn">Öde</div>
+  </div>
+  <div id="pulse"></div>
+  <div id="tapring"></div>
+  <div id="tap"></div>
+  <div id="oldcap">Şimdi alan adı ücreti diye para istiyordu.</div>
+  <div id="cap"></div>
+</div>
+<script>
+  // TIMING comes from build.mjs: voiceStart, duration, and every spoken word with start/end seconds.
+  const TIMING = __TIMING__;
+  const V = TIMING.voiceStart;
+  const WORDS = TIMING.words;
+
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const seg = (t, a, b) => clamp((t - a) / (b - a));
+  const easeOut = (x) => 1 - Math.pow(1 - x, 3);
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const lerp = (a, b, k) => a + (b - a) * k;
+  const $ = (id) => document.getElementById(id);
+
+  __CAPTIONS__
+  const captions = makeCaptions($('cap'), WORDS);
+
+  const find = (re) => WORDS.find((w) => re.test(w.text));
+  const korktu = find(/^korktu/i) || { start: V + 0.5, end: V + 0.9 };
+  const odemeye = find(/^ödemeye/i) || { start: V + 1.1, end: V + 1.5 };
+  const hazir = find(/^hazır/i) || { start: V + 1.5, end: V + 2.0 };
+
+  // pointer path: from lower right, ending on the button
+  const P0 = { x: 900, y: 1700 }, P1 = { x: 610, y: 1185 };
+
+  window.draw = function (t) {
+    // stage continues the slow drift from section 2 (it ended at 1.025)
+    $('stage').style.transform = `scale(${1.025 + 0.02 * seg(t, 0, TIMING.duration)})`;
+
+    // the old caption leaves, the message steps back to make room
+    $('oldcap').style.opacity = String(1 - easeOut(seg(t, 0, 0.2)));
+    const back = easeInOut(seg(t, 0.05, 0.55));
+    $('msggroup').style.transform = `translateY(${lerp(0, -250, back)}px) scale(${lerp(1, 0.8, back)})`;
+    $('msggroup').style.opacity = String(lerp(1, 0.6, back));
+
+    // payment panel rises in
+    const pin = easeOut(seg(t, 0.2, 0.6));
+    $('pay').style.opacity = String(pin);
+    $('pay').style.transform = `translateY(${(1 - pin) * 60}px) scale(${0.94 + 0.06 * pin})`;
+
+    // fear: from "korktu" to the end, a steady red tint with a heartbeat (lub-dub every 0.85 s) on top.
+    // Each beat swells in over 0.2 s (eased both ends) so it never flashes.
+    const beat = (t0) => (t >= t0 ? easeInOut(seg(t, t0, t0 + 0.2)) * Math.exp(-Math.max(0, t - t0 - 0.2) * 3.2) : 0);
+    let b = 0;
+    for (let t0 = korktu.start; t0 < TIMING.duration; t0 += 0.85) b = Math.max(b, beat(t0), 0.75 * beat(t0 + 0.28));
+    const base = 0.45 * easeInOut(seg(t, korktu.start - 0.1, korktu.start + 0.5));
+    const p = clamp(base + 0.6 * b);
+    $('pulse').style.opacity = String(p);
+    $('stage').style.transform += ` scale(${1 + 0.008 * b})`;
+
+    // "ödemeye hazırdı": pointer drifts to the button, button breathes, a press ring as he finishes
+    const move = easeInOut(seg(t, odemeye.start - 0.1, hazir.end - 0.05));
+    const tap = $('tap');
+    tap.style.opacity = String(easeOut(seg(t, odemeye.start - 0.15, odemeye.start + 0.1)));
+    tap.style.left = `${lerp(P0.x, P1.x, move) - 37}px`;
+    tap.style.top = `${lerp(P0.y, P1.y, move) - 37}px`;
+    const breathe = t > odemeye.start ? 0.5 + 0.5 * Math.sin((t - odemeye.start) * 9 - Math.PI / 2) : 0;
+    $('btn').style.transform = `scale(${1 + 0.035 * breathe * seg(t, odemeye.start, odemeye.start + 0.2)})`;
+    $('btn').style.boxShadow = `0 0 ${40 * breathe}px rgba(255,75,62,${0.55 * breathe * seg(t, odemeye.start, odemeye.start + 0.2)})`;
+    const ringT = hazir.end - 0.05;
+    const ring = $('tapring');
+    const rq = seg(t, ringT, ringT + 0.45);
+    ring.style.opacity = String(t >= ringT ? 0.8 * (1 - rq) : 0);
+    const rs = 74 * (1 + 1.4 * rq);
+    ring.style.width = ring.style.height = `${rs}px`;
+    ring.style.left = `${P1.x - rs / 2}px`;
+    ring.style.top = `${P1.y - rs / 2}px`;
+
+    captions(t);
+  };
+  window.draw(0);
+</script>
+</body>
+</html>

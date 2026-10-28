@@ -173,7 +173,7 @@ export async function renderFrames({ html, timing, seconds, fps = 30, width = 10
     fs
       .readFileSync(html, "utf8")
       .replace("__FONT__", fontDataUrl())
-      .replace("__MARK__", markInner())
+      .replaceAll("__MARK__", markInner())
       .replace("__TIMING__", JSON.stringify(timing ?? {}))
       .replace("__CAPTIONS__", () => fs.readFileSync(path.join(videoDir, "lib", "captions.js"), "utf8")),
   );

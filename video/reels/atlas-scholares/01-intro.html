@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "SG"; src: url("__FONT__") format("truetype"); font-weight: 300 700; }
+  html, body { margin: 0; background: #121211; overflow: hidden; }
+  canvas { display: block; }
+  #atlasLogo { display: none; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1080" height="1350"></canvas>
+<img id="atlasLogo" alt="" src="__ATLAS_SRC__">
+<script>
+/*
+ * Instagram carousel, slide 1 (4:5, 1080x1350, 10 s). Everything is a pure function of time: window.draw(t).
+ * Timeline (seconds):
+ *   0.0 - 2.5   hook: "Veliler hala 'Cocugum nasil?' diye mi ariyor?" slides in line by line
+ *   2.0 - 3.2   orange iris wipe
+ *   2.9 - 5.2   Ekiz x Atlas lock-up, then the Ekiz tile morphs into a phone
+ *   5.0 - 8.5   the Scholares parent app: attendance + exam events fly in as notifications
+ *   8.4 - 10.0  caption + "Nasil cozduk?" call to swipe
+ */
+const HAS_ATLAS = __HAS_ATLAS__;
+const AUDIENCE = "__AUDIENCE__";
+const W = 1080, H = 1350;
+const c = document.getElementById("c");
+const ctx = c.getContext("2d");
+const atlasImg = document.getElementById("atlasLogo");
+
+// ---------- palette ----------
+const BG = "#121211", SURF = "#1a1a18", SURF2 = "#242422", BORDER = "#32322e";
+const CREAM = "#f3f0e8", MUTED = "#a9a69c", ORANGE = "#e58a5c", INK = "#141413";
+const CORE = new Path2D("M29.9 12H73.7L84.6 30.8H40.8L51.7 50L40.8 69.1H84.6L73.7 87.9H29.9L19 69.1L29.9 50L19 30.8L29.9 12Z");
+
+// ---------- easing ----------
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const eo3 = (p) => 1 - Math.pow(1 - p, 3);
+const eo5 = (p) => 1 - Math.pow(1 - p, 5);
+const ei3 = (p) => p * p * p;
+const eio = (p) => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+const back = (p, s = 1.7) => { const q = p - 1; return 1 + (s + 1) * q * q * q + s * q * q; };
+const spring = (p) => (p <= 0 ? 0 : p >= 1 ? 1 : 1 - Math.exp(-7 * p) * Math.cos(11 * p));
+const mix = (a, b, t) => a.map((v, i) => Math.round(lerp(v, b[i], t)));
+const rgb = (a, al = 1) => `rgba(${a[0]},${a[1]},${a[2]},${al})`;
+function rand(seed) { let s = seed * 9301 + 49297; return () => ((s = (s * 9301 + 49297) % 233280) / 233280); }
+
+function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, Math.min(r, w / 2, h / 2)); }
+function text(str, x, y, size, color, { weight = 600, align = "left", alpha = 1, ls = 0 } = {}) {
+  ctx.save();
+  ctx.globalAlpha *= alpha;
+  ctx.font = `${weight} ${size}px SG, sans-serif`;
+  ctx.letterSpacing = `${ls}px`;
+  ctx.textAlign = align;
+  ctx.textBaseline = "alphabetic";
+  ctx.fillStyle = color;
+  ctx.fillText(str, x, y);
+  ctx.restore();
+}
+
+// ---------- brand tiles ----------
+function ekizTile(cx, cy, size, { markAlpha = 1 } = {}) {
+  ctx.save();
+  ctx.translate(cx - size / 2, cy - size / 2);
+  ctx.scale(size / 100, size / 100);
+  rr(0, 0, 100, 100, 26);
+  ctx.fillStyle = ORANGE;
+  ctx.fill();
+  ctx.globalAlpha *= markAlpha;
+  ctx.translate(50, 50); ctx.scale(0.58, 0.58); ctx.translate(-51.8, -50);
+  ctx.fillStyle = INK;
+  ctx.fill(CORE);
+  ctx.restore();
+}
+function atlasTile(cx, cy, size) {
+  ctx.save();
+  ctx.translate(cx - size / 2, cy - size / 2);
+  rr(0, 0, size, size, size * 0.26);
+  ctx.fillStyle = CREAM;
+  ctx.fill();
+  if (HAS_ATLAS && atlasImg.naturalWidth) {
+    rr(0, 0, size, size, size * 0.26);
+    ctx.save(); ctx.clip();
+    const k = Math.max(size / atlasImg.naturalWidth, size / atlasImg.naturalHeight);
+    const w = atlasImg.naturalWidth * k, h = atlasImg.naturalHeight * k;
+    ctx.drawImage(atlasImg, (size - w) / 2, (size - h) / 2, w, h);
+    ctx.restore();
+    rr(0, 0, size, size, size * 0.26);
+    ctx.lineWidth = 3; ctx.strokeStyle = "rgba(243,240,232,0.35)"; ctx.stroke();
+  } else {
+    // Placeholder "A" until the real Atlas logo is dropped in video/assets/atlas-logo.png
+    const s = size;
+    ctx.strokeStyle = INK; ctx.lineWidth = s * 0.1; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(s * 0.27, s * 0.74); ctx.lineTo(s * 0.5, s * 0.25); ctx.lineTo(s * 0.73, s * 0.74);
+    ctx.moveTo(s * 0.35, s * 0.58); ctx.lineTo(s * 0.65, s * 0.58);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ---------- background ----------
+function background(t) {
+  ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H);
+  const gx = W * (0.3 + 0.35 * Math.sin(t * 0.32)), gy = H * (0.28 + 0.12 * Math.cos(t * 0.45));
+  let g = ctx.createRadialGradient(gx, gy, 0, gx, gy, W * 0.95);
+  g.addColorStop(0, "rgba(229,138,92,0.20)"); g.addColorStop(1, "rgba(229,138,92,0)");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  const hx = W * (0.85 - 0.25 * Math.sin(t * 0.27)), hy = H * 0.85;
+  g = ctx.createRadialGradient(hx, hy, 0, hx, hy, W * 0.7);
+  g.addColorStop(0, "rgba(229,138,92,0.10)"); g.addColorStop(1, "rgba(229,138,92,0)");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // grid
+  const gs = 54, off = (t * 9) % gs;
+  ctx.strokeStyle = "rgba(243,240,232,0.045)"; ctx.lineWidth = 1;
+  ctx.beginPath();
+  for (let x = 0; x <= W; x += gs) { ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); }
+  for (let y = -gs; y <= H; y += gs) { ctx.moveTo(0, y + off + 0.5); ctx.lineTo(W, y + off + 0.5); }
+  ctx.stroke();
+  // vignette
+  g = ctx.createRadialGradient(W / 2, H / 2, H * 0.35, W / 2, H / 2, H * 0.85);
+  g.addColorStop(0, "rgba(0,0,0,0)"); g.addColorStop(1, "rgba(0,0,0,0.55)");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+
+// ---------- phase 1: the hook ----------
+function audienceTag(t, exit) {
+  // big call-out at the top: who this is for
+  const p = spring(prog(t, 0.0, 0.7));
+  if (p <= 0.001) return;
+  ctx.save();
+  ctx.globalAlpha = clamp(p * 2) * (1 - exit);
+  ctx.font = "700 64px SG, sans-serif"; ctx.letterSpacing = "3px";
+  const tw = ctx.measureText(AUDIENCE).width;
+  const pw = Math.min(tw + 110, W - 80), ph = 128, cx = W / 2, cy = 215 + (1 - p) * -140;
+  ctx.shadowColor = "rgba(229,138,92,0.45)"; ctx.shadowBlur = 40;
+  rr(cx - pw / 2, cy - ph / 2, pw, ph, 64);
+  ctx.fillStyle = ORANGE; ctx.fill();
+  ctx.shadowBlur = 0;
+  text(AUDIENCE, cx, cy + 22, 64, INK, { align: "center", weight: 700, ls: 3 });
+  // small pointer line under the pill
+  const lp = eo5(prog(t, 0.5, 1.1));
+  ctx.strokeStyle = ORANGE; ctx.lineWidth = 4; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(cx, cy + ph / 2 + 18); ctx.lineTo(cx, cy + ph / 2 + 18 + 60 * lp); ctx.stroke();
+  ctx.restore();
+}
+
+function hook(t) {
+  if (t > 2.6) return;
+  const lines = [["Düşük deneme sonucu", CREAM], ["devamsızlıktan mı,", ORANGE], ["çalışmamaktan mı?", CREAM]];
+  const exit = ei3(prog(t, 1.85, 2.45));
+  audienceTag(t, exit);
+  const bar = eo5(prog(t, 0.05, 0.9));
+  const br = rand(11);
+  for (let i = 0; i < 9; i++) {
+    const bx = 120 + br() * 840, spd = 30 + br() * 50, ph = br() * 6, sz = 70 + br() * 70, delay = br() * 1.1;
+    const bp = eo3(prog(t, delay, delay + 0.6));
+    const by = 1180 - ((t * spd + ph * 90) % 1000) * 0.9 - bp * 40;
+    ctx.save();
+    ctx.globalAlpha = 0.16 * bp * (1 - exit);
+    ctx.strokeStyle = ORANGE; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.roundRect(bx, by, sz * 1.3, sz, 18); ctx.moveTo(bx + 18, by + sz); ctx.lineTo(bx + 8, by + sz + 22); ctx.lineTo(bx + 42, by + sz); ctx.stroke();
+    text("?", bx + sz * 0.65, by + sz * 0.72, sz * 0.62, ORANGE, { align: "center", weight: 600 });
+    ctx.restore();
+  }
+  ctx.fillStyle = ORANGE;
+  ctx.fillRect(64, 470 + (1 - bar) * 170, 8, 170 * 3 * bar * 0.93);
+  lines.forEach(([str, col], i) => {
+    const a = 0.12 + i * 0.4;
+    const p = eo5(prog(t, a, a + 0.75));
+    let size = 112;
+    ctx.font = `600 ${size}px SG`; ctx.letterSpacing = "-4px";
+    const w = ctx.measureText(str).width;
+    if (w > 880) size = (size * 880) / w;
+    const y = 560 + i * 165;
+    ctx.save();
+    ctx.beginPath(); ctx.rect(70, y - size * 0.95, 960, size * 1.45); ctx.clip();
+    text(str, 104, y + (1 - p) * size * 1.15 - exit * 190, size, col, { ls: -4, alpha: 1 - exit });
+    ctx.restore();
+  });
+  // underline sweep under the quoted line
+  const u = eo5(prog(t, 1.15, 1.6)) * (1 - exit);
+  ctx.fillStyle = ORANGE;
+  ctx.fillRect(104, 560 + 165 + 22, 700 * u, 4);
+}
+
+// ---------- transition: iris wipe ----------
+function iris(t) {
+  if (t < 2.0 || t > 3.3) return;
+  const R1 = 1150 * eo3(prog(t, 2.0, 2.65));
+  const R2 = 1250 * eo3(prog(t, 2.5, 3.2));
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(W / 2, 560, R1, 0, Math.PI * 2);
+  ctx.arc(W / 2, 560, R2, 0, Math.PI * 2, true);
+  ctx.fillStyle = ORANGE;
+  ctx.fill("evenodd");
+  ctx.restore();
+}
+
+// ---------- phase 2: calibration lock-up ----------
+const TILE = 230, LY = 560, LX = 300, RX = 780;
+function lockup(t) {
+  if (t < 2.85 || t > 5.2) return;
+  const fade = 1 - prog(t, 4.3, 4.7);
+
+  // shock rings when the two logos meet
+  [0, 0.14].forEach((d, i) => {
+    const p = prog(t, 3.55 + d, 4.25 + d);
+    if (p <= 0 || p >= 1) return;
+    ctx.save();
+    ctx.strokeStyle = ORANGE; ctx.globalAlpha = (1 - p) * 0.7; ctx.lineWidth = 5 - i * 2;
+    ctx.beginPath(); ctx.arc(W / 2, LY, 60 + eo3(p) * 460, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+  });
+
+  // connector (draws outward from each tile to the cross)
+  const lp = eo5(prog(t, 3.5, 3.85));
+  if (lp > 0 && fade > 0) {
+    ctx.save();
+    ctx.globalAlpha = fade; ctx.strokeStyle = ORANGE; ctx.lineWidth = 4; ctx.lineCap = "round";
+    ctx.setLineDash([10, 12]); ctx.lineDashOffset = -t * 60;
+    const a = LX + TILE / 2 + 18, b = RX - TILE / 2 - 18, m = W / 2;
+    ctx.beginPath();
+    ctx.moveTo(a, LY); ctx.lineTo(lerp(a, m - 46, lp), LY);
+    ctx.moveTo(b, LY); ctx.lineTo(lerp(b, m + 46, lp), LY);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // atlas tile (right) — absorbed into the phone during the morph
+  const pa = spring(prog(t, 2.95, 3.65));
+  const ax = lerp(1300, RX, pa);
+  const absorb = eio(prog(t, 4.35, 4.95));
+  if (absorb < 1) {
+    ctx.save();
+    const sx = lerp(ax, W / 2, absorb), sc = lerp(1, 0.15, absorb);
+    ctx.globalAlpha = 1 - absorb;
+    ctx.translate(sx, LY); ctx.rotate((1 - pa) * 0.45); ctx.scale(sc, sc); ctx.translate(-sx, -LY);
+    atlasTile(sx, LY, TILE);
+    ctx.restore();
+  }
+
+  // cross sign
+  const px = back(prog(t, 3.55, 3.9));
+  if (px > 0 && fade > 0) {
+    ctx.save();
+    ctx.globalAlpha = fade;
+    ctx.translate(W / 2, LY + 6); ctx.scale(px, px);
+    text("×", 0, 40, 130, ORANGE, { align: "center", weight: 500 });
+    ctx.restore();
+  }
+
+  // names
+  const na = eo3(prog(t, 3.75, 4.1)) * fade;
+  if (na > 0) {
+    text("Ekiz Yazılım", LX, LY + TILE / 2 + 78, 40, CREAM, { align: "center", alpha: na, ls: -1 });
+    text("Atlas VIP Eğitim Kurumu", RX, LY + TILE / 2 + 78, 40, CREAM, { align: "center", alpha: na, ls: -1 });
+    text("TEKNOLOJİ ORTAĞI", LX, LY + TILE / 2 + 122, 20, MUTED, { align: "center", alpha: na, ls: 4, weight: 500 });
+    text("EĞİTİM KURUMU", RX, LY + TILE / 2 + 122, 20, MUTED, { align: "center", alpha: na, ls: 4, weight: 500 });
+  }
+}
+
+// ---------- phone geometry ----------
+const PX = 305, PY = 120, PW = 470, PH = 860;
+
+function phoneShell(t) {
+  const m = eio(prog(t, 4.35, 5.15));
+  // Ekiz tile -> phone rect
+  const pe = spring(prog(t, 2.85, 3.55));
+  const tx = lerp(-220, LX, pe);
+  const cx = lerp(tx, W / 2, m), cy = lerp(LY, PY + PH / 2, m);
+  const w = lerp(TILE, PW, m), h = lerp(TILE, PH, m);
+  const r = lerp(TILE * 0.26, 74, m);
+  if (t < 2.85) return null;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate((1 - pe) * -0.45);
+  // soft glow behind the phone once it exists
+  if (m > 0) {
+    const g = ctx.createRadialGradient(0, 0, 100, 0, 0, 640);
+    g.addColorStop(0, `rgba(229,138,92,${0.22 * m})`); g.addColorStop(1, "rgba(229,138,92,0)");
+    ctx.fillStyle = g; ctx.fillRect(-700, -700, 1400, 1400);
+  }
+  rr(-w / 2, -h / 2, w, h, r);
+  ctx.fillStyle = rgb(mix([229, 138, 92], [26, 26, 24], prog(m, 0.25, 0.85)));
+  ctx.fill();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = rgb(mix([229, 138, 92], [74, 72, 64], prog(m, 0.3, 1)));
+  ctx.stroke();
+  // mark inside the tile fades out as it becomes a screen
+  const ma = 1 - prog(m, 0, 0.4);
+  if (ma > 0) {
+    ctx.save();
+    ctx.globalAlpha = ma;
+    ctx.scale(w / 100, w / 100); ctx.translate(0, 0);
+    ctx.translate(0, 0); ctx.scale(0.58, 0.58); ctx.translate(-51.8, -50);
+    ctx.fillStyle = INK; ctx.fill(CORE);
+    ctx.restore();
+  }
+  ctx.restore();
+  return m;
+}
+
+// ---------- phone screen ----------
+function notif(t, start, idx, title, sub, icon) {
+  const p = prog(t, start, start + 0.7);
+  if (p <= 0) return;
+  const sp = spring(p);
+  const y0 = PY + 262 + idx * 142;
+  const x = PX + 20, w = PW - 40, h = 126;
+  const y = y0 + (1 - sp) * -70;
+  ctx.save();
+  ctx.globalAlpha = clamp(p * 3);
+  // glow flash on arrival
+  const fl = 1 - prog(t, start, start + 0.7);
+  ctx.shadowColor = `rgba(229,138,92,${0.55 * fl})`; ctx.shadowBlur = 40 * fl;
+  rr(x, y, w, h, 24);
+  ctx.fillStyle = SURF2; ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.lineWidth = 2; ctx.strokeStyle = fl > 0.02 ? `rgba(229,138,92,${0.3 + 0.7 * fl})` : BORDER; ctx.stroke();
+  // icon
+  const ix = x + 52, iy = y + h / 2;
+  ctx.beginPath(); ctx.arc(ix, iy, 30, 0, Math.PI * 2); ctx.fillStyle = ORANGE; ctx.fill();
+  ctx.strokeStyle = INK; ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.fillStyle = INK;
+  if (icon === "check") {
+    ctx.beginPath(); ctx.moveTo(ix - 11, iy + 1); ctx.lineTo(ix - 3, iy + 9); ctx.lineTo(ix + 12, iy - 8); ctx.stroke();
+  } else if (icon === "bars") {
+    [[-11, 8, 8], [-2, 17, 8], [7, 26, 8]].forEach(([dx, hh]) => { ctx.fillRect(ix + dx - 3, iy + 12 - hh * 0.8, 7, hh * 0.8); });
+  } else {
+    ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(ix - 10, iy - 9); ctx.lineTo(ix + 10, iy - 9); ctx.moveTo(ix - 10, iy); ctx.lineTo(ix + 10, iy); ctx.moveTo(ix - 10, iy + 9); ctx.lineTo(ix + 3, iy + 9); ctx.stroke();
+  }
+  text(title, x + 100, y + 54, 23, CREAM, { weight: 600, ls: -0.5 });
+  text(sub, x + 100, y + 90, 20, MUTED, { weight: 400 });
+  text("Şimdi", x + w - 22, y + 91, 16, MUTED, { align: "right", weight: 400 });
+  ctx.restore();
+}
+
+function counter(from, to, p, dec) {
+  const v = lerp(from, to, eo3(p));
+  return dec ? v.toFixed(1).replace(".", ",") : Math.round(v).toString();
+}
+
+function screen(t) {
+  const a = prog(t, 4.95, 5.3);
+  if (a <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = a;
+  // clip to the screen
+  rr(PX + 6, PY + 6, PW - 12, PH - 12, 68); ctx.clip();
+  // notch + status
+  rr(PX + PW / 2 - 66, PY + 16, 132, 34, 17); ctx.fillStyle = "#0a0a09"; ctx.fill();
+  text("09:41", PX + 40, PY + 44, 20, CREAM, { weight: 500 });
+  // header
+  ekizTile(PX + 54, PY + 118, 46);
+  text("Scholares", PX + 88, PY + 128, 29, CREAM, { weight: 600, ls: -0.5 });
+  text("Elif A. · 8-A", PX + PW - 30, PY + 126, 19, MUTED, { align: "right", weight: 400 });
+  // stat chips
+  const cp = prog(t, 5.15, 5.9);
+  [["Ders katılımı", "%" + counter(0, 100, cp, false)], ["Son deneme", counter(0, 68.5, cp, true) + " net"]].forEach(([k, v], i) => {
+    const x = PX + 20 + i * 220, y = PY + 160;
+    rr(x, y, 210, 80, 20); ctx.fillStyle = SURF2; ctx.fill();
+    text(k, x + 18, y + 31, 16, MUTED, { weight: 400 });
+    text(v, x + 18, y + 64, 30, i ? CREAM : ORANGE, { weight: 600, ls: -0.5 });
+  });
+  ctx.restore();
+
+  ctx.save();
+  rr(PX + 6, PY + 6, PW - 12, PH - 12, 68); ctx.clip();
+  notif(t, 5.75, 0, "Elif 1. Derse Katıldı", "Cuma · Matematik", "check");
+  notif(t, 6.85, 1, "Deneme 7 Sonucu Yayınlandı", "68,5 Net · Sınıf Sırası 4", "bars");
+  notif(t, 7.75, 2, "Haftalık Özet Hazır", "12 ders işlendi", "doc");
+
+  // week strip
+  const wa = prog(t, 7.2, 7.55);
+  if (wa > 0) {
+    ctx.globalAlpha = wa;
+    text("Bu hafta", PX + 30, PY + 706, 20, MUTED, { weight: 500, ls: 1 });
+    ["Pzt", "Sal", "Çar", "Per", "Cum"].forEach((d, i) => {
+      const x = PX + 62 + i * 86, y = PY + 752;
+      const p = back(prog(t, 7.3 + i * 0.13, 7.65 + i * 0.13));
+      ctx.beginPath(); ctx.arc(x, y, 30, 0, Math.PI * 2); ctx.fillStyle = SURF2; ctx.fill();
+      if (p > 0) {
+        ctx.save(); ctx.translate(x, y); ctx.scale(p, p);
+        ctx.beginPath(); ctx.arc(0, 0, 30, 0, Math.PI * 2); ctx.fillStyle = ORANGE; ctx.fill();
+        ctx.strokeStyle = INK; ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.lineJoin = "round";
+        ctx.beginPath(); ctx.moveTo(-10, 1); ctx.lineTo(-3, 9); ctx.lineTo(11, -8); ctx.stroke();
+        ctx.restore();
+      }
+      text(d, x, y + 54, 16, MUTED, { align: "center", weight: 400 });
+    });
+  }
+  ctx.restore();
+  // home indicator
+  ctx.save(); ctx.globalAlpha = a; rr(PX + PW / 2 - 70, PY + PH - 26, 140, 6, 3); ctx.fillStyle = "rgba(243,240,232,0.35)"; ctx.fill(); ctx.restore();
+}
+
+// ---------- satellite cards ----------
+function card(x, y, w, h, tilt, alpha, draw) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(x + w / 2, y + h / 2); ctx.rotate(tilt); ctx.translate(-w / 2, -h / 2);
+  ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = 40; ctx.shadowOffsetY = 18;
+  rr(0, 0, w, h, 26); ctx.fillStyle = SURF; ctx.fill();
+  ctx.shadowColor = "transparent";
+  ctx.lineWidth = 2; ctx.strokeStyle = BORDER; ctx.stroke();
+  draw();
+  ctx.restore();
+}
+
+function attendanceCard(t) {
+  const p = spring(prog(t, 5.0, 5.7));
+  if (p <= 0.001) return;
+  const bob = Math.sin(t * 1.6) * 7;
+  const x = lerp(-320, 28, p), y = 405 + bob;
+  card(x, y, 268, 330, (1 - p) * -0.25 + Math.sin(t * 1.1) * 0.012, clamp(p * 2), () => {
+    text("Yoklama", 24, 46, 26, CREAM, { weight: 600, ls: -0.5 });
+    text("8-A · Matematik", 24, 74, 17, MUTED, { weight: 400 });
+    text("Örnek veri", 244, 40, 13, MUTED, { align: "right", weight: 500, alpha: 0.7 });
+    [["AŞ", "Ada Ş.", true], ["BT", "Baran T.", false], ["DK", "Defne K.", true]].forEach(([ini, name, present], i) => {
+      const rp = eo5(prog(t, 5.35 + i * 0.16, 5.75 + i * 0.16));
+      const ry = 100 + i * 60;
+      ctx.save(); ctx.globalAlpha *= rp; ctx.translate((1 - rp) * 30, 0);
+      rr(18, ry, 232, 50, 14); ctx.fillStyle = SURF2; ctx.fill();
+      ctx.beginPath(); ctx.arc(46, ry + 25, 17, 0, Math.PI * 2); ctx.fillStyle = "rgba(229,138,92,0.25)"; ctx.fill();
+      text(ini, 46, ry + 31, 13, ORANGE, { align: "center", weight: 600 });
+      text(name, 74, ry + 31, 18, CREAM, { weight: 500 });
+      rr(184, ry + 12, 52, 26, 13);
+      ctx.fillStyle = present ? "rgba(243,240,232,0.1)" : ORANGE; ctx.fill();
+      text(present ? "Var" : "Yok", 210, ry + 31, 15, present ? MUTED : INK, { align: "center", weight: 600 });
+      ctx.restore();
+    });
+    const fp = eo3(prog(t, 5.85, 6.2));
+    text("26 Var · 2 Yok", 24, 312, 20, CREAM, { weight: 500, alpha: fp });
+  });
+}
+
+function examCard(t) {
+  const p = spring(prog(t, 5.8, 6.5));
+  if (p <= 0.001) return;
+  const bob = Math.sin(t * 1.5 + 1.7) * 7;
+  const x = lerp(1400, 784, p), y = 505 + bob;
+  card(x, y, 268, 345, (1 - p) * 0.25 + Math.sin(t * 1.2 + 1) * 0.012, clamp(p * 2), () => {
+    text("Deneme Sonuçları", 24, 46, 24, CREAM, { weight: 600, ls: -0.5 });
+    text("8. Sınıf · Deneme 7", 24, 74, 17, MUTED, { weight: 400 });
+    text("Örnek veri", 244, 334, 13, MUTED, { align: "right", weight: 500, alpha: 0.7 });
+    const bars = [38, 52, 46, 64, 58, 76, 70];
+    const base = 282, maxH = 118;
+    ctx.strokeStyle = BORDER; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(24, base + 2); ctx.lineTo(244, base + 2); ctx.stroke();
+    bars.forEach((v, i) => {
+      const bp = eo5(prog(t, 6.15 + i * 0.07, 6.7 + i * 0.07));
+      const bh = (v / 76) * maxH * bp;
+      const bx = 26 + i * 32;
+      rr(bx, base - bh, 22, bh, 6);
+      ctx.fillStyle = i === bars.length - 1 ? ORANGE : "rgba(229,138,92,0.38)"; ctx.fill();
+      text("D" + (i + 1), bx + 11, base + 26, 13, MUTED, { align: "center", weight: 400, alpha: bp });
+    });
+    const vp = eo3(prog(t, 6.7, 7.0));
+    text("63,0", 24, 134, 34, ORANGE, { weight: 600, alpha: vp, ls: -1 });
+    text("ortalama net", 100, 132, 15, MUTED, { weight: 400, alpha: vp });
+  });
+}
+
+// data beams from the cards into the phone
+function beams(t) {
+  [[5.45, 5.8, 290, 560, PX + 24, PY + 322], [6.55, 6.9, 794, 640, PX + PW - 24, PY + 464]].forEach(([a, b, x0, y0, x1, y1]) => {
+    const p = prog(t, a, b);
+    if (p <= 0 || p >= 1.25) return;
+    const q = clamp(p);
+    ctx.save();
+    ctx.strokeStyle = ORANGE; ctx.lineWidth = 3; ctx.lineCap = "round";
+    ctx.shadowColor = ORANGE; ctx.shadowBlur = 18;
+    ctx.globalAlpha = 1 - prog(p, 1, 1.25);
+    const hx = lerp(x0, x1, eo3(q)), hy = lerp(y0, y1, eo3(q));
+    const tx = lerp(x0, x1, eo3(clamp(q - 0.45))), ty = lerp(y0, y1, eo3(clamp(q - 0.45)));
+    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke();
+    ctx.beginPath(); ctx.arc(hx, hy, 6, 0, Math.PI * 2); ctx.fillStyle = CREAM; ctx.fill();
+    ctx.restore();
+  });
+}
+
+// sparks when a notification lands
+function sparks(t) {
+  [5.75, 6.85, 7.75].forEach((s, k) => {
+    const p = prog(t, s, s + 0.9);
+    if (p <= 0 || p >= 1) return;
+    const r = rand(k + 3);
+    const cy = PY + 262 + k * 142 + 63;
+    ctx.save();
+    for (let i = 0; i < 16; i++) {
+      const ang = r() * Math.PI * 2, sp = 90 + r() * 200;
+      const d = eo3(p) * sp;
+      ctx.globalAlpha = (1 - p) * 0.9;
+      ctx.fillStyle = i % 3 ? ORANGE : CREAM;
+      ctx.beginPath(); ctx.arc(PX + PW / 2 + Math.cos(ang) * d * 0.9, cy + Math.sin(ang) * d * 0.45, 2 + r() * 3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  });
+}
+
+// ---------- closing ----------
+function closing(t) {
+  const a = eo3(prog(t, 8.45, 8.95));
+  if (a <= 0) return;
+  const rise = (1 - a) * 34;
+  text("Scholares", W / 2, 1078 + rise, 64, ORANGE, { align: "center", alpha: a, ls: -2 });
+  text("Atlas VIP Eğitim Kurumu’nda her gün kullanılıyor", W / 2, 1134 + rise, 35, CREAM, { align: "center", alpha: a, weight: 400, ls: -0.5 });
+
+  const pp = back(prog(t, 8.8, 9.3));
+  if (pp <= 0) return;
+  const pulse = 0.5 + 0.5 * Math.sin((t - 9.3) * 5);
+  ctx.save();
+  ctx.translate(W / 2, 1230); ctx.scale(pp, pp);
+  ctx.shadowColor = `rgba(229,138,92,${0.35 + 0.25 * pulse})`; ctx.shadowBlur = 36 + 20 * pulse;
+  rr(-210, -44, 420, 88, 44); ctx.fillStyle = ORANGE; ctx.fill();
+  ctx.shadowBlur = 0;
+  text("Nasıl çözdük?", -34, 12, 33, INK, { align: "center", weight: 600, ls: -0.5 });
+  // arrow slides to the right on a loop
+  const ax = 124 + (t > 9.3 ? ((t - 9.3) * 1.4 % 1) * 12 : 0);
+  ctx.strokeStyle = INK; ctx.lineWidth = 5; ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.beginPath(); ctx.moveTo(ax - 20, 0); ctx.lineTo(ax + 14, 0); ctx.moveTo(ax + 2, -12); ctx.lineTo(ax + 14, 0); ctx.lineTo(ax + 2, 12); ctx.stroke();
+  ctx.restore();
+}
+
+// ---------- main ----------
+window.draw = (t) => {
+  background(t);
+  hook(t);
+  lockup(t);
+
+  // phone + satellites share a slow push-in camera
+  const cam = 1 + 0.025 * eio(prog(t, 5.0, 8.6));
+  // the phone sits lower while it is the hero, then rises to make room for the caption
+  const dy = 100 * eio(prog(t, 4.35, 5.15)) * (1 - eio(prog(t, 8.3, 9.0)));
+  const out = prog(t, 8.5, 9.1);
+  ctx.save();
+  ctx.translate(0, dy); ctx.translate(W / 2, 540); ctx.scale(cam, cam); ctx.translate(-W / 2, -540);
+  ctx.globalAlpha = 1 - out * 0.25;
+  phoneShell(t);
+  screen(t);
+  attendanceCard(t);
+  examCard(t);
+  beams(t);
+  sparks(t);
+  ctx.restore();
+
+  iris(t);
+  closing(t);
+};
+window.draw(0);
+</script>
+</body>
+</html>
