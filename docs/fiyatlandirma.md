@@ -16,6 +16,20 @@
 - Reklam, SEO ve içerik üretimi siteye dahil değil; ayrı aylık paket (bkz. Kapsam Şablonu).
 - **Satış / ziyaretçi garantisi verilmez.**
 
+### 1b. Paket kademeleri (ÖNERİ, Mert onayı bekliyor, 28 Ekim 2026)
+
+Amaç: üstte gerçekten satın alınabilir, dürüst bir paket olsun; 20.000 TL'lik Kurumsal paket "orta" kalsın. Rakipler niş aramalarında 5.000-10.000 TL gösteriyor (bkz. buyume-plani.md); fark kanıtla kurulur.
+
+| Paket | Fiyat (KDV dahil) | İçerik |
+|---|---|---|
+| **Kurumsal Site** | **20.000 TL** (mevcut) | Kapsam şablonundaki site: sayfalar, mobil uyum, form + WhatsApp, temel SEO, ölçüm. |
+| **Büyüme Paketi** | **38.000 TL** (öneri) | Kurumsal Site + Google işletme profili kurulum/düzenleme + 5 program/şube sayfası + yorum toplama sistemi (QR + mesaj şablonu) + reklam hesaplarının kurulumu (bütçe hariç) + ilk 3 ay aylık rapor + yazılı 90 günlük plan. |
+| **Tam Paket** | **60.000 TL** (öneri) | Büyüme Paketi + öğrenci takip sistemi 1 yıllık lisans (200 öğrenciye kadar) + kurulum ve eğitim + veli bildirimi. Ayrı alınsaydı: 38.000 + 26.000 = 64.000 TL. |
+
+- Aylık bakım paketi (2.500 TL/ay) üç pakette de ayrı ve isteğe bağlı kalır.
+- Üst paketin içeriği gerçekten teslim edilebilir olmalı. Teslim edemeyeceğimiz bir vitrin paketi koyma.
+- Rakamlar öneridir. Mert onaylamadan teklife yazılmaz.
+
 ## 2. Öğrenci takip sistemi — yıllık lisans
 
 Öğrenci kapasitesine göre, **yıllık ve peşin**.
