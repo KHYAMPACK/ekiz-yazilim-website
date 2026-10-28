@@ -25,10 +25,6 @@ const webLinks = [
   { href: "#gorusme", label: "Görüşme" },
 ] as const;
 
-const products = [
-  { href: "/web-sitesi", label: "Web sitesi" },
-] as const;
-
 const linkClass =
   "text-[0.9375rem] text-sc-muted transition-colors hover:text-sc-text";
 
@@ -78,17 +74,6 @@ export default function ScHeader() {
           aria-label="Ana menü"
         >
           <ul className="flex items-center gap-6">
-            {products.map((p) => (
-              <li key={p.href}>
-                <Link
-                  href={p.href}
-                  className={`${linkClass} ${pathname === p.href ? "!text-sc-text" : ""}`}
-                  aria-current={pathname === p.href ? "page" : undefined}
-                >
-                  {p.label}
-                </Link>
-              </li>
-            ))}
             {nav.map((link) => {
               const wide = "wideOnly" in link && link.wideOnly;
               return (
@@ -111,10 +96,20 @@ export default function ScHeader() {
             })}
           </ul>
           <Link
+            href="/web-sitesi"
+            onClick={close}
+            className={`sc-btn !min-h-10 !px-4 !text-sm ${
+              onWeb ? "sc-btn--light" : "sc-btn--primary"
+            }`}
+            aria-current={onWeb ? "page" : undefined}
+          >
+            Web sitesi
+          </Link>
+          <Link
             href="/egitim"
             onClick={close}
             className={`sc-btn !min-h-10 !px-4 !text-sm ${
-              onEgitim ? "sc-btn--light" : "sc-btn--primary"
+              onEgitim ? "sc-btn--light" : "sc-btn--secondary"
             }`}
             aria-current={onEgitim ? "page" : undefined}
           >
@@ -152,26 +147,21 @@ export default function ScHeader() {
         >
           <div className="sc-container pt-4 pb-5">
             <Link
+              href="/web-sitesi"
+              onClick={close}
+              className={`sc-btn w-full ${onWeb ? "sc-btn--light" : "sc-btn--primary"}`}
+              aria-current={onWeb ? "page" : undefined}
+            >
+              Web sitesi
+            </Link>
+            <Link
               href="/egitim"
               onClick={close}
-              className={`sc-btn w-full ${onEgitim ? "sc-btn--light" : "sc-btn--primary"}`}
+              className={`sc-btn mt-2 w-full ${onEgitim ? "sc-btn--light" : "sc-btn--secondary"}`}
               aria-current={onEgitim ? "page" : undefined}
             >
               Eğitim kurumları
             </Link>
-            <div className="mt-2 grid gap-2">
-              {products.map((p) => (
-                <Link
-                  key={p.href}
-                  href={p.href}
-                  onClick={close}
-                  className="sc-btn sc-btn--secondary"
-                  aria-current={pathname === p.href ? "page" : undefined}
-                >
-                  {p.label}
-                </Link>
-              ))}
-            </div>
             <ul className="mt-3 divide-y divide-sc-border">
               {nav.map((link) => (
                 <li key={link.href}>

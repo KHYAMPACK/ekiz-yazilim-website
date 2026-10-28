@@ -3,7 +3,7 @@ import ContactSection from "@/components/ContactSection";
 import FaqSection from "@/components/FaqSection";
 import FirstClientNote from "@/components/FirstClientNote";
 import FounderSection from "@/components/FounderSection";
-import HeroIntake from "@/components/HeroIntake";
+import HeroPaths from "@/components/HeroPaths";
 import ProcessSection from "@/components/ProcessSection";
 import ResearchSection from "@/components/ResearchSection";
 import Reveal from "@/components/Reveal";
@@ -17,7 +17,7 @@ export default function Home() {
     <div className="sc-root">
       <ScHeader />
       <main>
-        <HeroIntake />
+        <HeroPaths />
         <Reveal>
           <AboutSection />
         </Reveal>
