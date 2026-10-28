@@ -42,6 +42,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.95,
     },
     {
+      url: `${seo.siteUrl}/arastirma`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${seo.siteUrl}/arastirma/ankara-kurs-siteleri-2026`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.7,
+    },
+    {
       url: `${seo.siteUrl}/site-kontrol`,
       lastModified,
       changeFrequency: "monthly",

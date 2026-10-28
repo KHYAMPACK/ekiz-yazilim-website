@@ -9,6 +9,7 @@ const links = [
   { href: "/#hakkimizda", label: "Hakkımızda", wideOnly: true },
   { href: "/#surec", label: "Süreç" },
   { href: "/isler", label: "İşler", route: true },
+  { href: "/arastirma", label: "Araştırma", route: true, wideOnly: true },
   { href: "/#kurucu", label: "Kurucu", wideOnly: true },
   { href: "/#sss", label: "SSS" },
   { href: "/#iletisim", label: "İletişim" },

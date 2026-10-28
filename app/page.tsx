@@ -5,6 +5,7 @@ import FirstClientNote from "@/components/FirstClientNote";
 import FounderSection from "@/components/FounderSection";
 import HeroIntake from "@/components/HeroIntake";
 import ProcessSection from "@/components/ProcessSection";
+import ResearchSection from "@/components/ResearchSection";
 import Reveal from "@/components/Reveal";
 import ScFooter from "@/components/ScFooter";
 import ScHeader from "@/components/ScHeader";
@@ -28,6 +29,9 @@ export default function Home() {
         </Reveal>
         <Reveal delay={40}>
           <WorksSection />
+        </Reveal>
+        <Reveal delay={40}>
+          <ResearchSection />
         </Reveal>
         <Reveal delay={40}>
           <FirstClientNote />
