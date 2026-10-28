@@ -85,9 +85,18 @@ export function useSiteCheck() {
         body: JSON.stringify({ url }),
         signal: ctrl.signal,
       });
-      const data = (await res.json()) as { result?: CheckResult; error?: string };
+      // The firewall answers a blocked visitor with its own 403/429 page, not our JSON.
+      if (res.status === 403 || res.status === 429) {
+        setError("Kısa sürede çok fazla kontrol yaptınız. Birkaç dakika sonra tekrar deneyin.");
+        return;
+      }
+      const data = (await res.json()) as { result?: CheckResult; error?: unknown };
       if (!res.ok || !data.result) {
-        setError(data.error ?? "Kontrol tamamlanamadı. Lütfen tekrar deneyin.");
+        setError(
+          typeof data.error === "string"
+            ? data.error
+            : "Kontrol tamamlanamadı. Lütfen tekrar deneyin.",
+        );
       } else {
         // Let the bar reach the end before the findings replace it.
         setProgress(100);
