@@ -1,8 +1,9 @@
-/** One-page A4 report as a self-contained HTML string (font and logo embedded). */
+/** One-page A4 report as a self-contained HTML string (font and logo embedded). Warm paper look, same as the site. */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SEVERITY_LABEL } from "./score.mjs";
+import { FIX_BY_ID, SEVERITY_LABEL } from "./score.mjs";
+import { page2Css, page2Html } from "./page2.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
 
@@ -12,31 +13,81 @@ export const CONTACT = {
   web: "ekizyazilim.com",
 };
 
-const esc = (s) =>
+export const esc = (s) =>
   String(s)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 
-let assets;
-function loadAssets() {
-  if (assets) return assets;
-  const font = fs
-    .readFileSync(path.join(root, "brand", "exports", "fonts", "SpaceGrotesk.ttf"))
-    .toString("base64");
-  const logo = fs
-    .readFileSync(path.join(root, "brand", "exports", "ekiz-logo-horizontal-black.svg"), "utf8")
-    .replace(/<\?xml[^>]*\?>/, "");
-  assets = { font, logo };
-  return assets;
-}
+const CORE = "M29.9 12H73.7L84.6 30.8H40.8L51.7 50L40.8 69.1H84.6L73.7 87.9H29.9L19 69.1L29.9 50L19 30.8L29.9 12Z";
+export const tile = (size) =>
+  `<svg width="${size}" height="${size}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="26" fill="#e58a5c"/><g transform="translate(50 50) scale(0.58) translate(-51.8 -50)" fill="#141413"><path d="${CORE}"/></g></svg>`;
+
+let fontCache;
+export const loadFont = () =>
+  (fontCache ??= fs.readFileSync(path.join(root, "brand", "exports", "fonts", "SpaceGrotesk.ttf")).toString("base64"));
+
+export const reportCss = (font) => `
+@font-face { font-family: "Space Grotesk"; src: url(data:font/ttf;base64,${font}) format("truetype"); font-weight: 300 700; }
+@page { size: A4; margin: 0; }
+:root { --paper:#faf9f5; --card:#ffffff; --ink:#141413; --muted:#6b6860; --line:#e3dfd2; --track:#ece8dc;
+        --orange:#e58a5c; --deep:#b6512a; --good:#4f9d77; --bad:#c4372c; --cream:#f3f0e8; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--paper); }
+body { font-family: "Space Grotesk", system-ui, sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+.page { width: 210mm; height: 297mm; padding: 14mm 15mm 12mm; display: flex; flex-direction: column; gap: 5.5mm; overflow: hidden; background: var(--paper); }
+header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 4.5mm; border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: center; gap: 3.2mm; font-size: 14pt; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+.head-r { text-align: right; font-size: 8pt; letter-spacing: .18em; text-transform: uppercase; color: var(--deep); font-weight: 600; line-height: 1.6; }
+.head-r span { display: block; color: var(--muted); letter-spacing: .04em; text-transform: none; font-weight: 400; font-size: 9pt; }
+.hero { display: flex; justify-content: space-between; align-items: stretch; gap: 8mm; }
+.eyebrow { font-size: 7.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--deep); font-weight: 600; margin-bottom: 2mm; }
+h1 { font-size: 26pt; font-weight: 600; letter-spacing: -.035em; line-height: 1.05; }
+.url { font-size: 10pt; color: var(--muted); margin-top: 2mm; }
+.score { background: var(--ink); color: var(--cream); border-radius: 5mm; padding: 4mm 6mm; text-align: center; min-width: 40mm; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; }
+.score::before { content: ""; position: absolute; right: -10mm; top: -12mm; width: 34mm; height: 34mm; border-radius: 50%; background: radial-gradient(circle, rgba(229,138,92,.35), rgba(229,138,92,0) 70%); }
+.score .num { font-size: 38pt; font-weight: 600; letter-spacing: -.04em; line-height: 1; position: relative; }
+.score .of { font-size: 11pt; color: #a9a69c; }
+.score .lab { display: block; font-size: 8pt; letter-spacing: .2em; text-transform: uppercase; margin-top: 1.5mm; color: var(--orange); font-weight: 600; position: relative; }
+.headline { font-size: 12pt; line-height: 1.4; padding: 3.6mm 5mm; background: var(--card); border: 1px solid var(--line); border-left: 1.6mm solid var(--orange); border-radius: 3.5mm; font-weight: 500; }
+.cats { display: grid; grid-template-columns: 1fr 1fr; gap: 2.8mm 9mm; background: var(--card); border: 1px solid var(--line); border-radius: 4mm; padding: 4mm 5mm; }
+.cat { display: grid; grid-template-columns: 33mm 1fr 8mm; align-items: center; gap: 3mm; font-size: 9pt; }
+.bar { height: 2.4mm; background: var(--track); border-radius: 2mm; display: block; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 2mm; background: var(--orange); }
+.bar i.good { background: var(--good); }
+.bar i.bad { background: var(--bad); }
+.c-score { text-align: right; font-weight: 600; }
+h2 { font-size: 8.5pt; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 2.6mm; font-weight: 600; }
+.findings { display: flex; flex-direction: column; gap: 3mm; }
+.finding { background: var(--card); border: 1px solid var(--line); border-radius: 4mm; padding: 3.8mm 5mm; }
+.finding.sev-critical { border-color: var(--bad); box-shadow: 0 0 0 .4mm rgba(196,55,44,.18); }
+.f-head { display: flex; align-items: center; gap: 3mm; margin-bottom: 1.6mm; }
+.f-no { width: 6.4mm; height: 6.4mm; border-radius: 2mm; background: var(--orange); color: var(--ink); display: grid; place-items: center; font-size: 9pt; font-weight: 700; flex: none; }
+.f-head h3 { font-size: 11.5pt; font-weight: 600; flex: 1; line-height: 1.25; letter-spacing: -.01em; }
+.chip { font-size: 7pt; letter-spacing: .12em; text-transform: uppercase; padding: .7mm 2.6mm; border-radius: 5mm; flex: none; font-weight: 600; border: 1px solid var(--line); color: var(--muted); }
+.chip-critical { background: var(--bad); border-color: var(--bad); color: #fff; }
+.chip-high { background: var(--orange); border-color: var(--orange); color: var(--ink); }
+.f-meaning { font-size: 9.5pt; line-height: 1.45; color: #3b3a36; }
+.f-fix { font-size: 9.5pt; line-height: 1.45; margin-top: 1.6mm; }
+.more { font-size: 8.5pt; color: var(--muted); margin-top: 2.2mm; }
+.ok ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 1.8mm 8mm; font-size: 9pt; }
+.ok li { padding-left: 6mm; position: relative; line-height: 1.35; }
+.ok li::before { content: ""; position: absolute; left: 0; top: .6mm; width: 3.6mm; height: 3.6mm; border-radius: 50%; background: var(--good); }
+.ok li::after { content: ""; position: absolute; left: 1.15mm; top: 1.45mm; width: 1.4mm; height: .8mm; border-left: .5mm solid #fff; border-bottom: .5mm solid #fff; transform: rotate(-45deg); }
+.spacer { flex: 1; }
+.cta { background: var(--ink); color: var(--cream); border-radius: 5mm; padding: 5.5mm 6.5mm; display: flex; justify-content: space-between; align-items: center; gap: 8mm; }
+.cta b { display: block; font-size: 13.5pt; font-weight: 600; letter-spacing: -.02em; margin-bottom: 1.2mm; }
+.cta p { font-size: 9pt; color: #b9b5a9; line-height: 1.45; max-width: 95mm; }
+.cta .contact { text-align: right; font-size: 9.5pt; line-height: 1.65; color: var(--orange); font-weight: 500; }
+.note { font-size: 7pt; color: var(--muted); line-height: 1.4; margin-top: 2.8mm; }
+`;
 
 const tone = (score) => (score >= 80 ? "good" : score >= 60 ? "mid" : "bad");
 const scoreText = (s) => (s === null ? "—" : s);
 
 export function renderHtml({ name, host, date, result }) {
-  const { font, logo } = loadAssets();
+  const font = loadFont();
   const { overall, label, headline, categories, top, passed, findings } = result;
   const more = Math.max(0, findings.length - top.length);
 
@@ -50,7 +101,7 @@ export function renderHtml({ name, host, date, result }) {
           <span class="chip chip-${f.severity}">${SEVERITY_LABEL[f.severity]}</span>
         </div>
         <p class="f-meaning">${esc(f.meaning)}</p>
-        <p class="f-fix"><b>Ne yapılmalı:</b> ${esc(f.fix)}</p>
+        <p class="f-fix"><b>Biz ne yaparız:</b> ${esc(FIX_BY_ID[f.id] ?? f.fix)}</p>
       </article>`,
     )
     .join("");
@@ -77,61 +128,14 @@ export function renderHtml({ name, host, date, result }) {
 <meta charset="utf-8">
 <title>Site Sağlık Raporu — ${esc(name)}</title>
 <style>
-@font-face { font-family: "Space Grotesk"; src: url(data:font/ttf;base64,${font}) format("truetype"); font-weight: 300 700; }
-@page { size: A4; margin: 0; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { background: #fff; }
-body { font-family: "Space Grotesk", system-ui, sans-serif; color: #000; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-.page { width: 210mm; height: 297mm; padding: 14mm 15mm 12mm; display: flex; flex-direction: column; gap: 5.5mm; overflow: hidden; }
-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 4mm; border-bottom: 1.5px solid #000; }
-header svg { height: 11mm; width: auto; display: block; }
-.head-r { text-align: right; font-size: 8.5pt; letter-spacing: .16em; text-transform: uppercase; line-height: 1.5; }
-.head-r span { display: block; color: rgba(0,0,0,.55); letter-spacing: .06em; text-transform: none; }
-.hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 8mm; }
-.eyebrow { font-size: 7.5pt; letter-spacing: .2em; text-transform: uppercase; color: rgba(0,0,0,.5); margin-bottom: 1.5mm; }
-h1 { font-size: 24pt; font-weight: 500; letter-spacing: -.02em; line-height: 1.1; }
-.url { font-size: 10pt; color: rgba(0,0,0,.6); margin-top: 1.5mm; }
-.score { border: 1.5px solid #000; padding: 3.5mm 5mm; text-align: center; min-width: 38mm; background: #bfd5eb; }
-.score .num { font-size: 38pt; font-weight: 500; letter-spacing: -.03em; line-height: 1; }
-.score .of { font-size: 11pt; color: rgba(0,0,0,.6); }
-.score .lab { display: block; font-size: 8pt; letter-spacing: .18em; text-transform: uppercase; margin-top: 1mm; }
-.headline { font-size: 12pt; line-height: 1.4; padding: 3.5mm 4mm; border-left: 3px solid #000; background: rgba(191,213,235,.35); }
-.cats { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5mm 8mm; }
-.cat { display: grid; grid-template-columns: 34mm 1fr 8mm; align-items: center; gap: 3mm; font-size: 9pt; }
-.bar { height: 2.6mm; background: rgba(191,213,235,.6); display: block; }
-.bar i { display: block; height: 100%; background: #000; }
-.bar i.mid { background: #000; opacity: .72; }
-.bar i.bad { background: #000; }
-.c-score { text-align: right; font-weight: 600; }
-h2 { font-size: 9pt; letter-spacing: .2em; text-transform: uppercase; color: rgba(0,0,0,.55); margin-bottom: 2.5mm; font-weight: 500; }
-.findings { display: flex; flex-direction: column; gap: 2.8mm; }
-.finding { border: 1px solid #000; padding: 3.5mm 4.5mm; }
-.finding.sev-critical { border-width: 2px; }
-.f-head { display: flex; align-items: center; gap: 3mm; margin-bottom: 1.5mm; }
-.f-no { width: 6mm; height: 6mm; background: #000; color: #fff; display: grid; place-items: center; font-size: 9pt; font-weight: 600; flex: none; }
-.f-head h3 { font-size: 11.5pt; font-weight: 600; flex: 1; line-height: 1.25; }
-.chip { font-size: 7.5pt; letter-spacing: .12em; text-transform: uppercase; padding: .6mm 2.2mm; border: 1px solid #000; flex: none; }
-.chip-critical { background: #000; color: #fff; }
-.chip-high { background: #bfd5eb; }
-.chip-medium, .chip-low { background: #fff; }
-.f-meaning { font-size: 9.5pt; line-height: 1.45; color: rgba(0,0,0,.75); }
-.f-fix { font-size: 9.5pt; line-height: 1.45; margin-top: 1.5mm; }
-.more { font-size: 8.5pt; color: rgba(0,0,0,.55); margin-top: 2mm; }
-.ok ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5mm 8mm; font-size: 9pt; }
-.ok li { padding-left: 5mm; position: relative; line-height: 1.35; }
-.ok li::before { content: ""; position: absolute; left: 0; top: 1.2mm; width: 2.4mm; height: 2.4mm; background: #000; }
-.spacer { flex: 1; }
-.cta { background: #000; color: #fff; padding: 5mm 6mm; display: flex; justify-content: space-between; align-items: center; gap: 8mm; }
-.cta b { display: block; font-size: 13pt; font-weight: 500; letter-spacing: -.01em; margin-bottom: 1mm; }
-.cta p { font-size: 9pt; color: rgba(255,255,255,.7); line-height: 1.4; max-width: 95mm; }
-.cta .contact { text-align: right; font-size: 9.5pt; line-height: 1.6; }
-.note { font-size: 7pt; color: rgba(0,0,0,.45); line-height: 1.4; margin-top: 2.5mm; }
+${reportCss(font)}
+${page2Css}
 </style>
 </head>
 <body>
 <main class="page">
   <header>
-    ${logo}
+    <div class="brand">${tile(40)}<span>Ekiz Yazılım</span></div>
     <div class="head-r">Site sağlık raporu<span>${esc(date)}</span></div>
   </header>
 
@@ -142,7 +146,7 @@ h2 { font-size: 9pt; letter-spacing: .2em; text-transform: uppercase; color: rgb
       <p class="url">${esc(host)}</p>
     </div>
     <div class="score">
-      <span class="num">${overall}</span><span class="of">/100</span>
+      <div><span class="num">${overall}</span><span class="of">/100</span></div>
       <span class="lab">${esc(label)}</span>
     </div>
   </section>
@@ -175,8 +179,8 @@ h2 { font-size: 9pt; letter-spacing: .2em; text-transform: uppercase; color: rgb
   <section>
     <div class="cta">
       <div>
-        <b>Bu konuları sizin için düzeltebiliriz.</b>
-        <p>Alan adı ve barındırma sizin adınıza kalır; ne ödediğiniz her kalemiyle yazılı olur.</p>
+        <b>Bu konuları sizin için çözelim.</b>
+        <p>10 dakikalık bir görüşmeyle başlayalım. Alan adı ve barındırma sizin adınıza kalır; ne ödediğiniz her kalemiyle yazılı olur.</p>
       </div>
       <div class="contact">
         ${esc(CONTACT.phone)}<br>${esc(CONTACT.email)}<br>${esc(CONTACT.web)}
@@ -185,6 +189,7 @@ h2 { font-size: 9pt; letter-spacing: .2em; text-transform: uppercase; color: rgb
     <p class="note">Bu rapor, sitenizin herkese açık sayfalarının otomatik kontrolüyle ${esc(date)} tarihinde hazırlanmıştır. Yalnızca ziyaretçilerin de görebildiği bilgiler incelenir; sitenize giriş yapılmaz. Puanlar yaklaşık göstergelerdir.</p>
   </section>
 </main>
+${page2Html()}
 </body>
 </html>`;
 }
