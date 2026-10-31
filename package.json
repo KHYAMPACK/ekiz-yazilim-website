@@ -13,6 +13,7 @@
     "outreach": "node scripts/leads/outreach.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "motion": "^13.1.0",
     "next": "16.2.10",
     "react": "19.2.4",

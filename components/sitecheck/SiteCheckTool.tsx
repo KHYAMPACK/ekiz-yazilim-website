@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@vercel/analytics";
 import { useEffect, useRef, useState } from "react";
 import { whatsappHref } from "@/lib/site";
 import type { CheckResult, Item, Level } from "@/lib/sitecheck/present";
@@ -73,6 +74,8 @@ export function useSiteCheck() {
     if (loading || !url.trim()) return;
     const ctrl = new AbortController();
     abortRef.current = ctrl;
+    // Only the page is recorded, never the address that was typed.
+    track("site_check_started", { page: window.location.pathname });
     setOpen(true);
     setLoading(true);
     setProgress(0);
@@ -101,7 +104,14 @@ export function useSiteCheck() {
         // Let the bar reach the end before the findings replace it.
         setProgress(100);
         await new Promise((r) => setTimeout(r, 450));
-        if (!ctrl.signal.aborted) setResult(data.result);
+        if (!ctrl.signal.aborted) {
+          setResult(data.result);
+          track("site_check_completed", {
+            page: window.location.pathname,
+            findings: data.result.items.length,
+            urgent: data.result.counts.critical,
+          });
+        }
       }
     } catch {
       if (!ctrl.signal.aborted) {

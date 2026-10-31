@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import AnalyticsEvents from "@/components/AnalyticsEvents";
 import FloatingAssistant from "@/components/FloatingAssistant";
 import JsonLd from "@/components/JsonLd";
 import LogoLoader from "@/components/LogoLoader";
@@ -65,6 +67,8 @@ export default function RootLayout({
         <JsonLd />
         <LogoLoader>{children}</LogoLoader>
         <FloatingAssistant />
+        <Analytics />
+        <AnalyticsEvents />
       </body>
     </html>
   );
