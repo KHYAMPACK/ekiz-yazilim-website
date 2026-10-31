@@ -24,8 +24,8 @@ Not: Bu arama bir kez, bir tarayıcıdan, kişiselleştirme olmadan yapıldı. S
 
 | # | Teklif | Neden | Durum |
 |---|---|---|---|
-| 1 | Ücretsiz "Siteniz kaç veli kaybettiriyor?" aracı (ekizyazilim.com'da). Site adresi girilir, bizim kontrol motorumuzla ölçülmüş bulgular çıkar, sonda WhatsApp butonu. | Rakiplerin hiçbirinde yok. Paylaşılır, lead getirir. Motor hazır. | Yapıldı: yerelde çalışıyor ve test edildi (`/site-kontrol`). Yayında değil; yayın için commit + deploy + Vercel güvenlik duvarında hız sınırı kuralı gerekli. |
-| 2 | "Ankara'daki eğitim kurumlarının web siteleri 2026" araştırma raporu, kendi tarama verimizden. | Bağlantı ve haber getirir; rakipler genel içerik yazıyor. | Yapılacak (önce veriyi hesapla, yöntemi yaz) |
+| 1 | Ücretsiz "Siteniz kaç veli kaybettiriyor?" aracı (ekizyazilim.com'da). Site adresi girilir, bizim kontrol motorumuzla ölçülmüş bulgular çıkar, sonda WhatsApp butonu. | Rakiplerin hiçbirinde yok. Paylaşılır, lead getirir. Motor hazır. | Yayında (28 Ekim 2026): `/site-kontrol` ve `/web-sitesi` kahramanı, açılır pencere + ilerleme çubuğu. Vercel güvenlik duvarı hız sınırı kuralı eklendi, canlıda doğrulandı. |
+| 2 | "Ankara'daki eğitim kurumlarının web siteleri 2026" araştırma raporu, kendi tarama verimizden. | Bağlantı ve haber getirir; rakipler genel içerik yazıyor. | Yayında: `/arastirma/ankara-kurs-siteleri-2026` (CRM oturumu yaptı), altbilgide ve /web-sitesi'nde bağlı. Sayıları ve yöntemi bir kez gözden geçir. |
 | 3 | Sahiplerin aradığı sorgulara sayfalar: dershane web sitesi, etüt merkezi/kurs sitesi, kreş web sitesi. Gerçek içerik, referanslar, örnek. | Üstteki arama tablosu. | Yapılacak |
 | 4 | Rehber yazıları: alan adı kimin adına, SSL süresi dolarsa ne olur, Google işletme profili, sözleşmede olması gerekenler. | Gerçek sorunlarımızdan geliyor; rakiplerde yok. | Yapılacak |
 | 5 | Her müşteri sitesinde "Ekiz Yazılım" alt bilgi bağlantısı + portföy sayfası (önce/sonra). | Sürekli ilgili bağlantı. Kapsam şablonu buna zaten izin veriyor. | Yapılacak |
