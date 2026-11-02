@@ -46,3 +46,20 @@ Not: Bu arama bir kez, bir tarayıcıdan, kişiselleştirme olmadan yapıldı. S
 - Reklam bütçesi (Mert belirler).
 - #1 aracı: istek sınırı ve kötüye kullanım önlemi gerekli.
 - Araştırma raporunda yalnızca kendi verimizden çıkan sayılar kullanılacak; yöntem yazılacak.
+
+## 5. Blog ve yapay zeka görünürlüğü (2 Kasım 2026)
+
+**Karar:** Günlük otomatik blog yerine, haftada 2-3 yazı ve her birinde bize özgü bir bilgi (kendi tarama verimiz, gerçek vaka, sahiplerin gerçekten sorduğu soru). Otomasyon yazıyı taslaklar, PR açar; yayından önce insan okur.
+
+**Yapıldı:** `/blog` bölümü (veri dosyalarından yazı: `content/blog/*.ts`, ekleme için `lib/blog/index.ts`), ilk 8 soru yazısı, RSS, site haritası, Article + FAQPage + BreadcrumbList şeması, `/llms.txt`.
+
+**Yapay zekanın bizi önermesi için:**
+- Her yazı soruyla başlar, "Kısa cevap" en üstte (40-70 kelime), başlıklar soru gibi, tablo ve numaralı listeler.
+- Doğrulanabilir somut bilgi: fiyat, sayı, tarih, yöntem. Uydurma sayı yok.
+- Kuruluş bilgisi her yerde aynı: ad, şehir, telefon, fiyatlar (site, `llms.txt`, Google profili).
+- Üçüncü taraf kanıt: yorumlar, Ankara incelemesine bağlantılar, LinkedIn/Instagram sayfaları (`lib/site.ts` içindeki `linkedin` ve `instagram` boş; doldurulunca Organization `sameAs` alanına girer).
+- Taramaya açık: `robots.ts` hiçbir yapay zeka tarayıcısını engellemiyor.
+- Bing Webmaster Tools + IndexNow ve Search Console henüz kurulmadı.
+- Aylık ölçüm: 20 örnek soruyu ChatGPT, Gemini, Perplexity ve Claude'a sor, Ekiz'in geçip geçmediğini kaydet.
+
+**Yapılmayacak:** gizli metin, yapay zekaya yönelik gizli talimat, sahte yorum.

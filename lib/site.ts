@@ -8,7 +8,7 @@ export const site = {
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP ?? "905515998156",
   responseTime: "24 saat içinde dönüş",
   linkedin: "",
-  instagram: "",
+  instagram: "https://www.instagram.com/ekizyazilim/",
   /** Optional Cal.com / Calendly / Google Appointments URL */
   bookingUrl: process.env.NEXT_PUBLIC_BOOKING_URL ?? "",
   description:

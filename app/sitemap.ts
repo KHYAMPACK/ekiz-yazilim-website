@@ -1,10 +1,27 @@
 import type { MetadataRoute } from "next";
+import { posts } from "@/lib/blog";
 import { seo } from "@/lib/seo";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
+  const blog: MetadataRoute.Sitemap = [
+    {
+      url: `${seo.siteUrl}/blog`,
+      lastModified: new Date(`${posts[0]?.updated ?? "2026-11-02"}T12:00:00`),
+      changeFrequency: "weekly",
+      priority: 0.85,
+    },
+    ...posts.map((p) => ({
+      url: `${seo.siteUrl}/blog/${p.slug}`,
+      lastModified: new Date(`${p.updated}T12:00:00`),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    })),
+  ];
+
   return [
+    ...blog,
     {
       url: seo.siteUrl,
       lastModified,

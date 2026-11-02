@@ -14,6 +14,7 @@ const columns = [
     title: "Ekiz Yazılım",
     links: [
       { href: "/isler", label: "İşler" },
+      { href: "/blog", label: "Blog" },
       { href: "/arastirma", label: "Araştırma" },
       { href: "/#sss", label: "SSS" },
       { href: "/#iletisim", label: "İletişim" },
