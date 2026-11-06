@@ -45,24 +45,25 @@ const SERVICES = [
 
 const WORK = [
   {
-    name: "Cortisstyle",
-    kind: "Multi-store e-commerce platform",
-    body: "One codebase where each boutique gets its own storefront, domain, admin panel, payments and shipping. Includes stock, orders, invoices, discounts, reports and an AI-assisted product catalog pipeline.",
-    stack: ["Next.js", "TypeScript", "Supabase", "iyzico", "Web Push"],
-    href: "https://www.cortisstyle.com",
-  },
-  {
-    name: "Student tracking and parent notifications",
-    kind: "School management app (PWA)",
-    body: "One app for principals, teachers, counselors and parents: attendance, homework, exam imports with topic analysis, fees, messaging and push notifications. Used every day at a school.",
-    stack: ["React", "Supabase", "Realtime", "Web Push", "PWA"],
-  },
-  {
     name: "Agile Auto Parts storefront",
     kind: "E-commerce development and SEO",
     body: "A US auto-parts store rebuilt around one question: will it fit my car? A custom storefront theme with a remembered vehicle picker, our own fitment search on Supabase instead of a paid app, 118 generated landing pages, structured data and a sticky buy bar on phones. Every change shipped as a tagged, reversible build to the live store.",
     stack: ["BigCommerce Stencil", "Handlebars", "Supabase", "Klaviyo", "Search Console", "GA4"],
     href: "https://agileautoparts.com",
+  },
+  {
+    name: "Scholares",
+    kind: "School management app (PWA), multi-tenant",
+    body: "One installable web app for the director, the teacher and the parent: attendance, exam analysis and parent communication. Each school gets its own branding, feature flags and domain, every table is scoped per school and protected with Postgres row-level security, and parents get weekly summaries and push notifications. In production at a private school in Denizli.",
+    stack: ["React 19", "Vite", "Supabase", "Postgres RLS", "Web Push", "Vercel Cron"],
+    href: "https://scholares.site",
+  },
+  {
+    name: "Cortisstyle",
+    kind: "Multi-store e-commerce platform",
+    body: "One codebase where each boutique gets its own storefront, domain, admin panel, payments and shipping. Includes stock, orders, invoices, discounts, reports and an AI-assisted product catalog pipeline.",
+    stack: ["Next.js", "TypeScript", "Supabase", "iyzico", "Web Push"],
+    href: "https://www.cortisstyle.com",
   },
   {
     name: "Agile Auto Parts product panel",
