@@ -58,6 +58,13 @@ const WORK = [
     stack: ["React", "Supabase", "Realtime", "Web Push", "PWA"],
   },
   {
+    name: "Agile Auto Parts storefront",
+    kind: "E-commerce development and SEO",
+    body: "A US auto-parts store rebuilt around one question: will it fit my car? A custom storefront theme with a remembered vehicle picker, our own fitment search on Supabase instead of a paid app, 118 generated landing pages, structured data and a sticky buy bar on phones. Every change shipped as a tagged, reversible build to the live store.",
+    stack: ["BigCommerce Stencil", "Handlebars", "Supabase", "Klaviyo", "Search Console", "GA4"],
+    href: "https://agileautoparts.com",
+  },
+  {
     name: "Agile Auto Parts product panel",
     kind: "Private team panel",
     body: "A custom panel for managing a master product catalog. Accounts are created by an admin, and sign-in needs a six-digit code from the user's phone. Access is by invitation, so there is no public link.",

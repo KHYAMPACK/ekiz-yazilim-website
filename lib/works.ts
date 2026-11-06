@@ -23,6 +23,8 @@ export type Work = {
   icon?: WorkIcon;
   /** Short line shown on the card for private or offline work (e.g. why there is no link) */
   note?: string;
+  /** Overrides the group the card is shown in (default: derived from status and link) */
+  group?: WorkGroup;
 };
 
 const gh = (repo: string) => `https://github.com/KHYAMPACK/${repo}`;
@@ -45,13 +47,14 @@ export const WORK_GROUPS: { id: WorkGroup; title: string; note: string }[] = [
   {
     id: "private",
     title: "Yayında, giriş gerektirir",
-    note: "Müşteriye özel çalışan sistemler; herkese açık bir bağlantıları yok.",
+    note: "Yönetim paneli ya da giriş arkasında çalışan sistemler ve üzerlerindeki mağazalar.",
   },
   { id: "building", title: "Yapım aşamasında", note: "Henüz tamamlanmamış işler." },
   { id: "offline", title: "Şu an çevrimiçi değil", note: "Kayıt için burada duruyor." },
 ];
 
 export function workGroup(work: Work): WorkGroup {
+  if (work.group) return work.group;
   if (work.status === "offline") return "offline";
   if (work.status === "live") return work.href ? "live" : "private";
   return "building";
@@ -74,6 +77,7 @@ const allWorks: Work[] = [
     icon: "store",
     tags: ["app", "ecommerce"],
     status: "live",
+    group: "private",
     blurb:
       "Butikler için e-ticaret altyapısı: her butik tek kod tabanı üzerinde kendi vitrinini, alan adını, yönetim panelini, ödemesini ve kargosunu alıyor.",
     highlights: [
@@ -278,6 +282,7 @@ const allWorks: Work[] = [
     domain: "lilaboutiquedenizli.com",
     tags: ["ecommerce"],
     status: "live",
+    group: "private",
     blurb:
       "Denizli’de butik giyim mağazasının online satış sitesi. Cortisstyle altyapısında çalışan ilk mağaza.",
     highlights: [
@@ -287,6 +292,25 @@ const allWorks: Work[] = [
     ],
     stack: ["Cortisstyle", "Next.js", "Supabase", "iyzico"],
     href: "https://www.lilaboutiquedenizli.com",
+  },
+  {
+    id: "tohumluktan",
+    name: "Tohumluktan",
+    meta: "E-ticaret — doğal ve el yapımı ürünler",
+    kind: "site",
+    domain: "tohumluktan.com",
+    tags: ["ecommerce"],
+    status: "live",
+    group: "private",
+    blurb:
+      "Tohumluk Vakfı’nın online mağazası: köyden ve kentten üreticilerin zeytinyağı ve gıda paketleri, el yapımı takı, seramik, kozmetik ve hediye ürünleri. Cortisstyle altyapısında çalışıyor.",
+    highlights: [
+      "Gıda, takı ve aksesuar, giyim, kozmetik ve hediye kategorileri",
+      "Ürün arama ve “hikayesi olan ürünler” bölümü",
+      "Mesafeli satış, iade ve KVKK metinleri hazır",
+    ],
+    stack: ["Cortisstyle", "Next.js", "Supabase"],
+    href: "https://www.tohumluktan.com",
   },
   {
     id: "budabi",
@@ -327,6 +351,27 @@ const allWorks: Work[] = [
   },
   {
     id: "agile",
+    name: "Agile Auto Parts",
+    meta: "E-ticaret geliştirme ve SEO — ABD oto yedek parça mağazası",
+    kind: "site",
+    domain: "agileautoparts.com",
+    tags: ["web", "ecommerce"],
+    status: "live",
+    note: "Rol: geliştirici ve SEO sorumlusu · 2026",
+    blurb:
+      "Binlerce performans ve yedek parça satan bir ABD mağazasının, “bu parça aracıma uyar mı?” sorusu etrafında yeniden kurulması: özel mağaza teması, kendi arama ve uyumluluk sistemi ve teknik SEO programı.",
+    highlights: [
+      "Araç öncelikli tasarım: yıl, marka ve model bir kez seçilir, her sayfada hatırlanır, uyan parçalar önce gelir",
+      "Ücretli uygulamanın yerine Supabase (Postgres ve Edge Functions) üzerinde kendi arama ve uyumluluk sistemi; 27 kategori listesi",
+      "118 üretilmiş açılış sayfası ve 8.399 üründe yayınlanmış “uyar” bilgisi",
+      "Telefonda sabit satın alma çubuğu; yapılandırılmış veri, başlık kalıpları, 24 kategoride rehber ve SSS",
+      "Canlı mağazada kesintisiz yayın: 34 etiketli, geri alınabilir tema sürümü",
+    ],
+    stack: ["BigCommerce Stencil", "Handlebars", "SCSS", "JavaScript", "Supabase", "Klaviyo", "Merchant Center", "GA4"],
+    href: "https://agileautoparts.com",
+  },
+  {
+    id: "agile-panel",
     name: "Agile Auto Parts — Ürün Paneli",
     meta: "Uygulama — özel katalog paneli",
     kind: "app",
@@ -347,15 +392,17 @@ const allWorks: Work[] = [
 
 /** Display order. Within the "Yayında" group the first entries are the strongest, most open work. */
 const ORDER = [
-  "cortis",
   "atlas",
   "lider",
   "ekiz",
   "basak",
-  "lila",
   "matemageist",
-  "takip",
   "agile",
+  "cortis",
+  "lila",
+  "tohumluktan",
+  "takip",
+  "agile-panel",
   "anasehir",
   "fmx",
   "hustle",
