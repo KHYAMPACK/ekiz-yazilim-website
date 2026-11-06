@@ -29,6 +29,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${seo.siteUrl}/upwork`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
       url: `${seo.siteUrl}/kvkk`,
       lastModified,
       changeFrequency: "yearly",
