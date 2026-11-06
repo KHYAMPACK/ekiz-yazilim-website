@@ -210,12 +210,6 @@ export const CARE = {
 
 export const WORKS = [
   {
-    name: "Şahika Öncü Minikler",
-    meta: "Kreş — Yenişehir",
-    href: "https://www.sahikaoncuminikler.com",
-    desktop: "/works/sahika-desktop.png",
-  },
-  {
     name: "Lider Çocuklar Anaokulu",
     meta: "Anaokulu — Yenişehir",
     href: "https://www.denizlilidercocuklaranaokulu.com",

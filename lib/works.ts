@@ -1,5 +1,5 @@
 export type WorkTag = "web" | "ecommerce" | "app" | "game";
-export type WorkStatus = "live" | "building" | "prototype";
+export type WorkStatus = "live" | "building" | "prototype" | "offline";
 export type WorkIcon = "store" | "school" | "rocket" | "gamepad";
 
 export type Work = {
@@ -21,6 +21,8 @@ export type Work = {
   /** GitHub repo URL */
   repo?: string;
   icon?: WorkIcon;
+  /** Short line shown on the card for private or offline work (e.g. why there is no link) */
+  note?: string;
 };
 
 const gh = (repo: string) => `https://github.com/KHYAMPACK/${repo}`;
@@ -29,7 +31,31 @@ export const STATUS_LABEL: Record<WorkStatus, string> = {
   live: "Yayında",
   building: "Yapım aşamasında",
   prototype: "Prototip",
+  offline: "Çevrimdışı",
 };
+
+/**
+ * Cards are shown in four groups, in this order: work you can open right now first, then work
+ * that is live but behind a login, then work in progress, then work that is currently offline.
+ */
+export type WorkGroup = "live" | "private" | "building" | "offline";
+
+export const WORK_GROUPS: { id: WorkGroup; title: string; note: string }[] = [
+  { id: "live", title: "Yayında", note: "Açıp gezebileceğiniz canlı siteler ve uygulamalar." },
+  {
+    id: "private",
+    title: "Yayında, giriş gerektirir",
+    note: "Müşteriye özel çalışan sistemler; herkese açık bir bağlantıları yok.",
+  },
+  { id: "building", title: "Yapım aşamasında", note: "Henüz tamamlanmamış işler." },
+  { id: "offline", title: "Şu an çevrimiçi değil", note: "Kayıt için burada duruyor." },
+];
+
+export function workGroup(work: Work): WorkGroup {
+  if (work.status === "offline") return "offline";
+  if (work.status === "live") return work.href ? "live" : "private";
+  return "building";
+}
 
 export const WORK_FILTERS: { id: "all" | WorkTag; label: string }[] = [
   { id: "all", label: "Tümü" },
@@ -39,8 +65,7 @@ export const WORK_FILTERS: { id: "all" | WorkTag; label: string }[] = [
   { id: "game", label: "Oyun" },
 ];
 
-/** Apps first, then websites; newest first within each group. */
-export const works: Work[] = [
+const allWorks: Work[] = [
   {
     id: "cortis",
     name: "Cortisstyle",
@@ -196,7 +221,8 @@ export const works: Work[] = [
     kind: "site",
     domain: "sahikaoncuminikler.com",
     tags: ["web"],
-    status: "live",
+    status: "offline",
+    note: "Müşterinin kararıyla yayından kaldırıldı.",
     blurb:
       "Montessori yaklaşımlı butik kreş için 8 sayfalık kurumsal site.",
     highlights: [
@@ -205,7 +231,6 @@ export const works: Work[] = [
       "Otomatik Open Graph görselleri ve kanonik URL’ler",
     ],
     stack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    href: "https://www.sahikaoncuminikler.com",
     repo: gh("sahika-oncu-minikler-website"),
   },
   {
@@ -270,7 +295,8 @@ export const works: Work[] = [
     kind: "site",
     domain: "budabi.art",
     tags: ["web"],
-    status: "live",
+    status: "offline",
+    note: "Şu an erişilemiyor.",
     blurb:
       "Kültür-sanat ve yapım şirketi için çerçevesiz, elle yazılmış çok sayfalı site.",
     highlights: [
@@ -279,9 +305,74 @@ export const works: Work[] = [
       "TikTok, YouTube ve Instagram içerikleri gömülü",
     ],
     stack: ["HTML", "CSS", "JavaScript"],
-    href: "https://budabi.art",
+  },
+  {
+    id: "matemageist",
+    name: "Matemageist",
+    meta: "Kurumsal web sitesi — matematik eğitimi",
+    kind: "site",
+    domain: "matemageist.study",
+    tags: ["web"],
+    status: "live",
+    blurb:
+      "LGS ve YKS matematiği için eğitim sitesi: sınıf sınıf konu bölümleri, blog, eğitim paketleri ve öğrenci koçluğu.",
+    highlights: [
+      "5–8. sınıf, LGS, 9–12. sınıf, TYT ve AYT için ayrı bölümler",
+      "Matematik tarihi, felsefesi ve eğitim üzerine blog yazıları",
+      "Eğitim paketleri ve öğrenci koçluğu sayfaları",
+      "Öğrenciler için giriş paneli",
+    ],
+    stack: ["Next.js", "Vercel"],
+    href: "https://matemageist.study",
+  },
+  {
+    id: "agile",
+    name: "Agile Auto Parts — Ürün Paneli",
+    meta: "Uygulama — özel katalog paneli",
+    kind: "app",
+    icon: "store",
+    tags: ["app"],
+    status: "live",
+    note: "Müşteriye özel panel; giriş gerektirir.",
+    blurb:
+      "Agile Auto Parts’ın ana ürün kataloğu için ekip paneli. Hesapları yönetici açar.",
+    highlights: [
+      "E-posta ve şifreye ek olarak telefondan 6 haneli kodla giriş",
+      "Yönetici tarafından açılan hesaplar",
+      "Ana ürün kataloğu tek yerden yönetilir",
+    ],
+    stack: ["Next.js", "Vercel"],
   },
 ];
+
+/** Display order. Within the "Yayında" group the first entries are the strongest, most open work. */
+const ORDER = [
+  "cortis",
+  "atlas",
+  "lider",
+  "ekiz",
+  "basak",
+  "lila",
+  "matemageist",
+  "takip",
+  "agile",
+  "anasehir",
+  "fmx",
+  "hustle",
+  "heart-house",
+  "sahika",
+  "budabi",
+] as const;
+
+export const works: Work[] = ORDER.map((id) => {
+  const work = allWorks.find((item) => item.id === id);
+  if (!work) throw new Error(`Missing work: ${id}`);
+  return work;
+});
+
+if (works.length !== allWorks.length) {
+  throw new Error("Every work must appear in ORDER");
+}
 
 /** Grouped stack for the /isler "Kullandığım teknolojiler" block. */
 export const STACK_GROUPS: { title: string; items: string[] }[] = [
@@ -307,7 +398,8 @@ export const STACK_GROUPS: { title: string; items: string[] }[] = [
   },
 ];
 
-export const FEATURED_WORK_IDS = ["cortis", "takip", "sahika"] as const;
+/** Homepage picks: all three open in a new tab. */
+export const FEATURED_WORK_IDS = ["cortis", "atlas", "matemageist"] as const;
 
 export function featuredWorks(): Work[] {
   return FEATURED_WORK_IDS.map((id) => {

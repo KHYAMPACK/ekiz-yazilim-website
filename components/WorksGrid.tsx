@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { WORK_FILTERS, works, type WorkTag } from "@/lib/works";
+import { WORK_FILTERS, WORK_GROUPS, workGroup, works, type WorkTag } from "@/lib/works";
 import WorkCard from "./WorkCard";
 
 export default function WorksGrid() {
@@ -41,10 +41,26 @@ export default function WorksGrid() {
         })}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        {shown.map((project) => (
-          <WorkCard key={project.id} project={project} />
-        ))}
+      <div className="space-y-14">
+        {WORK_GROUPS.map((group) => {
+          const items = shown.filter((work) => workGroup(work) === group.id);
+          if (!items.length) return null;
+          return (
+            <section key={group.id} aria-labelledby={`isler-group-${group.id}`}>
+              <div className="mb-6 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <h3 id={`isler-group-${group.id}`} className="sc-h3">
+                  {group.title}
+                </h3>
+                <p className="text-sm text-sc-muted">{group.note}</p>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                {items.map((project) => (
+                  <WorkCard key={project.id} project={project} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
     </>
   );

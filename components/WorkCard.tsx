@@ -12,7 +12,11 @@ function BrowserBar({ project }: { project: Work }) {
             <span className="size-2 rounded-full bg-sc-border" />
             <span className="size-2 rounded-full bg-sc-accent" />
           </div>
-          <p className="min-w-0 flex-1 truncate rounded-md bg-sc-bg px-2 py-0.5 font-mono text-xs text-sc-muted">
+          <p
+            className={`min-w-0 flex-1 truncate rounded-md bg-sc-bg px-2 py-0.5 font-mono text-xs text-sc-muted ${
+              project.status === "offline" ? "line-through" : ""
+            }`}
+          >
             {project.domain ?? "yakında"}
           </p>
         </div>
@@ -38,7 +42,11 @@ function IconStage({ project }: { project: Work }) {
 
 export default function WorkCard({ project }: { project: Work }) {
   return (
-    <article className="sc-card flex h-full flex-col overflow-hidden">
+    <article
+      className={`sc-card flex h-full flex-col overflow-hidden ${
+        project.status === "offline" ? "opacity-70" : ""
+      }`}
+    >
       {project.kind === "site" ? (
         <BrowserBar project={project} />
       ) : (
@@ -63,6 +71,11 @@ export default function WorkCard({ project }: { project: Work }) {
 
         <h3 className="sc-h3 mt-3 !text-[1.75rem] sm:!text-[2rem]">{project.name}</h3>
         <p className="sc-body mt-3">{project.blurb}</p>
+        {project.note ? (
+          <p className="mt-3 rounded-lg border border-sc-border bg-sc-bg px-3 py-2 text-sm text-sc-muted">
+            {project.note}
+          </p>
+        ) : null}
 
         <ul className="mt-5 space-y-2">
           {project.highlights.map((item) => (
